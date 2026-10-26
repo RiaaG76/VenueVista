@@ -1,0 +1,25 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Build artifacts
+**/target/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+
+# Environment & secrets
+*.env
+*.env.local

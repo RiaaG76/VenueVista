@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgStage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#090514" />
+      <stop offset="50%" stop-color="#190d33" />
+      <stop offset="85%" stop-color="#2a104e" />
+      <stop offset="100%" stop-color="#140628" />
+    </linearGradient>
+    <linearGradient id="spotMagenta" x1="0%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#ec4899" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="spotIndigo" x1="100%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#6366f1" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="spotCyan" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="stageFloor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b1d6e" />
+      <stop offset="40%" stop-color="#1e1136" />
+      <stop offset="100%" stop-color="#0a0514" />
+    </linearGradient>
+    <linearGradient id="guitarBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="50%" stop-color="#be123c" />
+      <stop offset="100%" stop-color="#4c0519" />
+    </linearGradient>
+    <radialGradient id="micHeadGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#e2e8f0" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#334155" />
+    </radialGradient>
+    <radialGradient id="centerGlow" cx="50%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Deep Stage Background -->
+  <rect width="600" height="360" fill="url(#bgStage)" />
+  <circle cx="300" cy="160" r="220" fill="url(#centerGlow)" />
+
+  <!-- Overhead Truss & Lights -->
+  <rect x="0" y="0" width="600" height="18" fill="#0f0720" />
+  <g stroke="#381c66" stroke-width="1.5" opacity="0.6">
+    <line x1="0" y1="18" x2="600" y2="18" />
+    <path d="M0 0 L30 18 L60 0 L90 18 L120 0 L150 18 L180 0 L210 18 L240 0 L270 18 L300 0 L330 18 L360 0 L390 18 L420 0 L450 18 L480 0 L510 18 L540 0 L570 18 L600 0" fill="none" />
+  </g>
+
+  <!-- Spotlights Beaming Down -->
+  <!-- Left Magenta Spot -->
+  <polygon points="90,18 0,310 260,310" fill="url(#spotMagenta)" />
+  <!-- Center Cyan Spot -->
+  <polygon points="300,18 190,310 410,310" fill="url(#spotCyan)" />
+  <!-- Right Indigo Spot -->
+  <polygon points="510,18 340,310 600,310" fill="url(#spotIndigo)" />
+
+  <!-- Spot Lamps on Truss -->
+  <rect x="75" y="14" width="30" height="10" rx="3" fill="#f43f5e" />
+  <rect x="285" y="14" width="30" height="10" rx="3" fill="#06b6d4" />
+  <rect x="495" y="14" width="30" height="10" rx="3" fill="#818cf8" />
+
+  <!-- Perspective Stage Floor -->
+  <polygon points="0,250 600,250 600,360 0,360" fill="url(#stageFloor)" />
+  <!-- Stage Planks Perspective Lines -->
+  <g stroke="rgba(255,255,255,0.06)" stroke-width="1.5">
+    <line x1="300" y1="250" x2="300" y2="360" />
+    <line x1="300" y1="250" x2="160" y2="360" />
+    <line x1="300" y1="250" x2="20" y2="360" />
+    <line x1="300" y1="250" x2="440" y2="360" />
+    <line x1="300" y1="250" x2="580" y2="360" />
+    <line x1="0" y1="270" x2="600" y2="270" />
+  </g>
+
+  <!-- Stage Monitors / Speakers -->
+  <polygon points="50,265 110,260 120,295 50,305" fill="#180d2e" stroke="#3d216f" stroke-width="1.5" />
+  <polygon points="490,260 550,265 550,305 480,295" fill="#180d2e" stroke="#3d216f" stroke-width="1.5" />
+
+  <!-- Foreground Musical Instruments (Electric Guitar Left) -->
+  <g transform="translate(140, 100) rotate(-22)" opacity="0.95">
+    <!-- Guitar Neck & Headstock -->
+    <rect x="44" y="20" width="10" height="110" fill="#f59e0b" rx="2" />
+    <polygon points="41,10 57,10 55,25 43,25" fill="#d97706" />
+    <!-- Tuning Pegs -->
+    <circle cx="37" cy="14" r="2.5" fill="#cbd5e1" />
+    <circle cx="37" cy="20" r="2.5" fill="#cbd5e1" />
+    <circle cx="61" cy="14" r="2.5" fill="#cbd5e1" />
+    <circle cx="61" cy="20" r="2.5" fill="#cbd5e1" />
+    <!-- Body -->
+    <path d="M49,120 C25,120 15,145 22,170 C28,190 10,215 25,235 C40,250 65,248 75,235 C90,215 72,190 78,170 C85,145 73,120 49,120 Z" fill="url(#guitarBody)" stroke="#fb7185" stroke-width="2" />
+    <!-- Pickguard -->
+    <path d="M49,140 C38,140 32,155 35,170 C38,180 30,195 40,205 C50,205 60,195 58,175 Z" fill="#ffffff" opacity="0.9" />
+    <!-- Pickups & Strings -->
+    <rect x="42" y="160" width="16" height="5" rx="1.5" fill="#0f172a" />
+    <rect x="42" y="180" width="16" height="5" rx="1.5" fill="#0f172a" />
+    <line x1="47" y1="20" x2="47" y2="215" stroke="#e2e8f0" stroke-width="0.8" />
+    <line x1="49" y1="20" x2="49" y2="215" stroke="#e2e8f0" stroke-width="0.8" />
+    <line x1="51" y1="20" x2="51" y2="215" stroke="#e2e8f0" stroke-width="0.8" />
+  </g>
+
+  <!-- Center Stage Performance Microphone Stand & Boom -->
+  <g transform="translate(320, 75)">
+    <!-- Stand Base -->
+    <ellipse cx="0" cy="210" rx="45" ry="12" fill="#0a0514" stroke="#475569" stroke-width="2" />
+    <!-- Vertical Tube -->
+    <line x1="0" y1="110" x2="0" y2="210" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
+    <line x1="0" y1="110" x2="0" y2="210" stroke="#f8fafc" stroke-width="1.5" stroke-linecap="round" />
+    <!-- Joint Clutch -->
+    <rect x="-6" y="104" width="12" height="14" rx="2" fill="#334155" />
+    <!-- Angled Boom Arm -->
+    <line x1="0" y1="110" x2="-55" y2="40" stroke="#cbd5e1" stroke-width="4.5" stroke-linecap="round" />
+    <line x1="-55" y1="40" x2="-80" y2="10" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
+    <!-- Counterweight -->
+    <rect x="-8" y="112" width="22" height="10" rx="3" fill="#1e293b" transform="rotate(-38 -8 112)" />
+    <!-- Mic Shockmount & Head -->
+    <g transform="translate(-78, 12) rotate(-35)">
+      <rect x="-6" y="6" width="12" height="20" rx="3" fill="#1e293b" />
+      <!-- Mic Grille -->
+      <ellipse cx="0" cy="0" rx="10" ry="14" fill="url(#micHeadGrad)" stroke="#64748b" stroke-width="1.5" />
+      <line x1="-10" y1="0" x2="10" y2="0" stroke="#334155" stroke-width="2" />
+      <path d="M-8,-5 L8,-5 M-8,5 L8,5" stroke="#475569" stroke-width="1" />
+    </g>
+    <!-- Glowing Aura on Mic -->
+    <circle cx="-78" cy="12" r="28" fill="#38bdf8" opacity="0.25" />
+  </g>
+
+  <!-- Front Audience Silhouettes -->
+  <g fill="#07030d">
+    <path d="M0,360 L0,325 Q30,310 60,335 Q100,320 140,335 Q180,315 220,330 Q270,310 310,335 Q350,315 390,330 Q440,305 480,335 Q530,315 570,330 Q600,315 600,360 Z" />
+    <!-- Raised Hands in Crowd -->
+    <path d="M120,325 L124,285 Q125,275 130,285 L135,325 Z M240,320 L245,270 Q248,260 255,272 L258,320 Z M460,320 L465,275 Q470,265 475,278 L478,320 Z" />
+  </g>
+
+  <!-- Atmospheric Light Dust Particles -->
+  <g fill="#ffffff" opacity="0.6">
+    <circle cx="160" cy="140" r="1.5" />
+    <circle cx="210" cy="90" r="2" />
+    <circle cx="280" cy="170" r="1" />
+    <circle cx="340" cy="110" r="2.5" />
+    <circle cx="430" cy="150" r="1.5" />
+    <circle cx="480" cy="90" r="2" />
+  </g>
+</svg>

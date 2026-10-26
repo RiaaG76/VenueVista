@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="convBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#021427" />
+      <stop offset="50%" stop-color="#0a2a4a" />
+      <stop offset="100%" stop-color="#031526" />
+    </linearGradient>
+    <radialGradient id="glassRoof" cx="50%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#021427" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="360" fill="url(#convBg)" />
+  <rect width="600" height="360" fill="url(#glassRoof)" />
+
+  <!-- Modern Geometric Architectural Space Truss Roof -->
+  <g stroke="#38bdf8" stroke-width="1.5" opacity="0.4" fill="none">
+    <path d="M0,40 L300,100 L600,40 M0,80 L300,140 L600,80 M0,120 L300,180 L600,120" />
+    <line x1="300" y1="0" x2="300" y2="240" stroke-width="2" />
+    <line x1="150" y1="0" x2="150" y2="240" />
+    <line x1="450" y1="0" x2="450" y2="240" />
+  </g>
+
+  <!-- Massive High-Ceiling Exhibition Hall Floor (Polished Concrete Perspective) -->
+  <polygon points="120,180 480,180 600,360 0,360" fill="#0f1f38" stroke="#1e3a66" stroke-width="2" />
+
+  <!-- Modular Booth Stalls / Exhibition Pavilions -->
+  <!-- Left Pavilion -->
+  <polygon points="40,240 160,210 160,300 40,340" fill="#0c2547" stroke="#38bdf8" stroke-width="2" />
+  <rect x="65" y="240" width="60" height="40" fill="#0284c7" opacity="0.5" />
+  <line x1="40" y1="240" x2="160" y2="210" stroke="#67e8f9" stroke-width="2" />
+
+  <!-- Center Stage Presentation Screen -->
+  <rect x="220" y="160" width="160" height="85" rx="6" fill="#0a1930" stroke="#60a5fa" stroke-width="2" />
+  <rect x="230" y="170" width="140" height="65" rx="4" fill="#1e3a8a" />
+  <text x="300" y="208" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#93c5fd" text-anchor="middle">EXPO MAIN STAGE</text>
+
+  <!-- Right Pavilion -->
+  <polygon points="560,240 440,210 440,300 560,340" fill="#0c2547" stroke="#38bdf8" stroke-width="2" />
+  <rect x="475" y="240" width="60" height="40" fill="#0284c7" opacity="0.5" />
+  <line x1="560" y1="240" x2="440" y2="210" stroke="#67e8f9" stroke-width="2" />
+
+  <!-- Venue Badge Overlay -->
+  <rect x="25" y="25" width="145" height="28" rx="6" fill="rgba(15, 23, 42, 0.85)" stroke="#38bdf8" stroke-width="1.5" />
+  <text x="97" y="44" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">🏢 CONVENTION HUB</text>
+</svg>

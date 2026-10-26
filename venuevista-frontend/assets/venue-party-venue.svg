@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="partyBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#18042b" />
+      <stop offset="50%" stop-color="#31084d" />
+      <stop offset="100%" stop-color="#090214" />
+    </linearGradient>
+    <radialGradient id="neonLaser" cx="50%" cy="10%" r="80%">
+      <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.35" />
+      <stop offset="45%" stop-color="#a855f7" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="loungeBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ec4899" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" fill="url(#partyBg)" />
+  <rect width="600" height="360" fill="url(#neonLaser)" />
+
+  <!-- Laser Beams -->
+  <g stroke-width="2" opacity="0.6">
+    <line x1="300" y1="20" x2="40" y2="280" stroke="#f43f5e" />
+    <line x1="300" y1="20" x2="160" y2="300" stroke="#a855f7" />
+    <line x1="300" y1="20" x2="440" y2="300" stroke="#06b6d4" />
+    <line x1="300" y1="20" x2="560" y2="280" stroke="#ec4899" />
+  </g>
+
+  <!-- Mirror Disco Ball -->
+  <line x1="300" y1="0" x2="300" y2="35" stroke="#94a3b8" stroke-width="2" />
+  <circle cx="300" cy="50" r="18" fill="#e2e8f0" stroke="#ffffff" stroke-width="1.5" />
+  <!-- Sparkles -->
+  <g fill="#ffffff">
+    <circle cx="295" cy="45" r="2.5" /><circle cx="305" cy="53" r="2.5" /><circle cx="298" cy="55" r="2" />
+    <polygon points="260,35 264,40 260,45 256,40" fill="#f43f5e" />
+    <polygon points="340,30 344,35 340,40 336,35" fill="#38bdf8" />
+  </g>
+
+  <!-- Rooftop Lounge Bar / DJ Console -->
+  <polygon points="200,170 400,170 430,220 170,220" fill="#1e1136" stroke="#c084fc" stroke-width="2" />
+  <rect x="210" y="175" width="180" height="8" rx="4" fill="url(#loungeBar)" />
+  <circle cx="260" cy="195" r="12" fill="#38bdf8" opacity="0.8" />
+  <circle cx="340" cy="195" r="12" fill="#f43f5e" opacity="0.8" />
+
+  <!-- Illuminated Party Dance Floor Tiles -->
+  <polygon points="0,240 600,240 600,360 0,360" fill="#0f051d" />
+  <g stroke="#a855f7" stroke-width="1.5" fill="none" opacity="0.4">
+    <line x1="100" y1="240" x2="0" y2="360" />
+    <line x1="200" y1="240" x2="120" y2="360" />
+    <line x1="300" y1="240" x2="300" y2="360" />
+    <line x1="400" y1="240" x2="480" y2="360" />
+    <line x1="500" y1="240" x2="600" y2="360" />
+    <line x1="0" y1="270" x2="600" y2="270" />
+    <line x1="0" y1="310" x2="600" y2="310" />
+  </g>
+
+  <!-- Glowing Dance Floor Highlights -->
+  <rect x="150" y="278" width="60" height="25" fill="#ec4899" opacity="0.25" rx="3" />
+  <rect x="390" y="278" width="60" height="25" fill="#8b5cf6" opacity="0.25" rx="3" />
+  <rect x="260" y="318" width="80" height="30" fill="#06b6d4" opacity="0.25" rx="3" />
+
+  <text x="300" y="345" text-anchor="middle" fill="#f472b6" font-family="system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="2">ROOFTOP &amp; CELEBRATION LOUNGE</text>
+</svg>

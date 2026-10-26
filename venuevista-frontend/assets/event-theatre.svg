@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgTheatre" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#12041a" />
+      <stop offset="50%" stop-color="#240833" />
+      <stop offset="100%" stop-color="#14031d" />
+    </linearGradient>
+    <linearGradient id="velvetRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#881337" />
+      <stop offset="25%" stop-color="#be123c" />
+      <stop offset="50%" stop-color="#4c0519" />
+      <stop offset="75%" stop-color="#9f1239" />
+      <stop offset="100%" stop-color="#4c0519" />
+    </linearGradient>
+    <linearGradient id="goldTassel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </linearGradient>
+    <radialGradient id="stageGlow" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.5" />
+      <stop offset="35%" stop-color="#f43f5e" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="maskGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fef08a" />
+      <stop offset="80%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+    <linearGradient id="maskSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Velvet Backstage Ambient -->
+  <rect width="600" height="360" fill="url(#bgTheatre)" />
+  <rect width="600" height="360" fill="url(#stageGlow)" />
+
+  <!-- Stage Spotlights Beaming Down -->
+  <polygon points="120,0 200,280 340,280 240,0" fill="#fef08a" opacity="0.12" />
+  <polygon points="480,0 260,280 400,280 360,0" fill="#f472b6" opacity="0.12" />
+
+  <!-- Classical Proscenium Stage Frame (Arch & Columns) -->
+  <g fill="#180424" stroke="#4c0519" stroke-width="1.5">
+    <rect x="0" y="0" width="55" height="360" />
+    <rect x="545" y="0" width="55" height="360" />
+    <!-- Fluted Column Details -->
+    <line x1="18" y1="0" x2="18" y2="360" stroke="#881337" stroke-width="1.5" />
+    <line x1="36" y1="0" x2="36" y2="360" stroke="#881337" stroke-width="1.5" />
+    <line x1="563" y1="0" x2="563" y2="360" stroke="#881337" stroke-width="1.5" />
+    <line x1="581" y1="0" x2="581" y2="360" stroke="#881337" stroke-width="1.5" />
+  </g>
+
+  <!-- Grand Velvet Valance & Drapes Overhead -->
+  <!-- Top Swag Drapes -->
+  <path d="M50,0 Q180,95 300,35 Q420,95 550,0 L550,0 L50,0 Z" fill="url(#velvetRed)" stroke="#be123c" stroke-width="1.5" />
+  <path d="M50,0 Q175,70 300,15 Q425,70 550,0 Z" fill="none" stroke="url(#goldTassel)" stroke-width="3" />
+  
+  <!-- Side Curtains Left & Right with Deep Folds -->
+  <!-- Left Velvet Curtain -->
+  <path d="M50,0 L120,0 Q95,160 140,320 L50,320 Z" fill="url(#velvetRed)" stroke="#4c0519" stroke-width="1.5" />
+  <path d="M75,0 Q65,160 90,320 M100,0 Q88,160 115,320" stroke="#4c0519" stroke-width="2.5" fill="none" opacity="0.7" />
+  <!-- Left Curtain Tie-Back & Gold Tassel -->
+  <ellipse cx="108" cy="180" rx="16" ry="6" fill="url(#goldTassel)" />
+  <polygon points="106,183 110,215 102,215" fill="url(#goldTassel)" />
+
+  <!-- Right Velvet Curtain -->
+  <path d="M550,0 L480,0 Q505,160 460,320 L550,320 Z" fill="url(#velvetRed)" stroke="#4c0519" stroke-width="1.5" />
+  <path d="M525,0 Q535,160 510,320 M500,0 Q512,160 485,320" stroke="#4c0519" stroke-width="2.5" fill="none" opacity="0.7" />
+  <!-- Right Curtain Tie-Back & Gold Tassel -->
+  <ellipse cx="492" cy="180" rx="16" ry="6" fill="url(#goldTassel)" />
+  <polygon points="494,183 490,215 498,215" fill="url(#goldTassel)" />
+
+  <!-- Polished Oak Stage Floor -->
+  <polygon points="0,240 600,240 600,360 0,360" fill="#200d07" stroke="#451a03" stroke-width="2" />
+  <!-- Stage Board Slats -->
+  <g stroke="rgba(251,191,36,0.12)" stroke-width="1.5">
+    <line x1="300" y1="240" x2="300" y2="360" />
+    <line x1="300" y1="240" x2="150" y2="360" />
+    <line x1="300" y1="240" x2="450" y2="360" />
+    <line x1="300" y1="240" x2="0" y2="360" />
+    <line x1="300" y1="240" x2="600" y2="360" />
+  </g>
+
+  <!-- Luminous Warm Stage Footlights -->
+  <g fill="#fef08a">
+    <circle cx="150" cy="244" r="5" />
+    <circle cx="210" cy="244" r="5" />
+    <circle cx="270" cy="244" r="5" />
+    <circle cx="330" cy="244" r="5" />
+    <circle cx="390" cy="244" r="5" />
+    <circle cx="450" cy="244" r="5" />
+    <!-- Footlight Shells -->
+    <path d="M145,248 C145,244 155,244 155,248 Z" fill="#78350f" />
+    <path d="M205,248 C205,244 215,244 215,248 Z" fill="#78350f" />
+    <path d="M265,248 C265,244 275,244 275,248 Z" fill="#78350f" />
+    <path d="M325,248 C325,244 335,244 335,248 Z" fill="#78350f" />
+    <path d="M385,248 C385,244 395,244 395,248 Z" fill="#78350f" />
+    <path d="M445,248 C445,244 455,244 455,248 Z" fill="#78350f" />
+  </g>
+
+  <!-- Center Stage Pedestal & Theatrical Masks -->
+  <!-- Classical Velvet Pedestal Plinth -->
+  <polygon points="230,225 370,225 385,260 215,260" fill="#4c0519" stroke="#be123c" stroke-width="2" />
+  <polygon points="215,260 385,260 395,275 205,275" fill="#2a040e" />
+
+  <!-- Classical Mask 1: Tragedy (Left, Angled) -->
+  <g transform="translate(262, 168) rotate(-14)">
+    <!-- Mask Face Oval -->
+    <path d="M0,0 C-26,0 -36,25 -32,55 C-28,82 -14,102 0,102 C14,102 28,82 32,55 C36,25 26,0 0,0 Z" fill="url(#maskSilver)" stroke="#334155" stroke-width="2" />
+    <!-- Downward Brows -->
+    <path d="M-22,28 Q-12,22 -4,34" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M22,28 Q12,22 4,34" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" />
+    <!-- Hollow Eyes (Dark Almonds) -->
+    <ellipse cx="-13" cy="40" rx="6" ry="9" fill="#0f172a" />
+    <ellipse cx="13" cy="40" rx="6" ry="9" fill="#0f172a" />
+    <!-- Nose Ridge -->
+    <path d="M0,36 L-3,62 L3,64" fill="none" stroke="#475569" stroke-width="2" />
+    <!-- Tragedy Down-turned Open Mouth -->
+    <ellipse cx="0" cy="80" rx="9" ry="12" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+  </g>
+
+  <!-- Classical Mask 2: Comedy (Right, Golden, Overlapping) -->
+  <g transform="translate(338, 162) rotate(12)">
+    <!-- Mask Face Oval -->
+    <path d="M0,0 C-26,0 -36,25 -32,55 C-28,82 -14,102 0,102 C14,102 28,82 32,55 C36,25 26,0 0,0 Z" fill="url(#maskGold)" stroke="#854d0e" stroke-width="2.5" />
+    <!-- Arched Cheerful Brows -->
+    <path d="M-22,32 Q-12,18 -4,26" fill="none" stroke="#78350f" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M22,32 Q12,18 4,26" fill="none" stroke="#78350f" stroke-width="3.5" stroke-linecap="round" />
+    <!-- Laughing Crescent Eyes -->
+    <path d="M-18,42 Q-12,32 -6,42" fill="none" stroke="#451a03" stroke-width="4" stroke-linecap="round" />
+    <path d="M18,42 Q12,32 6,42" fill="none" stroke="#451a03" stroke-width="4" stroke-linecap="round" />
+    <!-- Nose Ridge -->
+    <path d="M0,34 L-3,58 L4,60" fill="none" stroke="#92400e" stroke-width="2" />
+    <!-- Comedy Big Smiling Open Mouth -->
+    <path d="M-16,74 Q0,100 16,74 Z" fill="#451a03" stroke="#78350f" stroke-width="2" />
+    <path d="M-13,76 Q0,86 13,76" fill="#ffffff" />
+  </g>
+
+  <!-- Satin Ribbons Flowing from Masks -->
+  <path d="M235,190 Q210,230 220,265 Q225,280 215,300" fill="none" stroke="#ec4899" stroke-width="3" stroke-linecap="round" />
+  <path d="M365,190 Q390,230 380,265 Q375,280 385,300" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" />
+</svg>

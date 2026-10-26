@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="banquetBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1026" />
+      <stop offset="60%" stop-color="#2d1538" />
+      <stop offset="100%" stop-color="#0f0714" />
+    </linearGradient>
+    <radialGradient id="chandelierGlow" cx="50%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.45" />
+      <stop offset="40%" stop-color="#f59e0b" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="pillarGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#92400e" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" fill="url(#banquetBg)" />
+  <rect width="600" height="360" fill="url(#chandelierGlow)" />
+
+  <!-- Architectural Pillars -->
+  <rect x="40" y="80" width="30" height="240" rx="4" fill="url(#pillarGold)" opacity="0.6" />
+  <rect x="160" y="90" width="24" height="230" rx="4" fill="url(#pillarGold)" opacity="0.4" />
+  <rect x="416" y="90" width="24" height="230" rx="4" fill="url(#pillarGold)" opacity="0.4" />
+  <rect x="530" y="80" width="30" height="240" rx="4" fill="url(#pillarGold)" opacity="0.6" />
+
+  <!-- Center Grand Chandelier -->
+  <g stroke="#f59e0b" stroke-width="2" fill="none">
+    <line x1="300" y1="0" x2="300" y2="50" stroke="#fde047" stroke-width="3" />
+    <path d="M260,70 Q300,90 340,70" />
+    <path d="M240,95 Q300,120 360,95" />
+    <path d="M220,120 Q300,150 380,120" />
+  </g>
+  <!-- Crystals and Sparkles -->
+  <g fill="#fef08a">
+    <circle cx="300" cy="55" r="5" />
+    <circle cx="260" cy="70" r="4" /><circle cx="340" cy="70" r="4" /><circle cx="300" cy="80" r="4" />
+    <circle cx="240" cy="95" r="4.5" /><circle cx="360" cy="95" r="4.5" /><circle cx="280" cy="105" r="4" /><circle cx="320" cy="105" r="4" />
+    <circle cx="220" cy="120" r="5" /><circle cx="380" cy="120" r="5" /><circle cx="260" cy="130" r="4" /><circle cx="340" cy="130" r="4" />
+    <circle cx="300" cy="140" r="5" />
+  </g>
+
+  <!-- Polished Banquet Floor -->
+  <polygon points="0,250 600,250 600,360 0,360" fill="#180b20" stroke="#4a154b" stroke-width="2" />
+  <ellipse cx="300" cy="270" rx="160" ry="20" fill="#fef08a" opacity="0.12" />
+
+  <!-- Round Banquet Tables with Linen & Chairs -->
+  <!-- Table Left -->
+  <ellipse cx="140" cy="285" rx="55" ry="18" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
+  <ellipse cx="140" cy="280" rx="48" ry="14" fill="#ffffff" />
+  <circle cx="140" cy="278" r="8" fill="#f59e0b" />
+  <circle cx="140" cy="278" r="4" fill="#dc2626" />
+  <!-- Table Right -->
+  <ellipse cx="460" cy="285" rx="55" ry="18" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
+  <ellipse cx="460" cy="280" rx="48" ry="14" fill="#ffffff" />
+  <circle cx="460" cy="278" r="8" fill="#f59e0b" />
+  <circle cx="460" cy="278" r="4" fill="#dc2626" />
+  <!-- Center Stage Dais -->
+  <polygon points="220,240 380,240 410,265 190,265" fill="#3b0764" stroke="#7e22ce" stroke-width="1.5" />
+  <line x1="225" y1="242" x2="375" y2="242" stroke="#facc15" stroke-width="2" />
+
+  <text x="300" y="340" text-anchor="middle" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="12" font-weight="600" letter-spacing="2">VENUEVISTA LUXURY BANQUET HALL</text>
+</svg>

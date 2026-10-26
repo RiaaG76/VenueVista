@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyTwilight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1145" />
+      <stop offset="50%" stop-color="#4a154b" />
+      <stop offset="85%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#14532d" />
+    </linearGradient>
+    <linearGradient id="lawnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14532d" />
+      <stop offset="50%" stop-color="#166534" />
+      <stop offset="100%" stop-color="#052e16" />
+    </linearGradient>
+  </defs>
+  <!-- Twilight Sky -->
+  <rect width="600" height="360" fill="url(#skyTwilight)" />
+
+  <!-- Stars & Warm Twilight Crescent Moon -->
+  <circle cx="500" cy="65" r="16" fill="#fef08a" />
+  <circle cx="506" cy="61" r="14" fill="#351248" />
+  <g fill="#ffffff" opacity="0.6">
+    <circle cx="80" cy="45" r="1.5" />
+    <circle cx="150" cy="75" r="1" />
+    <circle cx="240" cy="35" r="2" />
+    <circle cx="380" cy="50" r="1.5" />
+  </g>
+
+  <!-- Distant Palm Tree & Coastal City Skyline Silhouettes -->
+  <path d="M0,220 L600,220 L600,240 L0,240 Z" fill="#2d123b" opacity="0.6" />
+  <!-- Palm Trees Left -->
+  <g stroke="#1a0924" stroke-width="3" fill="none">
+    <path d="M40,240 Q45,180 50,140" />
+    <path d="M50,140 Q30,120 15,135 M50,140 Q40,110 30,115 M50,140 Q65,115 75,125 M50,140 Q75,135 85,150" />
+    <path d="M85,240 Q90,190 95,155" stroke-width="2.5" />
+    <path d="M95,155 Q80,135 65,145 M95,155 Q85,125 75,130 M95,155 Q110,130 120,140" />
+  </g>
+
+  <!-- Festive Fairy Light Festoon Strings across Lawn -->
+  <g stroke="#fef08a" stroke-width="1.2" fill="none">
+    <path d="M20,120 Q160,165 300,135 Q440,170 580,120" />
+    <path d="M40,145 Q170,185 300,160 Q430,190 560,145" />
+  </g>
+  <!-- Glowing Fairy Bulbs -->
+  <g fill="#fef08a">
+    <circle cx="80" cy="140" r="3.5" /><circle cx="140" cy="154" r="3.5" /><circle cx="210" cy="156" r="3.5" /><circle cx="270" cy="144" r="3.5" />
+    <circle cx="340" cy="145" r="3.5" /><circle cx="410" cy="160" r="3.5" /><circle cx="480" cy="154" r="3.5" /><circle cx="530" cy="138" r="3.5" />
+  </g>
+
+  <!-- Open Lawn Mat & Amphitheatre Semi-circle Stage -->
+  <polygon points="0,220 600,220 600,360 0,360" fill="url(#lawnGrad)" />
+
+  <!-- Semi-Circle Wooden Stage Deck in Center Lawn -->
+  <ellipse cx="300" cy="275" rx="140" ry="40" fill="#78350f" stroke="#b45309" stroke-width="2" />
+  <ellipse cx="300" cy="270" rx="130" ry="35" fill="#92400e" />
+
+  <!-- White Canopy / Gazebo Arches over Stage -->
+  <path d="M190,270 Q300,180 410,270" fill="none" stroke="#f8fafc" stroke-width="3" />
+  <path d="M220,265 Q300,195 380,265" fill="none" stroke="#fef08a" stroke-width="2" />
+
+  <!-- Venue Badge Overlay -->
+  <rect x="25" y="25" width="165" height="28" rx="6" fill="rgba(15, 23, 42, 0.85)" stroke="#10b981" stroke-width="1.5" />
+  <text x="107" y="44" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">🌿 OPEN-AIR LAWN</text>
+</svg>

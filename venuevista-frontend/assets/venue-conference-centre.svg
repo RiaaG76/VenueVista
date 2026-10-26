@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="confBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#091e3a" />
+      <stop offset="50%" stop-color="#0f2b48" />
+      <stop offset="100%" stop-color="#051224" />
+    </linearGradient>
+    <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="podiumGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" fill="url(#confBg)" />
+
+  <!-- Modern Ceiling LED Light Panels -->
+  <g stroke="#38bdf8" stroke-width="2" fill="none" opacity="0.4">
+    <line x1="80" y1="20" x2="520" y2="20" />
+    <line x1="120" y1="45" x2="480" y2="45" />
+    <line x1="160" y1="70" x2="440" y2="70" />
+  </g>
+
+  <!-- Large Ultrawide Presentation Display Wall -->
+  <rect x="120" y="75" width="360" height="130" rx="8" fill="#0284c7" stroke="#38bdf8" stroke-width="2" opacity="0.9" />
+  <rect x="126" y="81" width="348" height="118" rx="6" fill="url(#screenGrad)" />
+  <!-- Slide Visuals on Display -->
+  <text x="300" y="125" text-anchor="middle" fill="#ffffff" font-family="system-ui, sans-serif" font-size="16" font-weight="700">EXECUTIVE CONCLAVE &amp; BOARDROOM</text>
+  <text x="300" y="148" text-anchor="middle" fill="#e0f2fe" font-family="system-ui, sans-serif" font-size="11">Global Leadership • Hybrid Audio-Visual • High-Speed Connectivity</text>
+  <line x1="180" y1="165" x2="420" y2="165" stroke="#bae6fd" stroke-width="2" stroke-dasharray="6,4" />
+
+  <!-- Stage Dais & Modern Lectern -->
+  <polygon points="100,220 500,220 560,250 40,250" fill="#1e293b" stroke="#334155" stroke-width="2" />
+  <!-- Speaker Podium -->
+  <polygon points="275,185 325,185 330,230 270,230" fill="url(#podiumGrad)" stroke="#38bdf8" stroke-width="1.5" />
+  <circle cx="288" cy="180" r="3" fill="#38bdf8" />
+  <line x1="288" y1="180" x2="285" y2="185" stroke="#38bdf8" stroke-width="2" />
+
+  <!-- Conference Delegate Seating (Ergonomic Executive Desks) -->
+  <polygon points="0,260 600,260 600,360 0,360" fill="#0b1324" />
+  <g fill="#1e293b" stroke="#38bdf8" stroke-width="1.5">
+    <!-- Row 1 Curved Desk -->
+    <path d="M60,280 Q300,260 540,280 L545,295 Q300,275 55,295 Z" />
+    <!-- Row 2 Curved Desk -->
+    <path d="M20,315 Q300,290 580,315 L585,335 Q300,310 15,335 Z" />
+  </g>
+  <!-- Microphones & Laptops on Desk -->
+  <g fill="#38bdf8">
+    <circle cx="160" cy="275" r="3" /><circle cx="300" cy="268" r="3" /><circle cx="440" cy="275" r="3" />
+    <circle cx="120" cy="308" r="3.5" /><circle cx="240" cy="300" r="3.5" /><circle cx="360" cy="300" r="3.5" /><circle cx="480" cy="308" r="3.5" />
+  </g>
+</svg>
