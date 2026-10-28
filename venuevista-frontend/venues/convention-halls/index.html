@@ -24,6 +24,15 @@
         })();
     </script>
 
+    <!-- Google Fonts for Editorial Typography (Plus Jakarta Sans & Newsreader) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Preload authoritative logo variants to prevent theme-switch reflow -->
+    <link rel="preload" href="/assets/logo-dark.png" as="image">
+    <link rel="preload" href="/assets/logo-light.png" as="image">
+
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -34,9 +43,7 @@
     <header class="app-header">
         <div class="container header-container">
             <a href="/" class="brand-logo" id="brand-logo-link" aria-label="VenueVista Home">
-                <span class="logo-mark" aria-hidden="true">VV</span>
-                <span class="brand-text">Venue<strong>Vista</strong></span>
-                <span class="brand-region-badge">IN</span>
+                <img id="navbar-brand-logo" class="brand-logo-img" src="/assets/logo-dark.png" alt="VenueVista - Events • Tickets • Venues" width="250" height="68">
             </a>
 
             <!-- Mobile Hamburger Toggle Button -->
@@ -60,7 +67,7 @@
 
                 <div class="header-actions">
                     <!-- Icon-Only Sun and Moon Theme Toggle Button -->
-                    <button class="theme-toggle-btn icon-only" id="theme-toggle-btn" type="button" aria-label="Switch to light theme" title="Toggle theme (Midnight Glow / Aurora Light)">
+                    <button class="theme-toggle-btn icon-only" id="theme-toggle-btn" type="button" aria-label="Switch to light theme" title="Toggle theme (Midnight Aurora / Aurora Light)">
                         <span class="theme-icon icon-sun" aria-hidden="true">☀️</span>
                         <span class="theme-icon icon-moon" aria-hidden="true">🌙</span>
                     </button>
@@ -81,21 +88,35 @@
         <div id="view-home" class="route-view active" role="region" aria-label="VenueVista Home">
             <!-- Home Hero Section -->
             <section class="home-hero-section">
-                <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
-                <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
 
                 <div class="container hero-container text-center">
                     <div class="hero-badge">
                         <span class="badge-dot" aria-hidden="true"></span>
-                        <span>India-First Platform • College Demo MVP</span>
+                        <span class="badge-text">India-First Platform • College Demo MVP</span>
                     </div>
                     
-                    <h1 class="hero-title">Discover events. Find your perfect venue.</h1>
+                    <h1 class="hero-title">
+                        <span class="title-main">Discover <em class="hero-highlight hero-italic-events">events</em>. Find your</span>
+                        <span class="title-sub">perfect <em class="hero-highlight hero-italic-venue">venue</em>.</span>
+                    </h1>
                     <div class="hero-tagline-sub">Two journeys, one destination.</div>
                     
                     <p class="hero-intro-text">
                         VenueVista connects attendees looking for verified live concerts, tech conclaves, and cultural experiences with organizers seeking iconic rental spaces across <strong>New Delhi, Mumbai, Bengaluru, Hyderabad, Pune, and Chennai</strong>.
                     </p>
+
+                    <div class="hero-scroll-indicator" aria-hidden="true">
+                        <a href="#how-it-works" class="scroll-arrow-link" aria-label="Scroll down to details">⌄</a>
+                    </div>
                 </div>
             </section>
 
@@ -198,8 +219,15 @@
         <div id="view-events-categories" class="route-view" role="region" aria-label="Event Categories Landing Page">
             <!-- Event Hero Banner (Moved here from Explore Events) -->
             <section class="hero-section">
-                <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
-                <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
 
                 <div class="container hero-container text-center">
                     <div class="hero-badge">
@@ -219,17 +247,17 @@
                 <div class="container">
                     <div class="view-back-bar">
                         <div class="view-breadcrumbs">
-                            <a href="/">Home</a> <span>/</span> <strong>Event Categories</strong>
+                            <a href="/">Home</a> <span>/</span> <strong>Categories</strong>
                         </div>
                         <a href="/events/all" class="btn-show-all">
                             <span>Browse All Events →</span>
                         </a>
                     </div>
 
-                    <div class="section-header text-center">
+                    <div class="category-page-header">
                         <div class="section-tag">Browse by Category</div>
-                        <h2 class="section-title">Explore Event Categories</h2>
-                        <p class="section-subtitle max-w-600">
+                        <h1 class="section-title">Explore Event Categories</h1>
+                        <p class="section-subtitle">
                             Select an event category below to view dedicated listings across India with verified INR pricing and IST schedules.
                         </p>
                     </div>
@@ -386,8 +414,15 @@
         <div id="view-venues-categories" class="route-view" role="region" aria-label="Venue Categories Landing Page">
             <!-- Venue Hero Banner (Moved here from Explore Venues) -->
             <section class="hero-section">
-                <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
-                <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
 
                 <div class="container hero-container text-center">
                     <div class="hero-badge">
@@ -407,17 +442,17 @@
                 <div class="container">
                     <div class="view-back-bar">
                         <div class="view-breadcrumbs">
-                            <a href="/">Home</a> <span>/</span> <strong>Venue Categories</strong>
+                            <a href="/">Home</a> <span>/</span> <strong>Categories</strong>
                         </div>
                         <a href="/venues/all" class="btn-show-all">
                             <span>Browse All Venues →</span>
                         </a>
                     </div>
 
-                    <div class="section-header text-center">
+                    <div class="category-page-header">
                         <div class="section-tag">Browse by Venue Type</div>
-                        <h2 class="section-title">Explore Venue Categories</h2>
-                        <p class="section-subtitle max-w-600">
+                        <h1 class="section-title">Explore Venue Categories</h1>
+                        <p class="section-subtitle">
                             Certified rental spaces categorized by architectural format, acoustic engineering, and guest capacity.
                         </p>
                     </div>
@@ -803,11 +838,9 @@
     <footer class="app-footer">
         <div class="container footer-container">
             <div class="footer-brand">
-                <div class="brand-logo footer-logo">
-                    <span class="logo-mark" aria-hidden="true">VV</span>
-                    <span class="brand-text">Venue<strong>Vista</strong></span>
-                    <span class="brand-region-badge">IN</span>
-                </div>
+                <a href="/" class="brand-logo footer-logo" aria-label="VenueVista Home">
+                    <img id="footer-brand-logo" class="brand-logo-img" src="/assets/logo-dark.png" alt="VenueVista - Events • Tickets • Venues" width="250" height="68">
+                </a>
                 <p class="footer-tagline">
                     Discover events. Find your perfect venue. Two journeys, one destination. Developed with clean architecture for College Project Demonstration.
                 </p>

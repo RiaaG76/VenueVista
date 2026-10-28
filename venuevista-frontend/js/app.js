@@ -621,8 +621,10 @@ const VenueVista = (() => {
      * Cache all interactive DOM nodes
      */
     function cacheDom() {
-        // Theme Toggle
+        // Theme Toggle & Logos
         dom.themeToggleBtn = document.getElementById('theme-toggle-btn');
+        dom.navbarBrandLogo = document.getElementById('navbar-brand-logo');
+        dom.footerBrandLogo = document.getElementById('footer-brand-logo');
 
         // Navigation elements
         dom.mainNav = document.getElementById('main-nav');
@@ -802,18 +804,33 @@ const VenueVista = (() => {
             }
         }
 
+        // Dynamically update authoritative brand logo to exact theme variant
+        const logoSrc = themeName === 'dark' ? '/assets/logo-dark.png' : '/assets/logo-light.png';
+        if (dom.navbarBrandLogo) {
+            dom.navbarBrandLogo.src = logoSrc;
+        } else {
+            const nl = document.getElementById('navbar-brand-logo');
+            if (nl) nl.src = logoSrc;
+        }
+        if (dom.footerBrandLogo) {
+            dom.footerBrandLogo.src = logoSrc;
+        } else {
+            const fl = document.getElementById('footer-brand-logo');
+            if (fl) fl.src = logoSrc;
+        }
+
         if (dom.themeToggleBtn) {
             const isDark = themeName === 'dark';
             dom.themeToggleBtn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
-            dom.themeToggleBtn.setAttribute('title', isDark ? 'Theme: Midnight Glow (Click for Aurora Light)' : 'Theme: Aurora Light (Click for Midnight Glow)');
+            dom.themeToggleBtn.setAttribute('title', isDark ? 'Theme: Midnight Aurora (Click for Aurora Light)' : 'Theme: Aurora Light (Click for Midnight Aurora)');
         }
     }
 
     function toggleTheme() {
         const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
         setTheme(nextTheme, true);
-        const name = nextTheme === 'dark' ? 'Midnight Glow' : 'Aurora Light';
-        showToast(`Theme switched to ${name}`);
+        const msg = nextTheme === 'dark' ? 'Mode switched to Midnight Glow' : 'Mode switched to Aurora View';
+        showToast(msg);
     }
 
     /**
@@ -1018,7 +1035,7 @@ const VenueVista = (() => {
         } else if (experience === 'venues') {
             // Venue Experience Navigation (Exact Order):
             // 1. Home
-            // 2. Venue Categories
+            // 2. Categories
             // 3. Explore Venues
             // 4. How Finding a Venue Works
             const isVenueCatActive = path === '/venues/categories';
@@ -1027,7 +1044,7 @@ const VenueVista = (() => {
 
             navHtml = `
                 <li><a href="/" class="nav-link" data-nav="home">Home</a></li>
-                <li><a href="/venues/categories" class="nav-link ${isVenueCatActive ? 'active' : ''}" data-nav="venue-categories">Venue Categories</a></li>
+                <li><a href="/venues/categories" class="nav-link ${isVenueCatActive ? 'active' : ''}" data-nav="venue-categories">Categories</a></li>
                 <li><a href="/venues/all" class="nav-link ${isExploreVenuesActive ? 'active' : ''}" data-nav="explore-venues">Explore Venues</a></li>
                 <li><a href="/venues#how-venues-work" class="nav-link ${isHowVenueWorksActive ? 'active' : ''}" data-nav="how-venues-work">How Finding a Venue Works</a></li>
             `;
@@ -1042,8 +1059,8 @@ const VenueVista = (() => {
 
             navHtml = `
                 <li><a href="/" class="nav-link ${isHomeActive ? 'active' : ''}" data-nav="home">Home</a></li>
-                <li><a href="/events/categories" class="nav-link" data-nav="events">Explore Events</a></li>
-                <li><a href="/venues/categories" class="nav-link" data-nav="venues">Find Venues</a></li>
+                <li><a href="/events" class="nav-link" data-nav="events">Explore Events</a></li>
+                <li><a href="/venues" class="nav-link" data-nav="venues">Find Venues</a></li>
                 <li><a href="/#how-it-works" class="nav-link ${isHowItWorksActive ? 'active' : ''}" data-nav="how-it-works">How It Works</a></li>
             `;
         }
@@ -1614,7 +1631,7 @@ const VenueVista = (() => {
         if (state.toastTimeout) clearTimeout(state.toastTimeout);
         state.toastTimeout = setTimeout(() => {
             dom.toast.classList.remove('show');
-        }, 3600);
+        }, 2400);
     }
 
     function escapeHtml(str) {
@@ -1851,6 +1868,11 @@ const VenueVista = (() => {
         inrFormatter
     };
 })();
+
+// Expose to window for external scripts and router verification
+if (typeof window !== 'undefined') {
+    window.VenueVista = VenueVista;
+}
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
