@@ -14,7 +14,10 @@ const VenueVista = (() => {
         version: '0.2.0',
         locale: 'en-IN',
         currency: 'INR',
-        themeStorageKey: 'vv_theme'
+        themeStorageKey: 'vv_theme',
+        apiBaseUrl: (typeof window !== 'undefined' && window.VENUEVISTA_API_URL) ? window.VENUEVISTA_API_URL : 'http://localhost:8081',
+        tokenStorageKey: 'vv_token',
+        userStorageKey: 'vv_user'
     };
 
     // Indian Rupee currency formatter
@@ -23,6 +26,78 @@ const VenueVista = (() => {
         currency: 'INR',
         maximumFractionDigits: 0
     });
+
+    /**
+     * Centralized Frontend API Client for VenueVista Spring Boot REST MVP
+     * Handles JSON envelopes, JWT bearer authorization, and error formatting consistently.
+     */
+    const apiClient = {
+        async request(endpoint, options = {}) {
+            const url = `${CONFIG.apiBaseUrl}${endpoint}`;
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...options.headers
+            };
+
+            const token = localStorage.getItem(CONFIG.tokenStorageKey);
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers
+                });
+
+                const text = await response.text();
+                let json = null;
+                if (text) {
+                    try {
+                        json = JSON.parse(text);
+                    } catch (e) {
+                        json = { message: text };
+                    }
+                }
+
+                if (!response.ok) {
+                    const message = (json && json.message) || `HTTP Error ${response.status}: ${response.statusText}`;
+                    const error = new Error(message);
+                    error.status = response.status;
+                    error.data = json;
+                    throw error;
+                }
+
+                return json;
+            } catch (err) {
+                if (err.name === 'TypeError' && err.message && err.message.toLowerCase().includes('fetch')) {
+                    const connErr = new Error(`Cannot connect to VenueVista backend server at ${CONFIG.apiBaseUrl}. Ensure the Spring Boot service is active.`);
+                    connErr.status = 0;
+                    throw connErr;
+                }
+                throw err;
+            }
+        },
+
+        get(endpoint, params = {}) {
+            const searchParams = new URLSearchParams();
+            Object.entries(params).forEach(([k, v]) => {
+                if (v !== undefined && v !== null && v !== '') {
+                    searchParams.append(k, v);
+                }
+            });
+            const qs = searchParams.toString();
+            return this.request(qs ? `${endpoint}?${qs}` : endpoint, { method: 'GET' });
+        },
+
+        post(endpoint, body = {}) {
+            return this.request(endpoint, {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+        }
+    };
 
     // Six Event Categories with dedicated route slugs and descriptions (using local SVG illustrations)
     const EVENT_CATEGORIES = [
@@ -611,7 +686,17 @@ const VenueVista = (() => {
         activeVenueCity: '',
         venueSearchQuery: '',
         selectedEvent: null,
-        selectedVenue: null
+        selectedVenue: null,
+        // Backend integration state
+        currentUser: null,
+        eventCategories: [],
+        venueCategories: [],
+        venueCities: [],
+        eventsData: [],
+        venuesData: [],
+        eventsLoading: false,
+        venuesLoading: false,
+        authMode: 'login'
     };
 
     // Cached DOM elements
@@ -632,6 +717,7 @@ const VenueVista = (() => {
         dom.mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         dom.headerNavWrapper = document.getElementById('header-nav-wrapper');
         dom.brandLogoLink = document.getElementById('brand-logo-link');
+        dom.headerActions = document.querySelector('.header-actions');
         dom.btnLogin = document.getElementById('btn-login');
         dom.btnRegister = document.getElementById('btn-register');
 
@@ -741,6 +827,17 @@ const VenueVista = (() => {
         dom.modalEventOrganizer = document.getElementById('modal-event-organizer');
         dom.modalEventDescription = document.getElementById('modal-event-description');
         dom.btnModalBook = document.getElementById('btn-modal-book');
+        dom.eventBookingSection = document.getElementById('event-booking-section');
+        dom.eventBookingForm = document.getElementById('event-booking-form');
+        dom.eventBookingConfirmation = document.getElementById('event-booking-confirmation');
+        dom.bookingTicketTier = document.getElementById('booking-ticket-tier');
+        dom.bookingQuantity = document.getElementById('booking-quantity');
+        dom.bookingTotalDisplay = document.getElementById('booking-total-display');
+        dom.bookingName = document.getElementById('booking-name');
+        dom.bookingEmail = document.getElementById('booking-email');
+        dom.bookingPhone = document.getElementById('booking-phone');
+        dom.btnBookingAnother = document.getElementById('btn-booking-another');
+        dom.btnBookingDone = document.getElementById('btn-booking-done');
 
         // Venue Rental Modal
         dom.venueModal = document.getElementById('venue-modal-backdrop');
@@ -754,11 +851,20 @@ const VenueVista = (() => {
         dom.venueModalPrice = document.getElementById('venue-modal-price');
         dom.venueInquiryForm = document.getElementById('venue-inquiry-form');
         dom.btnSubmitInquiry = document.getElementById('btn-submit-inquiry');
+        dom.venueInquiryConfirmation = document.getElementById('venue-inquiry-confirmation');
+        dom.btnInquiryAnother = document.getElementById('btn-inquiry-another');
+        dom.btnInquiryDone = document.getElementById('btn-inquiry-done');
 
         // Auth Modal
         dom.authModal = document.getElementById('auth-modal-backdrop');
         dom.authModalCloseBtn = document.getElementById('auth-modal-close-btn');
         dom.authModalOkBtn = document.getElementById('auth-modal-ok-btn');
+        dom.authTabLogin = document.getElementById('auth-tab-login');
+        dom.authTabRegister = document.getElementById('auth-tab-register');
+        dom.formAuthLogin = document.getElementById('form-auth-login');
+        dom.formAuthRegister = document.getElementById('form-auth-register');
+        dom.authErrorAlert = document.getElementById('auth-error-alert');
+        dom.btnAuthQuickFill = document.getElementById('btn-auth-quick-fill');
 
         // Toast
         dom.toast = document.getElementById('toast');
@@ -890,9 +996,10 @@ const VenueVista = (() => {
             state.currentRoute = 'events-all';
             documentTitle = 'VenueVista | All Upcoming Events in India';
 
+            const eventCats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
             const catParam = queryParams.get('category');
             if (catParam) {
-                const matched = EVENT_CATEGORIES.find(c => c.key.toLowerCase() === catParam.toLowerCase() || c.slug === catParam.toLowerCase());
+                const matched = eventCats.find(c => c.key.toLowerCase() === catParam.toLowerCase() || c.slug === catParam.toLowerCase());
                 renderExploreEventsListing(matched ? matched.slug : 'all');
             } else {
                 renderExploreEventsListing('all');
@@ -900,8 +1007,9 @@ const VenueVista = (() => {
         }
         // 4. Individual Event Category Pages: /events/:categorySlug
         else if (cleanPath.startsWith('/events/')) {
+            const eventCats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
             const catSlug = cleanPath.replace('/events/', '').toLowerCase();
-            const matchedCat = EVENT_CATEGORIES.find(c => c.slug === catSlug);
+            const matchedCat = eventCats.find(c => c.slug === catSlug);
 
             if (matchedCat) {
                 activeViewId = 'view-events';
@@ -931,13 +1039,14 @@ const VenueVista = (() => {
             state.currentRoute = 'venues-all';
             documentTitle = 'VenueVista | All Demonstration Venues in India';
 
+            const venueCats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
             const venCatParam = queryParams.get('category');
             const venCityParam = queryParams.get('city');
             if (venCityParam) {
                 state.activeVenueCity = venCityParam;
             }
             if (venCatParam) {
-                const matchedV = VENUE_CATEGORIES.find(vc => vc.key.toLowerCase() === venCatParam.toLowerCase() || vc.slug === venCatParam.toLowerCase());
+                const matchedV = venueCats.find(vc => vc.key.toLowerCase() === venCatParam.toLowerCase() || vc.slug === venCatParam.toLowerCase());
                 renderExploreVenuesListing(matchedV ? matchedV.slug : 'all');
             } else {
                 renderExploreVenuesListing('all');
@@ -945,8 +1054,9 @@ const VenueVista = (() => {
         }
         // 7. Individual Venue Category Pages: /venues/:venueCategorySlug
         else if (cleanPath.startsWith('/venues/')) {
+            const venueCats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
             const venueCatSlug = cleanPath.replace('/venues/', '').toLowerCase();
-            const matchedVenueCat = VENUE_CATEGORIES.find(vc => vc.slug === venueCatSlug);
+            const matchedVenueCat = venueCats.find(vc => vc.slug === venueCatSlug);
 
             if (matchedVenueCat) {
                 activeViewId = 'view-venues';
@@ -1075,16 +1185,18 @@ const VenueVista = (() => {
     // Full category cards directory on /events/categories
     function renderEventsFullCategories() {
         if (!dom.eventsFullCategoriesGrid) return;
-        dom.eventsFullCategoriesGrid.innerHTML = EVENT_CATEGORIES.map(cat => createCategoryCardHtml(cat)).join('');
+        const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
+        dom.eventsFullCategoriesGrid.innerHTML = cats.map(cat => createCategoryCardHtml(cat)).join('');
     }
 
     // Explore Events Listing on /events, /events/all, /events/:categorySlug
     function renderExploreEventsListing(slug = 'all') {
         const isAll = !slug || slug === 'all';
-        const matchedCat = isAll ? null : EVENT_CATEGORIES.find(c => c.slug === slug);
+        const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
+        const matchedCat = isAll ? null : cats.find(c => c.slug === slug);
 
         // Update active category in state
-        state.activeEventCategory = matchedCat ? matchedCat.key : '';
+        state.activeEventCategory = matchedCat ? (matchedCat.key || matchedCat.title) : '';
 
         // Update Compact Navigation Row Active Pill
         if (dom.eventsCompactNav) {
@@ -1110,7 +1222,7 @@ const VenueVista = (() => {
             } else {
                 if (dom.eventsHeadingTag) dom.eventsHeadingTag.textContent = 'Complete Catalog';
                 dom.eventsHeadingTitle.textContent = 'All Upcoming Events in India';
-                dom.eventsHeadingSubtitle.textContent = 'Browse all available demonstration events. Search by title, venue, or metro city, and filter by category.';
+                dom.eventsHeadingSubtitle.textContent = 'Browse live curated demonstration events from the Spring Boot API. Search by title, venue, or metro city, and filter by category.';
             }
         }
 
@@ -1122,23 +1234,56 @@ const VenueVista = (() => {
         applyEventFilters();
     }
 
-    // Complete catalog of all events with search and filters
-    function applyEventFilters() {
-        const query = (state.eventSearchQuery || '').toLowerCase();
-        const selectedCat = (state.activeEventCategory || '').toLowerCase();
+    // Complete catalog of all events with backend search and filters
+    async function applyEventFilters() {
+        const grid = dom.eventsGrid || dom.allEventsGrid;
+        const emptyState = dom.eventsEmptyState || dom.allEventsEmptyState;
+        if (!grid) return;
 
-        const filtered = SAMPLE_EVENTS.filter(event => {
-            const matchesCategory = !selectedCat || event.category.toLowerCase() === selectedCat;
-            const matchesQuery = !query ||
-                event.title.toLowerCase().includes(query) ||
-                event.venue.toLowerCase().includes(query) ||
-                event.city.toLowerCase().includes(query) ||
-                event.organizer.toLowerCase().includes(query);
-            return matchesCategory && matchesQuery;
-        });
+        if (emptyState) emptyState.style.display = 'none';
+        grid.style.display = 'grid';
+        grid.innerHTML = `
+            <div class="api-loading-state">
+                <div class="api-spinner"></div>
+                <p>Loading live events from VenueVista backend...</p>
+            </div>
+        `;
 
-        renderEventsGrid(filtered);
-        syncEventFilterControls(filtered.length);
+        try {
+            state.eventsLoading = true;
+            const queryParams = {};
+            if (state.activeEventCategory) {
+                queryParams.category = state.activeEventCategory;
+            }
+            if (state.eventSearchQuery) {
+                queryParams.query = state.eventSearchQuery;
+            }
+
+            const res = await apiClient.get('/api/events', queryParams);
+            const events = (res && res.data) ? res.data : [];
+            state.eventsData = events;
+            state.eventsLoading = false;
+
+            renderEventsGrid(events);
+            syncEventFilterControls(events.length);
+        } catch (err) {
+            state.eventsLoading = false;
+            console.error('[VenueVista] Failed to fetch events from backend:', err);
+            grid.style.display = 'grid';
+            if (emptyState) emptyState.style.display = 'none';
+            grid.innerHTML = `
+                <div class="api-error-state">
+                    <span class="error-icon" aria-hidden="true">⚠️</span>
+                    <h3>Unable to Load Events</h3>
+                    <p>${escapeHtml(err.message || 'Could not connect to backend server at ' + CONFIG.apiBaseUrl)}</p>
+                    <button class="btn btn-primary btn-sm" id="btn-events-retry" type="button">Retry Connection</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-events-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => applyEventFilters());
+            }
+        }
     }
 
     function renderEventsGrid(events) {
@@ -1181,11 +1326,10 @@ const VenueVista = (() => {
 
         const countEl = dom.eventsResultsCount || dom.allEventsResultsCount;
         if (countEl) {
-            const total = SAMPLE_EVENTS.length;
             if (state.eventSearchQuery || state.activeEventCategory) {
-                countEl.textContent = `Found ${matchCount} of ${total} events`;
+                countEl.textContent = `Found ${matchCount} event${matchCount === 1 ? '' : 's'}`;
             } else {
-                countEl.textContent = `Showing all ${total} events`;
+                countEl.textContent = `Showing all ${matchCount} events`;
             }
         }
 
@@ -1203,16 +1347,18 @@ const VenueVista = (() => {
     // Full category cards directory on /venues/categories
     function renderVenuesFullCategories() {
         if (!dom.venuesFullCategoriesGrid) return;
-        dom.venuesFullCategoriesGrid.innerHTML = VENUE_CATEGORIES.map(vc => createVenueCategoryCardHtml(vc)).join('');
+        const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
+        dom.venuesFullCategoriesGrid.innerHTML = cats.map(vc => createVenueCategoryCardHtml(vc)).join('');
     }
 
     // Explore Venues Listing on /venues, /venues/all, /venues/:venueCategorySlug
     function renderExploreVenuesListing(slug = 'all') {
         const isAll = !slug || slug === 'all';
-        const matchedVenueCat = isAll ? null : VENUE_CATEGORIES.find(vc => vc.slug === slug);
+        const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
+        const matchedVenueCat = isAll ? null : cats.find(vc => vc.slug === slug);
 
         // Update active venue category in state
-        state.activeVenueCategory = matchedVenueCat ? matchedVenueCat.key : '';
+        state.activeVenueCategory = matchedVenueCat ? (matchedVenueCat.key || matchedVenueCat.title) : '';
 
         // Update Compact Navigation Row Active Pill
         if (dom.venuesCompactNav) {
@@ -1250,25 +1396,59 @@ const VenueVista = (() => {
         applyVenueFilters();
     }
 
-    // Complete catalog of all venues with search and filters
-    function applyVenueFilters() {
-        const query = (state.venueSearchQuery || '').toLowerCase();
-        const selectedCat = (state.activeVenueCategory || '').toLowerCase();
-        const selectedCity = (state.activeVenueCity || '').toLowerCase();
+    // Complete catalog of all venues with backend search and filters
+    async function applyVenueFilters() {
+        const grid = dom.venuesGrid || dom.allVenuesGrid;
+        const emptyState = dom.venuesEmptyState || dom.allVenuesEmptyState;
+        if (!grid) return;
 
-        const filtered = SAMPLE_VENUES.filter(venue => {
-            const matchesCategory = !selectedCat || venue.category.toLowerCase() === selectedCat;
-            const matchesCity = !selectedCity || venue.city.toLowerCase() === selectedCity;
-            const matchesQuery = !query ||
-                venue.name.toLowerCase().includes(query) ||
-                venue.location.toLowerCase().includes(query) ||
-                venue.city.toLowerCase().includes(query) ||
-                venue.suitableFor.toLowerCase().includes(query);
-            return matchesCategory && matchesCity && matchesQuery;
-        });
+        if (emptyState) emptyState.style.display = 'none';
+        grid.style.display = 'grid';
+        grid.innerHTML = `
+            <div class="api-loading-state">
+                <div class="api-spinner"></div>
+                <p>Loading certified demonstration venues from backend...</p>
+            </div>
+        `;
 
-        renderVenuesGrid(filtered);
-        syncVenueFilterControls(filtered.length);
+        try {
+            state.venuesLoading = true;
+            const queryParams = {};
+            if (state.activeVenueCategory) {
+                queryParams.category = state.activeVenueCategory;
+            }
+            if (state.activeVenueCity) {
+                queryParams.city = state.activeVenueCity;
+            }
+            if (state.venueSearchQuery) {
+                queryParams.query = state.venueSearchQuery;
+            }
+
+            const res = await apiClient.get('/api/venues', queryParams);
+            const venues = (res && res.data) ? res.data : [];
+            state.venuesData = venues;
+            state.venuesLoading = false;
+
+            renderVenuesGrid(venues);
+            syncVenueFilterControls(venues.length);
+        } catch (err) {
+            state.venuesLoading = false;
+            console.error('[VenueVista] Failed to fetch venues from backend:', err);
+            grid.style.display = 'grid';
+            if (emptyState) emptyState.style.display = 'none';
+            grid.innerHTML = `
+                <div class="api-error-state">
+                    <span class="error-icon" aria-hidden="true">⚠️</span>
+                    <h3>Unable to Load Venues</h3>
+                    <p>${escapeHtml(err.message || 'Could not connect to backend server at ' + CONFIG.apiBaseUrl)}</p>
+                    <button class="btn btn-primary btn-sm" id="btn-venues-retry" type="button">Retry Connection</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-venues-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => applyVenueFilters());
+            }
+        }
     }
 
     function renderVenuesGrid(venues) {
@@ -1316,11 +1496,10 @@ const VenueVista = (() => {
 
         const countEl = dom.venuesResultsCount || dom.allVenuesResultsCount;
         if (countEl) {
-            const total = SAMPLE_VENUES.length;
             if (state.activeVenueCategory || state.activeVenueCity || state.venueSearchQuery) {
-                countEl.textContent = `Found ${matchCount} of ${total} venues`;
+                countEl.textContent = `Found ${matchCount} venue${matchCount === 1 ? '' : 's'}`;
             } else {
-                countEl.textContent = `Showing all ${total} venues`;
+                countEl.textContent = `Showing all ${matchCount} venues`;
             }
         }
 
@@ -1530,10 +1709,28 @@ const VenueVista = (() => {
     }
 
     /**
-     * Modal Dialog Handlers
+     * Modal Dialog Handlers & Live Backend Actions
      */
-    function openEventModal(eventId) {
-        const event = SAMPLE_EVENTS.find(e => e.id === eventId);
+
+    function updateBookingTotal() {
+        if (!state.selectedEvent || !dom.bookingTotalDisplay) return;
+        const basePrice = Number(state.selectedEvent.startingPrice) || 0;
+        const tier = dom.bookingTicketTier ? dom.bookingTicketTier.value : 'Standard Pass';
+        let unitPrice = basePrice;
+        if (tier === 'VIP Access Pass') {
+            unitPrice = Math.round(basePrice * 1.5);
+        } else if (tier === 'Early Bird Pass') {
+            unitPrice = Math.round(basePrice * 0.85);
+        }
+
+        const qty = dom.bookingQuantity ? (parseInt(dom.bookingQuantity.value, 10) || 1) : 1;
+        const total = unitPrice * qty;
+        dom.bookingTotalDisplay.textContent = `${inrFormatter.format(total)} (${qty} × ${inrFormatter.format(unitPrice)})`;
+    }
+
+    async function openEventModal(eventId) {
+        let event = (state.eventsData && state.eventsData.find(e => e.id === eventId || e.code === eventId)) ||
+                    SAMPLE_EVENTS.find(e => e.id === eventId || e.code === eventId);
         if (!event || !dom.eventModal) return;
 
         state.selectedEvent = event;
@@ -1542,8 +1739,8 @@ const VenueVista = (() => {
             dom.modalEventImage.alt = event.title;
         }
         if (dom.modalEventCategory) {
-            dom.modalEventCategory.textContent = `${event.categoryIcon} ${event.category}`;
-            dom.modalEventCategory.className = `modal-category-badge ${event.categoryBadgeClass}`;
+            dom.modalEventCategory.textContent = `${event.categoryIcon || '🎟️'} ${event.category}`;
+            dom.modalEventCategory.className = `modal-category-badge ${event.categoryBadgeClass || 'badge-music'}`;
         }
         if (dom.modalEventTitle) dom.modalEventTitle.textContent = event.title;
         if (dom.modalEventDate) dom.modalEventDate.textContent = event.dateTime;
@@ -1552,21 +1749,129 @@ const VenueVista = (() => {
         if (dom.modalEventOrganizer) dom.modalEventOrganizer.textContent = event.organizer;
         if (dom.modalEventDescription) dom.modalEventDescription.textContent = event.description;
 
-        dom.eventModal.classList.add('show');
+        // Reset booking form and confirmation state
+        if (dom.eventBookingSection) dom.eventBookingSection.style.display = 'block';
+        if (dom.eventBookingConfirmation) dom.eventBookingConfirmation.style.display = 'none';
+
+        // Pre-fill user details if logged in
+        if (dom.bookingName && !dom.bookingName.value) {
+            dom.bookingName.value = state.currentUser ? state.currentUser.name : '';
+        }
+        if (dom.bookingEmail && !dom.bookingEmail.value) {
+            dom.bookingEmail.value = state.currentUser ? state.currentUser.email : '';
+        }
+        if (dom.bookingPhone && !dom.bookingPhone.value && state.currentUser && state.currentUser.phone) {
+            dom.bookingPhone.value = state.currentUser.phone;
+        }
+
+        updateBookingTotal();
+
+        dom.eventModal.classList.add('is-open', 'show');
         dom.eventModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
+
+        // Fetch fresh details from backend to ensure available seats and metadata are live
+        try {
+            const fresh = await apiClient.get(`/api/events/${encodeURIComponent(eventId)}`);
+            if (fresh && fresh.data) {
+                state.selectedEvent = { ...event, ...fresh.data };
+                event = state.selectedEvent;
+                if (dom.modalEventPrice) dom.modalEventPrice.textContent = `From ${inrFormatter.format(event.startingPrice)}`;
+                updateBookingTotal();
+            }
+        } catch (e) {
+            console.debug('[VenueVista] Using cached event for modal:', eventId);
+        }
     }
 
     function closeEventModal() {
         if (!dom.eventModal) return;
-        dom.eventModal.classList.remove('show');
+        dom.eventModal.classList.remove('is-open', 'show');
         dom.eventModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
         state.selectedEvent = null;
     }
 
-    function openVenueModal(venueId) {
-        const venue = SAMPLE_VENUES.find(v => v.id === venueId);
+    async function handleEventBookingSubmit(e) {
+        if (e) e.preventDefault();
+        if (!state.selectedEvent) {
+            showToast('Please select an event before booking.');
+            return;
+        }
+
+        const quantity = dom.bookingQuantity ? parseInt(dom.bookingQuantity.value, 10) : 1;
+        const ticketTier = dom.bookingTicketTier ? dom.bookingTicketTier.value : 'Standard Pass';
+        const customerName = dom.bookingName ? dom.bookingName.value.trim() : '';
+        const customerEmail = dom.bookingEmail ? dom.bookingEmail.value.trim() : '';
+        const customerPhone = dom.bookingPhone ? dom.bookingPhone.value.trim() : '';
+
+        if (!customerName || !customerEmail) {
+            showToast('Please enter attendee name and email.');
+            return;
+        }
+
+        const submitBtn = dom.btnModalBook;
+        const originalText = submitBtn ? submitBtn.innerHTML : 'Confirm Ticket Pass';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Reserving Pass...</span>';
+        }
+
+        try {
+            const payload = {
+                eventCode: state.selectedEvent.id || state.selectedEvent.code,
+                quantity: quantity,
+                ticketTier: ticketTier,
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerPhone: customerPhone || '+91 98765 43210',
+                notes: 'College MVP Ticket Reservation'
+            };
+
+            const res = await apiClient.post('/api/bookings', payload);
+            const booking = (res && res.data) ? res.data : null;
+
+            if (!booking) {
+                throw new Error('Booking response was empty.');
+            }
+
+            // Populate confirmation card
+            const codeEl = document.getElementById('booking-confirmed-code');
+            const eventEl = document.getElementById('booking-confirmed-event');
+            const qtyEl = document.getElementById('booking-confirmed-qty');
+            const amountEl = document.getElementById('booking-confirmed-amount');
+            const attendeeEl = document.getElementById('booking-confirmed-attendee');
+
+            if (codeEl) codeEl.textContent = booking.bookingCode;
+            if (eventEl) eventEl.textContent = state.selectedEvent.title;
+            if (qtyEl) qtyEl.textContent = `${booking.quantity} Ticket${booking.quantity > 1 ? 's' : ''} (${booking.ticketTier || ticketTier})`;
+            if (amountEl) amountEl.textContent = inrFormatter.format(booking.totalAmount);
+            if (attendeeEl) attendeeEl.textContent = `${booking.customerName} (${booking.customerEmail})`;
+
+            // Switch view inside modal
+            if (dom.eventBookingSection) dom.eventBookingSection.style.display = 'none';
+            if (dom.eventBookingConfirmation) dom.eventBookingConfirmation.style.display = 'block';
+
+            showToast(`✓ Ticket Confirmed! Booking code: ${booking.bookingCode}`);
+
+            // If events grid is rendered, reload events in background so seat counts update
+            if (state.currentRoute === 'events-all' || state.currentRoute === 'event-category') {
+                applyEventFilters();
+            }
+        } catch (err) {
+            console.error('[VenueVista] Booking submission failed:', err);
+            showToast(`Booking error: ${err.message || 'Could not complete reservation'}`);
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+    }
+
+    async function openVenueModal(venueId) {
+        let venue = (state.venuesData && state.venuesData.find(v => v.id === venueId || v.code === venueId)) ||
+                    SAMPLE_VENUES.find(v => v.id === venueId || v.code === venueId);
         if (!venue || !dom.venueModal) return;
 
         state.selectedVenue = venue;
@@ -1583,45 +1888,412 @@ const VenueVista = (() => {
         if (dom.venueModalCapacity) dom.venueModalCapacity.textContent = venue.capacity;
         if (dom.venueModalPrice) dom.venueModalPrice.textContent = `${inrFormatter.format(venue.baseRental)} / day (Indicative Base)`;
 
-        dom.venueModal.classList.add('show');
+        // Reset inquiry form and confirmation state
+        if (dom.venueInquiryForm) dom.venueInquiryForm.style.display = 'flex';
+        if (dom.venueInquiryConfirmation) dom.venueInquiryConfirmation.style.display = 'none';
+
+        // Pre-fill user details if logged in
+        const nameInput = document.getElementById('inquiry-name');
+        const contactInput = document.getElementById('inquiry-contact');
+        if (nameInput && !nameInput.value && state.currentUser) {
+            nameInput.value = state.currentUser.name;
+        }
+        if (contactInput && !contactInput.value && state.currentUser) {
+            contactInput.value = state.currentUser.email;
+        }
+
+        dom.venueModal.classList.add('is-open', 'show');
         dom.venueModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
+
+        // Fetch fresh details from backend
+        try {
+            const fresh = await apiClient.get(`/api/venues/${encodeURIComponent(venueId)}`);
+            if (fresh && fresh.data) {
+                state.selectedVenue = { ...venue, ...fresh.data };
+                venue = state.selectedVenue;
+                if (dom.venueModalPrice) dom.venueModalPrice.textContent = `${inrFormatter.format(venue.baseRental)} / day (Indicative Base)`;
+            }
+        } catch (e) {
+            console.debug('[VenueVista] Using cached venue for modal:', venueId);
+        }
     }
 
     function closeVenueModal() {
         if (!dom.venueModal) return;
-        dom.venueModal.classList.remove('show');
+        dom.venueModal.classList.remove('is-open', 'show');
         dom.venueModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
         state.selectedVenue = null;
     }
 
-    function openAuthModal(title = 'Authentication Demo') {
+    async function handleVenueInquirySubmit(e) {
+        if (e) e.preventDefault();
+        if (!state.selectedVenue) {
+            showToast('Please select a venue before submitting an inquiry.');
+            return;
+        }
+
+        const dateInput = document.getElementById('inquiry-date');
+        const eventTypeInput = document.getElementById('inquiry-event-type');
+        const attendanceInput = document.getElementById('inquiry-attendance');
+        const durationInput = document.getElementById('inquiry-duration');
+        const nameInput = document.getElementById('inquiry-name');
+        const contactInput = document.getElementById('inquiry-contact');
+
+        const contactName = nameInput ? nameInput.value.trim() : '';
+        const contactPhoneEmail = contactInput ? contactInput.value.trim() : '';
+        const requestedDate = dateInput ? dateInput.value : '2026-11-20';
+        const eventType = eventTypeInput ? eventTypeInput.value : 'Conference';
+        const expectedAttendance = attendanceInput ? attendanceInput.value : '500-1500';
+        const rentalDuration = durationInput ? durationInput.value : 'Full Day (10 Hours)';
+
+        if (!contactName || !contactPhoneEmail || !requestedDate) {
+            showToast('Please fill in required contact and date fields.');
+            return;
+        }
+
+        const submitBtn = dom.btnSubmitInquiry;
+        const originalText = submitBtn ? submitBtn.innerHTML : 'Submit Rental Inquiry';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Dispatching Inquiry...</span>';
+        }
+
+        try {
+            const payload = {
+                venueCode: state.selectedVenue.id || state.selectedVenue.code,
+                eventType: eventType,
+                requestedDate: requestedDate,
+                expectedAttendance: expectedAttendance,
+                rentalDuration: rentalDuration,
+                contactName: contactName,
+                contactPhoneEmail: contactPhoneEmail,
+                notes: 'College MVP Venue Rental Inquiry'
+            };
+
+            const res = await apiClient.post('/api/venues/inquiries', payload);
+            const inquiry = (res && res.data) ? res.data : null;
+
+            if (!inquiry) {
+                throw new Error('Inquiry response was empty.');
+            }
+
+            // Populate confirmation card
+            const codeEl = document.getElementById('inquiry-confirmed-code');
+            const venueEl = document.getElementById('inquiry-confirmed-venue');
+            const typeEl = document.getElementById('inquiry-confirmed-type');
+            const dateEl = document.getElementById('inquiry-confirmed-date');
+            const durationEl = document.getElementById('inquiry-confirmed-duration');
+            const quoteEl = document.getElementById('inquiry-confirmed-quote');
+
+            if (codeEl) codeEl.textContent = inquiry.inquiryCode;
+            if (venueEl) venueEl.textContent = inquiry.venueName || state.selectedVenue.name;
+            if (typeEl) typeEl.textContent = inquiry.eventType;
+            if (dateEl) dateEl.textContent = inquiry.requestedDate;
+            if (durationEl) durationEl.textContent = inquiry.rentalDuration;
+            if (quoteEl) quoteEl.textContent = inrFormatter.format(inquiry.estimatedQuote);
+
+            // Switch view inside modal
+            if (dom.venueInquiryForm) dom.venueInquiryForm.style.display = 'none';
+            if (dom.venueInquiryConfirmation) dom.venueInquiryConfirmation.style.display = 'block';
+
+            showToast(`✓ Inquiry Dispatched! Reference: ${inquiry.inquiryCode}`);
+        } catch (err) {
+            console.error('[VenueVista] Venue inquiry submission failed:', err);
+            showToast(`Inquiry error: ${err.message || 'Could not dispatch inquiry'}`);
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+    }
+
+    /**
+     * User Authentication UI & Session Management
+     */
+
+    function switchAuthTab(tabName) {
+        state.authMode = tabName;
+        if (dom.authErrorAlert) {
+            dom.authErrorAlert.style.display = 'none';
+            dom.authErrorAlert.textContent = '';
+        }
+
+        if (tabName === 'register') {
+            if (dom.authTabRegister) {
+                dom.authTabRegister.classList.add('active');
+                dom.authTabRegister.setAttribute('aria-selected', 'true');
+            }
+            if (dom.authTabLogin) {
+                dom.authTabLogin.classList.remove('active');
+                dom.authTabLogin.setAttribute('aria-selected', 'false');
+            }
+            if (dom.formAuthRegister) dom.formAuthRegister.style.display = 'block';
+            if (dom.formAuthLogin) dom.formAuthLogin.style.display = 'none';
+        } else {
+            if (dom.authTabLogin) {
+                dom.authTabLogin.classList.add('active');
+                dom.authTabLogin.setAttribute('aria-selected', 'true');
+            }
+            if (dom.authTabRegister) {
+                dom.authTabRegister.classList.remove('active');
+                dom.authTabRegister.setAttribute('aria-selected', 'false');
+            }
+            if (dom.formAuthLogin) dom.formAuthLogin.style.display = 'block';
+            if (dom.formAuthRegister) dom.formAuthRegister.style.display = 'none';
+        }
+    }
+
+    function openAuthModal(initialTab = 'login') {
         if (!dom.authModal) return;
-        const titleEl = document.getElementById('auth-modal-title');
-        if (titleEl) titleEl.textContent = title;
-        dom.authModal.classList.add('show');
+        switchAuthTab(initialTab);
+        dom.authModal.classList.add('is-open', 'show');
         dom.authModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
     }
 
     function closeAuthModal() {
         if (!dom.authModal) return;
-        dom.authModal.classList.remove('show');
+        dom.authModal.classList.remove('is-open', 'show');
         dom.authModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        if (dom.authErrorAlert) dom.authErrorAlert.style.display = 'none';
     }
 
-    function handleVenueInquirySubmit() {
-        const venueName = state.selectedVenue ? state.selectedVenue.name : 'Selected Venue';
-        const dateInput = document.getElementById('inquiry-date');
-        const eventTypeInput = document.getElementById('inquiry-event-type');
+    async function handleLoginSubmit(e) {
+        if (e) e.preventDefault();
+        const emailInput = document.getElementById('login-email');
+        const passInput = document.getElementById('login-password');
+        const email = emailInput ? emailInput.value.trim() : '';
+        const password = passInput ? passInput.value : '';
 
-        const dateVal = dateInput ? dateInput.value : '2026-11-20';
-        const typeVal = eventTypeInput ? eventTypeInput.value : 'Event';
+        if (!email || !password) {
+            showAuthError('Please enter both email and password.');
+            return;
+        }
 
-        closeVenueModal();
-        showToast(`Inquiry Received! Space managers for ${venueName} will contact you for ${typeVal} on ${dateVal}.`);
+        const submitBtn = document.getElementById('btn-submit-login');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Signing In...</span>';
+        }
+
+        try {
+            const res = await apiClient.post('/api/auth/login', { email, password });
+            if (res && res.data && res.data.token) {
+                try {
+                    localStorage.setItem(CONFIG.tokenStorageKey, res.data.token);
+                    localStorage.setItem(CONFIG.userStorageKey, JSON.stringify(res.data.user));
+                } catch (storeErr) {
+                    console.warn('[VenueVista] Could not store JWT in localStorage:', storeErr);
+                }
+
+                state.currentUser = res.data.user;
+                updateAuthNav();
+                closeAuthModal();
+                showToast(`Welcome back, ${res.data.user.name}!`);
+
+                // Pre-fill modal contact fields if open
+                if (dom.bookingName) dom.bookingName.value = res.data.user.name;
+                if (dom.bookingEmail) dom.bookingEmail.value = res.data.user.email;
+            } else {
+                throw new Error('Unexpected authentication response format.');
+            }
+        } catch (err) {
+            console.error('[VenueVista] Login failed:', err);
+            showAuthError(err.message || 'Invalid email or password.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Sign In</span>';
+            }
+        }
+    }
+
+    async function handleRegisterSubmit(e) {
+        if (e) e.preventDefault();
+        const nameInput = document.getElementById('reg-name');
+        const emailInput = document.getElementById('reg-email');
+        const phoneInput = document.getElementById('reg-phone');
+        const passInput = document.getElementById('reg-password');
+
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const phone = phoneInput ? phoneInput.value.trim() : '';
+        const password = passInput ? passInput.value : '';
+
+        if (!name || !email || !password) {
+            showAuthError('Please fill in name, email, and a password (minimum 6 characters).');
+            return;
+        }
+
+        const submitBtn = document.getElementById('btn-submit-register');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Creating Account...</span>';
+        }
+
+        try {
+            await apiClient.post('/api/auth/register', { name, email, phone, password });
+
+            // Automatically authenticate after registration
+            const loginRes = await apiClient.post('/api/auth/login', { email, password });
+            if (loginRes && loginRes.data && loginRes.data.token) {
+                try {
+                    localStorage.setItem(CONFIG.tokenStorageKey, loginRes.data.token);
+                    localStorage.setItem(CONFIG.userStorageKey, JSON.stringify(loginRes.data.user));
+                } catch (storeErr) {
+                    console.warn('[VenueVista] Could not store JWT:', storeErr);
+                }
+
+                state.currentUser = loginRes.data.user;
+                updateAuthNav();
+                closeAuthModal();
+                showToast(`✓ Account created! Welcome, ${loginRes.data.user.name}!`);
+            } else {
+                switchAuthTab('login');
+                showToast('Registration successful! Please sign in with your credentials.');
+            }
+        } catch (err) {
+            console.error('[VenueVista] Registration failed:', err);
+            showAuthError(err.message || 'Registration failed. Email may already be in use.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Create Account</span>';
+            }
+        }
+    }
+
+    function showAuthError(msg) {
+        if (dom.authErrorAlert) {
+            dom.authErrorAlert.textContent = msg;
+            dom.authErrorAlert.style.display = 'block';
+        } else {
+            showToast(msg);
+        }
+    }
+
+    function handleLogout() {
+        try {
+            localStorage.removeItem(CONFIG.tokenStorageKey);
+            localStorage.removeItem(CONFIG.userStorageKey);
+        } catch (e) {
+            console.warn('[VenueVista] Error clearing token:', e);
+        }
+        state.currentUser = null;
+        updateAuthNav();
+        showToast('Signed out successfully.');
+    }
+
+    function updateAuthNav() {
+        const headerActions = dom.headerActions;
+        if (!headerActions) return;
+
+        const existingWrapper = document.getElementById('auth-user-wrapper');
+
+        if (state.currentUser) {
+            if (dom.btnLogin) dom.btnLogin.style.display = 'none';
+            if (dom.btnRegister) dom.btnRegister.style.display = 'none';
+
+            if (!existingWrapper) {
+                const userWrapper = document.createElement('div');
+                userWrapper.className = 'auth-user-wrapper';
+                userWrapper.id = 'auth-user-wrapper';
+                const initial = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+
+                userWrapper.innerHTML = `
+                    <div class="auth-user-chip" title="${escapeHtml(state.currentUser.email)}">
+                        <div class="auth-user-avatar">${escapeHtml(initial)}</div>
+                        <span>${escapeHtml(state.currentUser.name)}</span>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="btn-logout" type="button">Sign Out</button>
+                `;
+                headerActions.appendChild(userWrapper);
+
+                const logoutBtn = userWrapper.querySelector('#btn-logout');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', handleLogout);
+                }
+            } else {
+                const chipSpan = existingWrapper.querySelector('.auth-user-chip span');
+                const avatar = existingWrapper.querySelector('.auth-user-avatar');
+                if (chipSpan) chipSpan.textContent = state.currentUser.name;
+                if (avatar) avatar.textContent = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+            }
+        } else {
+            if (existingWrapper) existingWrapper.remove();
+            if (dom.btnLogin) dom.btnLogin.style.display = '';
+            if (dom.btnRegister) dom.btnRegister.style.display = '';
+        }
+    }
+
+    async function initAuthSession() {
+        let storedToken = null;
+        try {
+            storedToken = localStorage.getItem(CONFIG.tokenStorageKey);
+        } catch (e) {
+            console.warn('[VenueVista] Could not read token from storage:', e);
+        }
+
+        if (!storedToken) {
+            updateAuthNav();
+            return;
+        }
+
+        try {
+            const res = await apiClient.get('/api/auth/me');
+            if (res && res.data) {
+                state.currentUser = res.data;
+                console.log(`[VenueVista] Authenticated session restored for: ${res.data.name} (${res.data.email})`);
+                updateAuthNav();
+            }
+        } catch (err) {
+            console.warn('[VenueVista] Token validation failed or expired. Resetting session.', err);
+            try {
+                localStorage.removeItem(CONFIG.tokenStorageKey);
+                localStorage.removeItem(CONFIG.userStorageKey);
+            } catch (e) {}
+            state.currentUser = null;
+            updateAuthNav();
+        }
+    }
+
+    async function loadCategoriesAndCities() {
+        // Fetch categories and cities from backend in parallel
+        try {
+            const [eventsCatRes, venuesCatRes, citiesRes] = await Promise.allSettled([
+                apiClient.get('/api/events/categories'),
+                apiClient.get('/api/venues/categories'),
+                apiClient.get('/api/venues/cities')
+            ]);
+
+            if (eventsCatRes.status === 'fulfilled' && eventsCatRes.value && eventsCatRes.value.data) {
+                state.eventCategories = eventsCatRes.value.data;
+            }
+
+            if (venuesCatRes.status === 'fulfilled' && venuesCatRes.value && venuesCatRes.value.data) {
+                state.venueCategories = venuesCatRes.value.data;
+            }
+
+            if (citiesRes.status === 'fulfilled' && citiesRes.value && citiesRes.value.data) {
+                state.venueCities = citiesRes.value.data;
+                // Populate city select filter dropdowns
+                const citySelects = [dom.venuesCitySelect, dom.allVenuesCitySelect].filter(Boolean);
+                citySelects.forEach(sel => {
+                    const currentVal = sel.value;
+                    let opts = '<option value="">All Metro Cities</option>';
+                    state.venueCities.forEach(city => {
+                        opts += `<option value="${escapeHtml(city)}" ${currentVal === city ? 'selected' : ''}>${escapeHtml(city)}</option>`;
+                    });
+                    sel.innerHTML = opts;
+                });
+            }
+        } catch (err) {
+            console.warn('[VenueVista] Non-critical metadata initialization error:', err);
+        }
     }
 
     function showToast(message) {
@@ -1631,7 +2303,7 @@ const VenueVista = (() => {
         if (state.toastTimeout) clearTimeout(state.toastTimeout);
         state.toastTimeout = setTimeout(() => {
             dom.toast.classList.remove('show');
-        }, 2400);
+        }, 2600);
     }
 
     function escapeHtml(str) {
@@ -1707,7 +2379,8 @@ const VenueVista = (() => {
         if (eventCatSelectEl) {
             eventCatSelectEl.addEventListener('change', (e) => {
                 const selectedVal = e.target.value;
-                const catObj = EVENT_CATEGORIES.find(c => c.key.toLowerCase() === selectedVal.toLowerCase());
+                const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
+                const catObj = cats.find(c => c.key.toLowerCase() === selectedVal.toLowerCase());
                 if (catObj) {
                     navigateTo(`/events/${catObj.slug}`);
                 } else {
@@ -1740,7 +2413,8 @@ const VenueVista = (() => {
         if (venueCatSelectEl) {
             venueCatSelectEl.addEventListener('change', (e) => {
                 const selectedVal = e.target.value;
-                const vObj = VENUE_CATEGORIES.find(c => c.key.toLowerCase() === selectedVal.toLowerCase());
+                const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
+                const vObj = cats.find(c => c.key.toLowerCase() === selectedVal.toLowerCase());
                 if (vObj) {
                     navigateTo(`/venues/${vObj.slug}`);
                 } else {
@@ -1786,15 +2460,38 @@ const VenueVista = (() => {
         const venueEmptyResetBtn = dom.btnVenuesEmptyReset || dom.btnAllVenuesEmptyReset;
         if (venueEmptyResetBtn) venueEmptyResetBtn.addEventListener('click', resetVenues);
 
-        // Auth Buttons
-        if (dom.btnLogin) dom.btnLogin.addEventListener('click', () => openAuthModal('Sign In Demo'));
-        if (dom.btnRegister) dom.btnRegister.addEventListener('click', () => openAuthModal('User Registration Demo'));
+        // Auth Modal Controls
+        if (dom.btnLogin) dom.btnLogin.addEventListener('click', () => openAuthModal('login'));
+        if (dom.btnRegister) dom.btnRegister.addEventListener('click', () => openAuthModal('register'));
         if (dom.authModalCloseBtn) dom.authModalCloseBtn.addEventListener('click', closeAuthModal);
         if (dom.authModalOkBtn) dom.authModalOkBtn.addEventListener('click', closeAuthModal);
         if (dom.authModal) {
             dom.authModal.addEventListener('click', (e) => {
                 if (e.target === dom.authModal) closeAuthModal();
             });
+        }
+
+        if (dom.authTabLogin) {
+            dom.authTabLogin.addEventListener('click', () => switchAuthTab('login'));
+        }
+        if (dom.authTabRegister) {
+            dom.authTabRegister.addEventListener('click', () => switchAuthTab('register'));
+        }
+
+        if (dom.btnAuthQuickFill) {
+            dom.btnAuthQuickFill.addEventListener('click', () => {
+                const em = document.getElementById('login-email');
+                const pw = document.getElementById('login-password');
+                if (em) em.value = 'demo@venuevista.in';
+                if (pw) pw.value = 'DemoUser@2026';
+            });
+        }
+
+        if (dom.formAuthLogin) {
+            dom.formAuthLogin.addEventListener('submit', handleLoginSubmit);
+        }
+        if (dom.formAuthRegister) {
+            dom.formAuthRegister.addEventListener('submit', handleRegisterSubmit);
         }
 
         // Event Modal Controls
@@ -1805,10 +2502,26 @@ const VenueVista = (() => {
                 if (e.target === dom.eventModal) closeEventModal();
             });
         }
-        if (dom.btnModalBook) {
-            dom.btnModalBook.addEventListener('click', () => {
-                showToast('Demo Mode: Ticket reservation will connect to Spring Boot /api/bookings');
+
+        if (dom.bookingTicketTier) {
+            dom.bookingTicketTier.addEventListener('change', updateBookingTotal);
+        }
+        if (dom.bookingQuantity) {
+            dom.bookingQuantity.addEventListener('change', updateBookingTotal);
+        }
+
+        if (dom.eventBookingForm) {
+            dom.eventBookingForm.addEventListener('submit', handleEventBookingSubmit);
+        }
+
+        if (dom.btnBookingAnother) {
+            dom.btnBookingAnother.addEventListener('click', () => {
+                if (dom.eventBookingSection) dom.eventBookingSection.style.display = 'block';
+                if (dom.eventBookingConfirmation) dom.eventBookingConfirmation.style.display = 'none';
             });
+        }
+        if (dom.btnBookingDone) {
+            dom.btnBookingDone.addEventListener('click', closeEventModal);
         }
 
         // Venue Modal Controls
@@ -1819,11 +2532,19 @@ const VenueVista = (() => {
                 if (e.target === dom.venueModal) closeVenueModal();
             });
         }
+
         if (dom.venueInquiryForm) {
-            dom.venueInquiryForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                handleVenueInquirySubmit();
+            dom.venueInquiryForm.addEventListener('submit', handleVenueInquirySubmit);
+        }
+
+        if (dom.btnInquiryAnother) {
+            dom.btnInquiryAnother.addEventListener('click', () => {
+                if (dom.venueInquiryForm) dom.venueInquiryForm.style.display = 'flex';
+                if (dom.venueInquiryConfirmation) dom.venueInquiryConfirmation.style.display = 'none';
             });
+        }
+        if (dom.btnInquiryDone) {
+            dom.btnInquiryDone.addEventListener('click', closeVenueModal);
         }
 
         // Global Escape closes any open modal
@@ -1839,11 +2560,15 @@ const VenueVista = (() => {
     /**
      * Application Initialization
      */
-    function init() {
-        console.log(`[${CONFIG.appName}] Initializing v${CONFIG.version} (History API Client-Side Routing)`);
+    async function init() {
+        console.log(`[${CONFIG.appName}] Initializing v${CONFIG.version} (Integrated with Spring Boot API at ${CONFIG.apiBaseUrl})`);
         cacheDom();
         initTheme();
         bindEvents();
+
+        // Restore auth session & fetch metadata asynchronously
+        initAuthSession();
+        loadCategoriesAndCities();
 
         // Handle initial route from address bar
         handleRoute();
@@ -1855,16 +2580,21 @@ const VenueVista = (() => {
         init,
         config: CONFIG,
         getState: () => ({ ...state }),
-        getEventCategories: () => ([...EVENT_CATEGORIES]),
-        getVenueCategories: () => ([...VENUE_CATEGORIES]),
-        getSampleEvents: () => ([...SAMPLE_EVENTS]),
-        getSampleVenues: () => ([...SAMPLE_VENUES]),
+        getEventCategories: () => ([...state.eventCategories]),
+        getVenueCategories: () => ([...state.venueCategories]),
+        getEventsData: () => ([...state.eventsData]),
+        getVenuesData: () => ([...state.venuesData]),
+        apiClient,
         setTheme,
         toggleTheme,
         navigateTo,
         handleRoute,
         applyEventFilters,
         applyVenueFilters,
+        openEventModal,
+        openVenueModal,
+        openAuthModal,
+        handleLogout,
         inrFormatter
     };
 })();

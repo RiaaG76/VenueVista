@@ -696,17 +696,83 @@
                     <p class="modal-description" id="modal-event-description">Event description text goes here.</p>
                 </div>
 
-                <!-- Demo Notice Alert -->
-                <div class="demo-notice-box">
-                    <span class="demo-badge">College Demo Notice</span>
-                    <p>
-                        Ticket booking checkout and seat reservation will be integrated with the Spring Boot REST API endpoint (<code>/api/bookings</code>) in the upcoming backend phase.
-                    </p>
+                <!-- Event Ticket Booking Form (Connected to POST /api/bookings) -->
+                <div class="event-booking-section" id="event-booking-section">
+                    <h4 class="modal-subheading">Reserve Tickets</h4>
+                    <form class="event-booking-form" id="event-booking-form" onsubmit="return false;">
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-ticket-tier" class="form-label">Ticket Tier</label>
+                                <select id="booking-ticket-tier" class="form-control">
+                                    <option value="Standard Pass">Standard Pass</option>
+                                    <option value="VIP Access Pass">VIP Access Pass (+50%)</option>
+                                    <option value="Early Bird Pass">Early Bird Pass (-15%)</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="booking-quantity" class="form-label">Number of Tickets</label>
+                                <select id="booking-quantity" class="form-control">
+                                    <option value="1">1 Ticket</option>
+                                    <option value="2" selected>2 Tickets</option>
+                                    <option value="3">3 Tickets</option>
+                                    <option value="4">4 Tickets</option>
+                                    <option value="5">5 Tickets</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-name" class="form-label">Attendee Full Name</label>
+                                <input type="text" id="booking-name" class="form-control" placeholder="e.g. Rahul Verma" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="booking-email" class="form-label">Email Address</label>
+                                <input type="email" id="booking-email" class="form-control" placeholder="e.g. rahul@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-phone" class="form-label">Mobile Number</label>
+                                <input type="tel" id="booking-phone" class="form-control" placeholder="+91 98765 43210" value="+91 98765 43210" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label">Estimated Total</label>
+                                <div class="form-control font-bold text-primary" id="booking-total-display" style="display:flex;align-items:center;background:var(--bg-surface-alt);">
+                                    ₹1,998
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="padding:1rem 0 0;margin-top:0.5rem;">
+                            <button class="btn btn-outline" id="modal-close-action" type="button">Close</button>
+                            <button class="btn btn-primary" id="btn-modal-book" type="submit">
+                                <span>Confirm Ticket Pass</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-outline" id="modal-close-action" type="button">Close</button>
-                    <button class="btn btn-primary" id="btn-modal-book" type="button">Reserve Pass (Demo)</button>
+                <!-- Event Booking Confirmation Card (Shown after successful POST /api/bookings) -->
+                <div class="event-booking-confirmation" id="event-booking-confirmation" style="display:none;">
+                    <div class="confirmation-card">
+                        <div class="confirmation-badge-pill">✓ Reservation Confirmed</div>
+                        <h4 style="margin:0.25rem 0 0.5rem;color:var(--text-primary);font-size:1.2rem;">Your Booking Pass is Ready</h4>
+                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Keep this reference code for admission check-in:</p>
+                        <div class="confirmation-code-display" id="booking-confirmed-code">VV-BK-2026-0001</div>
+                        <div style="font-size:0.9rem;color:var(--text-primary);line-height:1.6;margin-top:0.75rem;text-align:left;background:var(--bg-surface);padding:0.75rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                            <div><strong>Event:</strong> <span id="booking-confirmed-event">-</span></div>
+                            <div><strong>Quantity:</strong> <span id="booking-confirmed-qty">-</span></div>
+                            <div><strong>Total Amount:</strong> <span id="booking-confirmed-amount" class="text-primary font-bold">-</span></div>
+                            <div><strong>Attendee:</strong> <span id="booking-confirmed-attendee">-</span></div>
+                            <div><strong>Status:</strong> <span style="color:#10b981;font-weight:700;">CONFIRMED</span></div>
+                        </div>
+                        <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:center;">
+                            <button class="btn btn-outline btn-sm" id="btn-booking-another" type="button">Book Another Pass</button>
+                            <button class="btn btn-primary btn-sm" id="btn-booking-done" type="button">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -792,39 +858,105 @@
                     </div>
 
                     <!-- Demo Notice Alert -->
-                    <div class="demo-notice-box">
-                        <span class="demo-badge">Venue Rental Demo</span>
+                    <div class="demo-notice-box" style="margin-bottom:0.75rem;">
+                        <span class="demo-badge">Venue Rental API</span>
                         <p>
-                            Venue booking requests will be routed to the Spring Boot venue manager API (<code>/api/venues/inquiries</code>) with automated quote calculation.
+                            Venue rental inquiries calculate indicative quotes and dispatch immediately to the Spring Boot venue manager API (<code>/api/venues/inquiries</code>).
                         </p>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="padding:1rem 0 0;margin-top:0.5rem;">
                         <button class="btn btn-outline" id="venue-modal-close-action" type="button">Cancel</button>
-                        <button class="btn btn-primary" id="btn-submit-inquiry" type="submit">Submit Rental Inquiry (Demo)</button>
+                        <button class="btn btn-primary" id="btn-submit-inquiry" type="submit">Submit Rental Inquiry</button>
                     </div>
                 </form>
+
+                <!-- Venue Inquiry Confirmation Card (Shown after successful POST /api/venues/inquiries) -->
+                <div class="venue-inquiry-confirmation" id="venue-inquiry-confirmation" style="display:none;">
+                    <div class="confirmation-card">
+                        <div class="confirmation-badge-pill">✓ Inquiry Received</div>
+                        <h4 style="margin:0.25rem 0 0.5rem;color:var(--text-primary);font-size:1.2rem;">Rental Inquiry Confirmed</h4>
+                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Your booking inquiry reference code:</p>
+                        <div class="confirmation-code-display" id="inquiry-confirmed-code">VV-INQ-2026-0001</div>
+                        <div style="font-size:0.9rem;color:var(--text-primary);line-height:1.6;margin-top:0.75rem;text-align:left;background:var(--bg-surface);padding:0.75rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                            <div><strong>Venue:</strong> <span id="inquiry-confirmed-venue">-</span></div>
+                            <div><strong>Event Type:</strong> <span id="inquiry-confirmed-type">-</span></div>
+                            <div><strong>Requested Date:</strong> <span id="inquiry-confirmed-date">-</span></div>
+                            <div><strong>Duration:</strong> <span id="inquiry-confirmed-duration">-</span></div>
+                            <div><strong>Estimated Quote:</strong> <span id="inquiry-confirmed-quote" class="text-primary font-bold">-</span></div>
+                            <div><strong>Status:</strong> <span style="color:#10b981;font-weight:700;">RECEIVED</span></div>
+                        </div>
+                        <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:center;">
+                            <button class="btn btn-outline btn-sm" id="btn-inquiry-another" type="button">Submit Another Inquiry</button>
+                            <button class="btn btn-primary btn-sm" id="btn-inquiry-done" type="button">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Auth Demo Modal -->
+    <!-- User Authentication Modal (Sign In / Register) -->
     <div class="modal-backdrop" id="auth-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
         <div class="modal-card modal-card-sm">
             <button class="modal-close-btn" id="auth-modal-close-btn" type="button" aria-label="Close modal">&times;</button>
-            <div class="modal-body text-center">
-                <div class="auth-icon-circle" aria-hidden="true">🔒</div>
-                <h3 class="modal-title" id="auth-modal-title">Authentication Demo</h3>
-                <p class="modal-description" id="auth-modal-desc">
-                    User authentication and registration will be connected to the Spring Security backend service with JWT token authentication.
-                </p>
-                <div class="auth-demo-badges">
-                    <span class="tech-badge">Spring Security 6</span>
-                    <span class="tech-badge">BCrypt Password Hashing</span>
-                    <span class="tech-badge">JWT Bearer Auth</span>
-                    <span class="tech-badge">Role-based Access</span>
+            <div class="modal-body">
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab-btn active" id="auth-tab-login" type="button" role="tab" aria-selected="true">Sign In</button>
+                    <button class="auth-tab-btn" id="auth-tab-register" type="button" role="tab" aria-selected="false">Register</button>
                 </div>
-                <button class="btn btn-primary w-full" id="auth-modal-ok-btn" type="button">Understood</button>
+
+                <div id="auth-error-alert" class="auth-error-alert" style="display:none;"></div>
+
+                <!-- Sign In Form -->
+                <form id="form-auth-login" onsubmit="return false;">
+                    <div style="margin-bottom:1rem;text-align:center;">
+                        <button type="button" class="btn btn-outline btn-sm" id="btn-auth-quick-fill" style="width:100%;font-size:0.8rem;border-style:dashed;">
+                            ⚡ Quick Demo Login: demo@venuevista.in
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label for="login-email" class="form-label">Email Address</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="demo@venuevista.in" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1.25rem;">
+                        <label for="login-password" class="form-label">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+
+                    <button class="btn btn-primary w-full" id="btn-submit-login" type="submit">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Registration Form -->
+                <form id="form-auth-register" onsubmit="return false;" style="display:none;">
+                    <div class="form-group" style="margin-bottom:0.85rem;">
+                        <label for="reg-name" class="form-label">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="e.g. Vikram Malhotra" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:0.85rem;">
+                        <label for="reg-email" class="form-label">Email Address</label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="e.g. vikram@example.com" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:0.85rem;">
+                        <label for="reg-phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="reg-phone" class="form-control" placeholder="+91 98765 43210">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1.25rem;">
+                        <label for="reg-password" class="form-label">Password (min 6 characters)</label>
+                        <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required minlength="6">
+                    </div>
+
+                    <button class="btn btn-primary w-full" id="btn-submit-register" type="submit">
+                        <span>Create Account</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
