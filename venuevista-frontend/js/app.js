@@ -804,6 +804,140 @@ const VenueVista = (() => {
     }
 
     /**
+     * Authoritative Category Icon & Badge Registry
+     * Provides clean, guaranteed-safe emoji icons and visual badge styles.
+     * Prevents database character-encoding corruption (e.g. ASCII '?')
+     * or missing icon mappings from displaying question marks to visitors.
+     */
+    const CATEGORY_ICON_REGISTRY = {
+        events: {
+            music: { icon: '🎵', badgeClass: 'badge-music' },
+            technology: { icon: '💻', badgeClass: 'badge-tech' },
+            workshops: { icon: '🛠️', badgeClass: 'badge-workshops' },
+            sports: { icon: '🏆', badgeClass: 'badge-sports' },
+            conferences: { icon: '🎤', badgeClass: 'badge-conferences' },
+            theatre: { icon: '🎭', badgeClass: 'badge-theatre' }
+        },
+        venues: {
+            'banquet-halls': { icon: '🏰', badgeClass: 'badge-banquet' },
+            'auditoriums': { icon: '🎭', badgeClass: 'badge-auditorium' },
+            'conference-centres': { icon: '💼', badgeClass: 'badge-conference-centre' },
+            'convention-halls': { icon: '🌐', badgeClass: 'badge-convention' },
+            'outdoor-lawns': { icon: '🌿', badgeClass: 'badge-lawn' },
+            'party-venues': { icon: '🎉', badgeClass: 'badge-party' }
+        }
+    };
+
+    /**
+     * Tests whether an icon string is clean and safe to display.
+     * Rejects placeholder question marks ('?'), Unicode replacement characters,
+     * null, undefined, or empty values.
+     */
+    function isCleanIcon(icon) {
+        if (!icon || typeof icon !== 'string') return false;
+        const trimmed = icon.trim();
+        if (!trimmed) return false;
+        if (trimmed.includes('?') || trimmed.includes('\uFFFD') || trimmed.toLowerCase() === 'null' || trimmed.toLowerCase() === 'undefined') {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Resolve a clean event category emoji icon.
+     * Guarantees that raw '?', 'undefined', or 'null' is never returned.
+     */
+    function resolveEventIcon(item) {
+        if (!item) return '🎟️';
+        const candidate = item.categoryIcon || item.icon;
+        if (isCleanIcon(candidate)) {
+            return candidate.trim();
+        }
+        const slug = (item.slug || item.categorySlug || '').toLowerCase();
+        if (slug && CATEGORY_ICON_REGISTRY.events[slug]) {
+            return CATEGORY_ICON_REGISTRY.events[slug].icon;
+        }
+        const str = `${item.categorySlug || ''} ${item.category || ''} ${item.slug || ''} ${item.key || ''} ${item.title || ''}`.toLowerCase();
+        if (str.includes('theatr')) return CATEGORY_ICON_REGISTRY.events.theatre.icon;
+        if (str.includes('music')) return CATEGORY_ICON_REGISTRY.events.music.icon;
+        if (str.includes('tech')) return CATEGORY_ICON_REGISTRY.events.technology.icon;
+        if (str.includes('workshop')) return CATEGORY_ICON_REGISTRY.events.workshops.icon;
+        if (str.includes('sport')) return CATEGORY_ICON_REGISTRY.events.sports.icon;
+        if (str.includes('conference')) return CATEGORY_ICON_REGISTRY.events.conferences.icon;
+        return '🎟️';
+    }
+
+    /**
+     * Resolve a valid event category CSS badge class.
+     */
+    function resolveEventBadgeClass(item) {
+        if (!item) return 'badge-music';
+        const candidate = item.categoryBadgeClass || item.badgeClass;
+        if (candidate && typeof candidate === 'string' && candidate.startsWith('badge-')) {
+            return candidate.trim();
+        }
+        const slug = (item.slug || item.categorySlug || '').toLowerCase();
+        if (slug && CATEGORY_ICON_REGISTRY.events[slug]) {
+            return CATEGORY_ICON_REGISTRY.events[slug].badgeClass;
+        }
+        const str = `${item.categorySlug || ''} ${item.category || ''} ${item.slug || ''} ${item.key || ''} ${item.title || ''}`.toLowerCase();
+        if (str.includes('theatr')) return CATEGORY_ICON_REGISTRY.events.theatre.badgeClass;
+        if (str.includes('music')) return CATEGORY_ICON_REGISTRY.events.music.badgeClass;
+        if (str.includes('tech')) return CATEGORY_ICON_REGISTRY.events.technology.badgeClass;
+        if (str.includes('workshop')) return CATEGORY_ICON_REGISTRY.events.workshops.badgeClass;
+        if (str.includes('sport')) return CATEGORY_ICON_REGISTRY.events.sports.badgeClass;
+        if (str.includes('conference')) return CATEGORY_ICON_REGISTRY.events.conferences.badgeClass;
+        return 'badge-music';
+    }
+
+    /**
+     * Resolve a clean venue category emoji icon.
+     * Guarantees that raw '?', 'undefined', or 'null' is never returned.
+     */
+    function resolveVenueIcon(item) {
+        if (!item) return '🏛️';
+        const candidate = item.categoryIcon || item.icon;
+        if (isCleanIcon(candidate)) {
+            return candidate.trim();
+        }
+        const slug = (item.slug || item.categorySlug || '').toLowerCase();
+        if (slug && CATEGORY_ICON_REGISTRY.venues[slug]) {
+            return CATEGORY_ICON_REGISTRY.venues[slug].icon;
+        }
+        const str = `${item.categorySlug || ''} ${item.category || ''} ${item.slug || ''} ${item.key || ''} ${item.title || ''}`.toLowerCase();
+        if (str.includes('banquet')) return CATEGORY_ICON_REGISTRY.venues['banquet-halls'].icon;
+        if (str.includes('auditorium')) return CATEGORY_ICON_REGISTRY.venues['auditoriums'].icon;
+        if (str.includes('conference')) return CATEGORY_ICON_REGISTRY.venues['conference-centres'].icon;
+        if (str.includes('convention')) return CATEGORY_ICON_REGISTRY.venues['convention-halls'].icon;
+        if (str.includes('lawn')) return CATEGORY_ICON_REGISTRY.venues['outdoor-lawns'].icon;
+        if (str.includes('party')) return CATEGORY_ICON_REGISTRY.venues['party-venues'].icon;
+        return '🏛️';
+    }
+
+    /**
+     * Resolve a valid venue category CSS badge class.
+     */
+    function resolveVenueBadgeClass(item) {
+        if (!item) return 'badge-auditorium';
+        const candidate = item.categoryBadgeClass || item.badgeClass;
+        if (candidate && typeof candidate === 'string' && candidate.startsWith('badge-')) {
+            return candidate.trim();
+        }
+        const slug = (item.slug || item.categorySlug || '').toLowerCase();
+        if (slug && CATEGORY_ICON_REGISTRY.venues[slug]) {
+            return CATEGORY_ICON_REGISTRY.venues[slug].badgeClass;
+        }
+        const str = `${item.categorySlug || ''} ${item.category || ''} ${item.slug || ''} ${item.key || ''} ${item.title || ''}`.toLowerCase();
+        if (str.includes('banquet')) return CATEGORY_ICON_REGISTRY.venues['banquet-halls'].badgeClass;
+        if (str.includes('auditorium')) return CATEGORY_ICON_REGISTRY.venues['auditoriums'].badgeClass;
+        if (str.includes('conference')) return CATEGORY_ICON_REGISTRY.venues['conference-centres'].badgeClass;
+        if (str.includes('convention')) return CATEGORY_ICON_REGISTRY.venues['convention-halls'].badgeClass;
+        if (str.includes('lawn')) return CATEGORY_ICON_REGISTRY.venues['outdoor-lawns'].badgeClass;
+        if (str.includes('party')) return CATEGORY_ICON_REGISTRY.venues['party-venues'].badgeClass;
+        return 'badge-auditorium';
+    }
+
+    /**
      * Generate visual availability badge markup based on current inventory
      */
     function getInventoryBadgeHtml(availableSeats, totalSeats) {
@@ -941,6 +1075,7 @@ const VenueVista = (() => {
         eventCategories: [],
         venueCategories: [],
         venueCities: [],
+        categoriesLoading: false,
         eventsData: [],
         venuesData: [],
         eventsLoading: false,
@@ -1527,7 +1662,33 @@ const VenueVista = (() => {
     // Full category cards directory on /events/categories
     function renderEventsFullCategories() {
         if (!dom.eventsFullCategoriesGrid) return;
+        if (state.categoriesLoading) {
+            dom.eventsFullCategoriesGrid.innerHTML = `
+                <div class="api-loading-state" style="grid-column: 1 / -1;">
+                    <div class="api-spinner"></div>
+                    <p>Loading categories...</p>
+                </div>
+            `;
+            return;
+        }
         const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
+        if (!cats || cats.length === 0) {
+            dom.eventsFullCategoriesGrid.innerHTML = `
+                <div class="api-error-state" style="grid-column: 1 / -1;">
+                    <span class="error-icon" aria-hidden="true">⚠️</span>
+                    <h3>Couldn't load categories</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-event-categories-retry" type="button">Try Again</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-event-categories-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    loadCategoriesAndCities().then(() => renderEventsFullCategories());
+                });
+            }
+            return;
+        }
         dom.eventsFullCategoriesGrid.innerHTML = cats.map(cat => createCategoryCardHtml(cat)).join('');
     }
 
@@ -1558,13 +1719,14 @@ const VenueVista = (() => {
         // Update Header Titles
         if (dom.eventsHeadingTitle && dom.eventsHeadingSubtitle) {
             if (matchedCat) {
-                if (dom.eventsHeadingTag) dom.eventsHeadingTag.textContent = `${matchedCat.icon} ${matchedCat.title}`;
+                const icon = resolveEventIcon(matchedCat);
+                if (dom.eventsHeadingTag) dom.eventsHeadingTag.textContent = `${icon} ${matchedCat.title}`;
                 dom.eventsHeadingTitle.textContent = `${matchedCat.title} Events in India`;
                 dom.eventsHeadingSubtitle.textContent = matchedCat.description;
             } else {
                 if (dom.eventsHeadingTag) dom.eventsHeadingTag.textContent = 'Complete Catalog';
                 dom.eventsHeadingTitle.textContent = 'All Upcoming Events in India';
-                dom.eventsHeadingSubtitle.textContent = 'Browse live curated demonstration events from the Spring Boot API. Search by title, venue, or metro city, and filter by category.';
+                dom.eventsHeadingSubtitle.textContent = 'Browse live curated events across India. Search by title, venue, or metro city, and filter by category.';
             }
         }
 
@@ -1587,7 +1749,7 @@ const VenueVista = (() => {
         grid.innerHTML = `
             <div class="api-loading-state">
                 <div class="api-spinner"></div>
-                <p>Loading live events from VenueVista backend...</p>
+                <p>Loading events...</p>
             </div>
         `;
 
@@ -1605,6 +1767,8 @@ const VenueVista = (() => {
             const events = (res && res.data) ? res.data : [];
             events.forEach(e => {
                 e.image = resolveEventImage(e);
+                e.categoryIcon = resolveEventIcon(e);
+                e.categoryBadgeClass = resolveEventBadgeClass(e);
             });
             state.eventsData = events;
             state.eventsLoading = false;
@@ -1613,15 +1777,15 @@ const VenueVista = (() => {
             syncEventFilterControls(events.length);
         } catch (err) {
             state.eventsLoading = false;
-            console.error('[VenueVista] Failed to fetch events from backend:', err);
+            console.error('[VenueVista] Failed to fetch events:', err);
             grid.style.display = 'grid';
             if (emptyState) emptyState.style.display = 'none';
             grid.innerHTML = `
                 <div class="api-error-state">
                     <span class="error-icon" aria-hidden="true">⚠️</span>
-                    <h3>Unable to Load Events</h3>
-                    <p>${escapeHtml(err.message || 'Could not connect to backend server at ' + CONFIG.apiBaseUrl)}</p>
-                    <button class="btn btn-primary btn-sm" id="btn-events-retry" type="button">Retry Connection</button>
+                    <h3>Couldn't load events</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-events-retry" type="button">Try Again</button>
                 </div>
             `;
             const retryBtn = document.getElementById('btn-events-retry');
@@ -1692,7 +1856,33 @@ const VenueVista = (() => {
     // Full category cards directory on /venues/categories
     function renderVenuesFullCategories() {
         if (!dom.venuesFullCategoriesGrid) return;
+        if (state.categoriesLoading) {
+            dom.venuesFullCategoriesGrid.innerHTML = `
+                <div class="api-loading-state" style="grid-column: 1 / -1;">
+                    <div class="api-spinner"></div>
+                    <p>Loading categories...</p>
+                </div>
+            `;
+            return;
+        }
         const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
+        if (!cats || cats.length === 0) {
+            dom.venuesFullCategoriesGrid.innerHTML = `
+                <div class="api-error-state" style="grid-column: 1 / -1;">
+                    <span class="error-icon" aria-hidden="true">🏛️</span>
+                    <h3>Couldn't load categories</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-venue-categories-retry" type="button">Try Again</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-venue-categories-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    loadCategoriesAndCities().then(() => renderVenuesFullCategories());
+                });
+            }
+            return;
+        }
         dom.venuesFullCategoriesGrid.innerHTML = cats.map(vc => createVenueCategoryCardHtml(vc)).join('');
     }
 
@@ -1723,12 +1913,13 @@ const VenueVista = (() => {
         // Update Header Titles
         if (dom.venuesHeadingTitle && dom.venuesHeadingSubtitle) {
             if (matchedVenueCat) {
-                if (dom.venuesHeadingTag) dom.venuesHeadingTag.textContent = `${matchedVenueCat.icon} ${matchedVenueCat.title}`;
+                const icon = resolveVenueIcon(matchedVenueCat);
+                if (dom.venuesHeadingTag) dom.venuesHeadingTag.textContent = `${icon} ${matchedVenueCat.title}`;
                 dom.venuesHeadingTitle.textContent = `${matchedVenueCat.title} in India`;
                 dom.venuesHeadingSubtitle.textContent = matchedVenueCat.description;
             } else {
                 if (dom.venuesHeadingTag) dom.venuesHeadingTag.textContent = 'All Rental Spaces';
-                dom.venuesHeadingTitle.textContent = 'All Demonstration Venues in India';
+                dom.venuesHeadingTitle.textContent = 'All Venues in India';
                 dom.venuesHeadingSubtitle.textContent = 'Certified event venues across New Delhi, Mumbai, Bengaluru, Hyderabad, Pune, and Chennai. Filter by venue type and location.';
             }
         }
@@ -1752,7 +1943,7 @@ const VenueVista = (() => {
         grid.innerHTML = `
             <div class="api-loading-state">
                 <div class="api-spinner"></div>
-                <p>Loading certified demonstration venues from backend...</p>
+                <p>Loading venues...</p>
             </div>
         `;
 
@@ -1773,6 +1964,8 @@ const VenueVista = (() => {
             const venues = (res && res.data) ? res.data : [];
             venues.forEach(v => {
                 v.image = resolveVenueImage(v);
+                v.categoryIcon = resolveVenueIcon(v);
+                v.categoryBadgeClass = resolveVenueBadgeClass(v);
             });
             state.venuesData = venues;
             state.venuesLoading = false;
@@ -1781,15 +1974,15 @@ const VenueVista = (() => {
             syncVenueFilterControls(venues.length);
         } catch (err) {
             state.venuesLoading = false;
-            console.error('[VenueVista] Failed to fetch venues from backend:', err);
+            console.error('[VenueVista] Failed to fetch venues:', err);
             grid.style.display = 'grid';
             if (emptyState) emptyState.style.display = 'none';
             grid.innerHTML = `
                 <div class="api-error-state">
-                    <span class="error-icon" aria-hidden="true">⚠️</span>
-                    <h3>Unable to Load Venues</h3>
-                    <p>${escapeHtml(err.message || 'Could not connect to backend server at ' + CONFIG.apiBaseUrl)}</p>
-                    <button class="btn btn-primary btn-sm" id="btn-venues-retry" type="button">Retry Connection</button>
+                    <span class="error-icon" aria-hidden="true">🏛️</span>
+                    <h3>Couldn't load venues</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-venues-retry" type="button">Try Again</button>
                 </div>
             `;
             const retryBtn = document.getElementById('btn-venues-retry');
@@ -1862,20 +2055,29 @@ const VenueVista = (() => {
      * Card HTML Generators
      */
     function createCategoryCardHtml(cat) {
+        if (!cat) return '';
         const catImg = resolveCategoryImage(cat);
+        const catIcon = resolveEventIcon(cat);
+        const badgeClass = resolveEventBadgeClass(cat);
+        const title = cat.title || cat.key || 'Category';
+        const tagline = cat.tagline || '';
+        const eventCount = (cat.eventCount !== undefined && cat.eventCount !== null) ? cat.eventCount : 3;
+        const slug = cat.slug || 'all';
+        const path = cat.path || `/events/${slug}`;
+
         return `
-            <a href="${escapeHtml(cat.path)}" class="category-card" data-slug="${escapeHtml(cat.slug)}" aria-label="Explore ${escapeHtml(cat.title)}">
+            <a href="${escapeHtml(path)}" class="category-card" data-slug="${escapeHtml(slug)}" aria-label="Explore ${escapeHtml(title)}">
                 <div class="category-card-media">
-                    <img src="${escapeHtml(catImg)}" alt="${escapeHtml(cat.title)}" class="category-card-image" loading="lazy">
-                    <div class="category-badge-floating ${escapeHtml(cat.badgeClass)}">
-                        <span>${escapeHtml(cat.icon)} ${escapeHtml(cat.title)}</span>
+                    <img src="${escapeHtml(catImg)}" alt="${escapeHtml(title)}" class="category-card-image" loading="lazy">
+                    <div class="category-badge-floating ${escapeHtml(badgeClass)}">
+                        <span>${escapeHtml(catIcon)} ${escapeHtml(title)}</span>
                     </div>
                 </div>
                 <div class="category-card-body">
-                    <h3 class="category-card-title">${escapeHtml(cat.title)}</h3>
-                    <p class="category-card-description">${escapeHtml(cat.tagline)}</p>
+                    <h3 class="category-card-title">${escapeHtml(title)}</h3>
+                    <p class="category-card-description">${escapeHtml(tagline)}</p>
                     <div class="category-card-footer">
-                        <span class="category-event-count">${cat.eventCount} Events Available</span>
+                        <span class="category-event-count">${eventCount} Events Available</span>
                         <span class="category-explore-link">Explore Category →</span>
                     </div>
                 </div>
@@ -1884,20 +2086,29 @@ const VenueVista = (() => {
     }
 
     function createVenueCategoryCardHtml(vc) {
+        if (!vc) return '';
         const vcImg = resolveVenueImage(vc);
+        const vcIcon = resolveVenueIcon(vc);
+        const badgeClass = resolveVenueBadgeClass(vc);
+        const title = vc.title || vc.key || 'Category';
+        const tagline = vc.tagline || '';
+        const venueCount = (vc.venueCount !== undefined && vc.venueCount !== null) ? vc.venueCount : 2;
+        const slug = vc.slug || 'all';
+        const path = vc.path || `/venues/${slug}`;
+
         return `
-            <a href="${escapeHtml(vc.path)}" class="category-card" data-slug="${escapeHtml(vc.slug)}" aria-label="Explore ${escapeHtml(vc.title)}">
+            <a href="${escapeHtml(path)}" class="category-card" data-slug="${escapeHtml(slug)}" aria-label="Explore ${escapeHtml(title)}">
                 <div class="category-card-media">
-                    <img src="${escapeHtml(vcImg)}" alt="${escapeHtml(vc.title)}" class="category-card-image" loading="lazy">
-                    <div class="category-badge-floating ${escapeHtml(vc.badgeClass)}">
-                        <span>${escapeHtml(vc.icon)} ${escapeHtml(vc.title)}</span>
+                    <img src="${escapeHtml(vcImg)}" alt="${escapeHtml(title)}" class="category-card-image" loading="lazy">
+                    <div class="category-badge-floating ${escapeHtml(badgeClass)}">
+                        <span>${escapeHtml(vcIcon)} ${escapeHtml(title)}</span>
                     </div>
                 </div>
                 <div class="category-card-body">
-                    <h3 class="category-card-title">${escapeHtml(vc.title)}</h3>
-                    <p class="category-card-description">${escapeHtml(vc.tagline)}</p>
+                    <h3 class="category-card-title">${escapeHtml(title)}</h3>
+                    <p class="category-card-description">${escapeHtml(tagline)}</p>
                     <div class="category-card-footer">
-                        <span class="category-event-count">${vc.venueCount} Venues Available</span>
+                        <span class="category-event-count">${venueCount} Venues Available</span>
                         <span class="category-explore-link">Explore Category →</span>
                     </div>
                 </div>
@@ -1906,35 +2117,45 @@ const VenueVista = (() => {
     }
 
     function createEventCardHtml(event) {
-        const priceFormatted = inrFormatter.format(event.startingPrice);
+        if (!event) return '';
+        const priceFormatted = inrFormatter.format(event.startingPrice || 0);
         const eventImg = resolveEventImage(event);
+        const eventIcon = resolveEventIcon(event);
+        const badgeClass = resolveEventBadgeClass(event);
+        const categoryLabel = event.category || event.categoryTitle || 'Event';
+        const eventId = event.id || event.code || '';
+        const title = event.title || 'Untitled Event';
+        const dateTime = event.dateTime || 'Upcoming';
+        const city = event.city || 'India';
+        const venue = event.venue || 'Venue';
+
         return `
-            <article class="event-card" data-event-id="${escapeHtml(event.id)}" tabindex="0" role="article" aria-label="${escapeHtml(event.title)}">
+            <article class="event-card" data-event-id="${escapeHtml(eventId)}" tabindex="0" role="article" aria-label="${escapeHtml(title)}">
                 <div class="event-card-media">
                     <img
                         src="${escapeHtml(eventImg)}"
-                        alt="${escapeHtml(event.title)}" 
+                        alt="${escapeHtml(title)}"
                         class="event-card-image"
                         loading="lazy"
                         onerror="this.onerror=null; this.src='/assets/categories/music-concert.jpg';"
                     >
-                    <div class="category-badge-floating ${escapeHtml(event.categoryBadgeClass)}">
-                        <span>${escapeHtml(event.categoryIcon)} ${escapeHtml(event.category)}</span>
+                    <div class="category-badge-floating ${escapeHtml(badgeClass)}">
+                        <span>${escapeHtml(eventIcon)} ${escapeHtml(categoryLabel)}</span>
                     </div>
                 </div>
 
                 <div class="event-card-body">
                     <div class="event-date-row">
                         <span class="event-date-icon" aria-hidden="true">📅</span>
-                        <time class="event-date-text">${escapeHtml(event.dateTime)}</time>
+                        <time class="event-date-text">${escapeHtml(dateTime)}</time>
                     </div>
 
-                    <h3 class="event-card-title">${escapeHtml(event.title)}</h3>
+                    <h3 class="event-card-title">${escapeHtml(title)}</h3>
 
                     <div class="event-location-row">
                         <span class="event-location-icon" aria-hidden="true">📍</span>
                         <span class="event-location-text">
-                            <strong>${escapeHtml(event.city)}:</strong> ${escapeHtml(event.venue)}
+                            <strong>${escapeHtml(city)}:</strong> ${escapeHtml(venue)}
                         </span>
                     </div>
 
@@ -1946,7 +2167,7 @@ const VenueVista = (() => {
                             <span class="price-value">${priceFormatted}</span>
                         </div>
 
-                        <button class="btn btn-primary btn-sm btn-view-details" type="button" data-event-id="${escapeHtml(event.id)}">
+                        <button class="btn btn-primary btn-sm btn-view-details" type="button" data-event-id="${escapeHtml(eventId)}">
                             <span>View Details</span>
                         </button>
                     </div>
@@ -1956,35 +2177,45 @@ const VenueVista = (() => {
     }
 
     function createVenueCardHtml(venue) {
-        const rentalFormatted = inrFormatter.format(venue.baseRental);
+        if (!venue) return '';
+        const rentalFormatted = inrFormatter.format(venue.baseRental || 0);
         const amenitiesHtml = (venue.amenities || []).slice(0, 3).map(a => `<span class="venue-tag">${escapeHtml(a)}</span>`).join('');
         const venueImg = resolveVenueImage(venue);
+        const venueIcon = resolveVenueIcon(venue);
+        const badgeClass = resolveVenueBadgeClass(venue);
+        const categoryLabel = venue.category || venue.categoryTitle || 'Venue';
+        const venueId = venue.id || venue.code || '';
+        const name = venue.name || 'Untitled Venue';
+        const city = venue.city || 'India';
+        const location = venue.location || '';
+        const suitableFor = venue.suitableFor || 'All Events';
+        const capacity = venue.capacity || 'Varies';
 
         return `
-            <article class="venue-card" data-venue-id="${escapeHtml(venue.id)}" tabindex="0" role="article" aria-label="${escapeHtml(venue.name)}">
+            <article class="venue-card" data-venue-id="${escapeHtml(venueId)}" tabindex="0" role="article" aria-label="${escapeHtml(name)}">
                 <div class="venue-card-media">
                     <img
                         src="${escapeHtml(venueImg)}"
-                        alt="${escapeHtml(venue.name)}" 
+                        alt="${escapeHtml(name)}"
                         class="venue-card-image"
                         loading="lazy"
                         onerror="this.onerror=null; this.src='/assets/venue-tech-convention.svg';"
                     >
-                    <div class="category-badge-floating ${escapeHtml(venue.categoryBadgeClass || 'badge-auditorium')}">
-                        <span>${escapeHtml(venue.categoryIcon || '🏛️')} ${escapeHtml(venue.category)}</span>
+                    <div class="category-badge-floating ${escapeHtml(badgeClass)}">
+                        <span>${escapeHtml(venueIcon)} ${escapeHtml(categoryLabel)}</span>
                     </div>
                 </div>
 
                 <div class="venue-card-body">
                     <div class="venue-location-row">
                         <span class="venue-location-icon" aria-hidden="true">📍</span>
-                        <span class="venue-location-text"><strong>${escapeHtml(venue.city)}:</strong> ${escapeHtml(venue.location)}</span>
+                        <span class="venue-location-text"><strong>${escapeHtml(city)}:</strong> ${escapeHtml(location)}</span>
                     </div>
 
-                    <h3 class="venue-card-title">${escapeHtml(venue.name)}</h3>
+                    <h3 class="venue-card-title">${escapeHtml(name)}</h3>
 
                     <p class="venue-card-suitable">
-                        <strong>Suitable for:</strong> ${escapeHtml(venue.suitableFor)}
+                        <strong>Suitable for:</strong> ${escapeHtml(suitableFor)}
                     </p>
 
                     <div class="venue-tags-row">
@@ -1994,7 +2225,7 @@ const VenueVista = (() => {
                     <div class="venue-specs-grid">
                         <div class="spec-item">
                             <span class="spec-label">Capacity</span>
-                            <span class="spec-val">${escapeHtml(venue.capacity)}</span>
+                            <span class="spec-val">${escapeHtml(capacity)}</span>
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Base Rental</span>
@@ -2003,7 +2234,7 @@ const VenueVista = (() => {
                     </div>
 
                     <div class="venue-card-footer">
-                        <button class="btn btn-outline btn-sm btn-inquire-venue w-full" type="button" data-venue-id="${escapeHtml(venue.id)}">
+                        <button class="btn btn-outline btn-sm btn-inquire-venue w-full" type="button" data-venue-id="${escapeHtml(venueId)}">
                             <span>View Details &amp; Inquire</span>
                         </button>
                     </div>
@@ -2090,11 +2321,14 @@ const VenueVista = (() => {
         state.selectedEvent = event;
         if (dom.modalEventImage) {
             dom.modalEventImage.src = resolveEventImage(event);
-            dom.modalEventImage.alt = event.title;
+            dom.modalEventImage.alt = event.title || 'Event';
         }
         if (dom.modalEventCategory) {
-            dom.modalEventCategory.textContent = `${event.categoryIcon || '🎟️'} ${event.category}`;
-            dom.modalEventCategory.className = `modal-category-badge ${event.categoryBadgeClass || 'badge-music'}`;
+            const eventIcon = resolveEventIcon(event);
+            const badgeClass = resolveEventBadgeClass(event);
+            const categoryLabel = event.category || 'Event';
+            dom.modalEventCategory.textContent = `${eventIcon} ${categoryLabel}`;
+            dom.modalEventCategory.className = `modal-category-badge ${badgeClass}`;
         }
         if (dom.modalEventTitle) dom.modalEventTitle.textContent = event.title;
         if (dom.modalEventDate) dom.modalEventDate.textContent = event.dateTime;
@@ -2131,8 +2365,14 @@ const VenueVista = (() => {
             if (fresh && fresh.data) {
                 const freshEvent = { ...event, ...fresh.data };
                 freshEvent.image = resolveEventImage(freshEvent);
+                freshEvent.categoryIcon = resolveEventIcon(freshEvent);
+                freshEvent.categoryBadgeClass = resolveEventBadgeClass(freshEvent);
                 state.selectedEvent = freshEvent;
                 event = state.selectedEvent;
+                if (dom.modalEventCategory) {
+                    dom.modalEventCategory.textContent = `${event.categoryIcon} ${event.category || 'Event'}`;
+                    dom.modalEventCategory.className = `modal-category-badge ${event.categoryBadgeClass}`;
+                }
                 if (dom.modalEventImage) {
                     dom.modalEventImage.src = event.image;
                 }
@@ -2267,11 +2507,14 @@ const VenueVista = (() => {
         state.selectedVenue = venue;
         if (dom.venueModalImage) {
             dom.venueModalImage.src = resolveVenueImage(venue);
-            dom.venueModalImage.alt = venue.name;
+            dom.venueModalImage.alt = venue.name || 'Venue';
         }
         if (dom.venueModalBadge) {
-            dom.venueModalBadge.textContent = `${venue.categoryIcon || '🏛️'} ${venue.category}`;
-            dom.venueModalBadge.className = `modal-category-badge ${venue.categoryBadgeClass || 'badge-auditorium'}`;
+            const venueIcon = resolveVenueIcon(venue);
+            const badgeClass = resolveVenueBadgeClass(venue);
+            const categoryLabel = venue.category || 'Venue';
+            dom.venueModalBadge.textContent = `${venueIcon} ${categoryLabel}`;
+            dom.venueModalBadge.className = `modal-category-badge ${badgeClass}`;
         }
         if (dom.venueModalTitle) dom.venueModalTitle.textContent = venue.name;
         if (dom.venueModalLocation) dom.venueModalLocation.textContent = `${venue.location}, ${venue.city}`;
@@ -2302,8 +2545,14 @@ const VenueVista = (() => {
             if (fresh && fresh.data) {
                 const freshVenue = { ...venue, ...fresh.data };
                 freshVenue.image = resolveVenueImage(freshVenue);
+                freshVenue.categoryIcon = resolveVenueIcon(freshVenue);
+                freshVenue.categoryBadgeClass = resolveVenueBadgeClass(freshVenue);
                 state.selectedVenue = freshVenue;
                 venue = state.selectedVenue;
+                if (dom.venueModalBadge) {
+                    dom.venueModalBadge.textContent = `${venue.categoryIcon} ${venue.category || 'Venue'}`;
+                    dom.venueModalBadge.className = `modal-category-badge ${venue.categoryBadgeClass}`;
+                }
                 if (dom.venueModalImage) {
                     dom.venueModalImage.src = venue.image;
                 }
@@ -3415,11 +3664,12 @@ const VenueVista = (() => {
 
         } catch (err) {
             state.myBookingsLoading = false;
+            console.error('[VenueVista] Failed to fetch user bookings:', err);
             if (dom.myTicketsLoading) dom.myTicketsLoading.style.display = 'none';
             if (dom.myTicketsError) {
                 dom.myTicketsError.style.display = 'block';
                 const txt = document.getElementById('my-tickets-error-text');
-                if (txt) txt.textContent = err.message || 'Unable to load ticket bookings. Please check your connection and retry.';
+                if (txt) txt.textContent = "Couldn't load tickets. Please try again.";
             }
         }
     }
@@ -3505,11 +3755,12 @@ const VenueVista = (() => {
 
         } catch (err) {
             state.myInquiriesLoading = false;
+            console.error('[VenueVista] Failed to fetch user inquiries:', err);
             if (dom.myInquiriesLoading) dom.myInquiriesLoading.style.display = 'none';
             if (dom.myInquiriesError) {
                 dom.myInquiriesError.style.display = 'block';
                 const txt = document.getElementById('my-inquiries-error-text');
-                if (txt) txt.textContent = err.message || 'Unable to load venue inquiries. Please check your connection and retry.';
+                if (txt) txt.textContent = "Couldn't load inquiries. Please try again.";
             }
         }
     }
@@ -3586,6 +3837,7 @@ const VenueVista = (() => {
 
     async function loadCategoriesAndCities() {
         // Fetch categories and cities from backend in parallel
+        state.categoriesLoading = true;
         try {
             const [eventsCatRes, venuesCatRes, citiesRes] = await Promise.allSettled([
                 apiClient.get('/api/events/categories'),
@@ -3596,6 +3848,8 @@ const VenueVista = (() => {
             if (eventsCatRes.status === 'fulfilled' && eventsCatRes.value && eventsCatRes.value.data) {
                 state.eventCategories = eventsCatRes.value.data.map(cat => ({
                     ...cat,
+                    icon: resolveEventIcon(cat),
+                    badgeClass: resolveEventBadgeClass(cat),
                     image: resolveCategoryImage(cat)
                 }));
             }
@@ -3603,6 +3857,8 @@ const VenueVista = (() => {
             if (venuesCatRes.status === 'fulfilled' && venuesCatRes.value && venuesCatRes.value.data) {
                 state.venueCategories = venuesCatRes.value.data.map(vc => ({
                     ...vc,
+                    icon: resolveVenueIcon(vc),
+                    badgeClass: resolveVenueBadgeClass(vc),
                     image: resolveVenueImage(vc)
                 }));
             }
@@ -3622,6 +3878,13 @@ const VenueVista = (() => {
             }
         } catch (err) {
             console.warn('[VenueVista] Non-critical metadata initialization error:', err);
+        } finally {
+            state.categoriesLoading = false;
+            if (state.currentRoute === 'events-categories') {
+                renderEventsFullCategories();
+            } else if (state.currentRoute === 'venues-categories') {
+                renderVenuesFullCategories();
+            }
         }
     }
 
@@ -4042,6 +4305,14 @@ const VenueVista = (() => {
         resolveEventImage,
         resolveCategoryImage,
         resolveVenueImage,
+        resolveEventIcon,
+        resolveVenueIcon,
+        resolveEventBadgeClass,
+        resolveVenueBadgeClass,
+        createCategoryCardHtml,
+        createVenueCategoryCardHtml,
+        createEventCardHtml,
+        createVenueCardHtml,
         getInventoryBadgeHtml,
         updateModalAvailability,
         switchBookingsTab,
