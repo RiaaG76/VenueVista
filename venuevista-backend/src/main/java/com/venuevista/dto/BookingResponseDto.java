@@ -58,6 +58,24 @@ public class BookingResponseDto {
         }
     }
 
+    /**
+     * Sanitizes personal identifiable information (PII) for guest / unauthenticated receipt views.
+     */
+    public void maskSensitiveDetails() {
+        if (this.customerEmail != null && this.customerEmail.contains("@")) {
+            String[] parts = this.customerEmail.split("@", 2);
+            String name = parts[0];
+            String maskedName = name.length() > 2 ? name.substring(0, 2) + "***" : name.charAt(0) + "***";
+            this.customerEmail = maskedName + "@" + parts[1];
+        }
+        if (this.customerPhone != null && this.customerPhone.length() >= 4) {
+            int len = this.customerPhone.length();
+            this.customerPhone = "******" + this.customerPhone.substring(len - 4);
+        }
+        this.notes = null;
+        this.qrCodePayload = "VENUEVISTA:" + (this.bookingCode != null ? this.bookingCode : "");
+    }
+
     public Long getId() {
         return id;
     }

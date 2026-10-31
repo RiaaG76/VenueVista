@@ -1,6 +1,7 @@
 package com.venuevista.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class BookingRequestDto {
 
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "At least 1 ticket must be booked")
+    @Max(value = 20, message = "A maximum of 20 tickets can be booked per order")
     private Integer quantity = 1;
 
     private String notes;

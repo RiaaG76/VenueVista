@@ -3,6 +3,7 @@ package com.venuevista.repository;
 import com.venuevista.entity.TicketBooking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,7 @@ public interface TicketBookingRepository extends JpaRepository<TicketBooking, Lo
     List<TicketBooking> findByUserIdOrderByBookingTimeDesc(Long userId);
 
     List<TicketBooking> findByEvent_Id(Long eventId);
+
+    Optional<TicketBooking> findTopByCustomerEmailIgnoreCaseAndEvent_IdAndBookingTimeAfterOrderByBookingTimeDesc(
+            String customerEmail, Long eventId, LocalDateTime after);
 }

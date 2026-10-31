@@ -3,6 +3,7 @@ package com.venuevista.repository;
 import com.venuevista.entity.VenueInquiry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,7 @@ public interface VenueInquiryRepository extends JpaRepository<VenueInquiry, Long
     List<VenueInquiry> findByUserIdOrderByInquiryTimeDesc(Long userId);
 
     List<VenueInquiry> findByVenue_Id(Long venueId);
+
+    Optional<VenueInquiry> findTopByContactPhoneEmailIgnoreCaseAndVenue_IdAndInquiryTimeAfterOrderByInquiryTimeDesc(
+            String contactPhoneEmail, Long venueId, LocalDateTime after);
 }

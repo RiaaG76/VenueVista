@@ -1,5 +1,6 @@
 package com.venuevista.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -19,10 +20,13 @@ public class InquiryRequestDto {
     private String eventType = "Concert";
 
     @NotNull(message = "Requested date is required")
+    @FutureOrPresent(message = "Requested date must be today or in the future")
     private LocalDate requestedDate;
 
+    @NotBlank(message = "Expected attendance is required")
     private String expectedAttendance = "500-1500";
 
+    @NotBlank(message = "Rental duration is required")
     private String rentalDuration = "Full Day (10 Hours)";
 
     private String notes;

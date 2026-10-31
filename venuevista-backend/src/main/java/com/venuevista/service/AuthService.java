@@ -31,13 +31,14 @@ public class AuthService {
 
     @Transactional
     public UserDto register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email is already registered: " + request.getEmail());
+        String normalizedEmail = request.getEmail().toLowerCase().trim();
+        if (userRepository.existsByEmail(normalizedEmail)) {
+            throw new IllegalArgumentException("Email is already registered: " + normalizedEmail);
         }
 
         User user = new User(
                 request.getName(),
-                request.getEmail().toLowerCase().trim(),
+                normalizedEmail,
                 passwordEncoder.encode(request.getPassword()),
                 request.getPhone(),
                 Role.ROLE_USER

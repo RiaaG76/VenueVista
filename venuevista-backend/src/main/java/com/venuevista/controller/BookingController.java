@@ -37,11 +37,16 @@ public class BookingController {
 
     /**
      * Lookup a booking by unique booking code (e.g. VV-BK-2026-X8F9).
+     * Protected against IDOR: personal details are masked for guest views and restricted for private bookings.
      */
     @GetMapping("/{bookingCode}")
     public ResponseEntity<ApiResponse<BookingResponseDto>> getBookingByCode(
-            @PathVariable String bookingCode) {
-        BookingResponseDto response = bookingService.getBookingByCode(bookingCode);
+            @PathVariable String bookingCode,
+            Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        BookingResponseDto response = bookingService.getBookingByCode(bookingCode, email, isAdmin);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 

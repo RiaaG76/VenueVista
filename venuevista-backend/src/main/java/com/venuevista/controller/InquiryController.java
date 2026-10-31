@@ -37,11 +37,16 @@ public class InquiryController {
 
     /**
      * Lookup an inquiry by unique inquiry code (e.g. VV-INQ-2026-K4L2).
+     * Protected against IDOR: contact details are masked for guest views and restricted for private inquiries.
      */
     @GetMapping("/{inquiryCode}")
     public ResponseEntity<ApiResponse<InquiryResponseDto>> getInquiryByCode(
-            @PathVariable String inquiryCode) {
-        InquiryResponseDto response = inquiryService.getInquiryByCode(inquiryCode);
+            @PathVariable String inquiryCode,
+            Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        InquiryResponseDto response = inquiryService.getInquiryByCode(inquiryCode, email, isAdmin);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 

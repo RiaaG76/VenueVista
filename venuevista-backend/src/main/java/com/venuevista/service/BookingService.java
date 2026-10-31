@@ -9,11 +9,13 @@ import com.venuevista.entity.User;
 import com.venuevista.repository.EventRepository;
 import com.venuevista.repository.TicketBookingRepository;
 import com.venuevista.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -36,24 +38,48 @@ public class BookingService {
 
     @Transactional
     public BookingResponseDto createBooking(BookingRequestDto request, String currentUserEmail) {
-        Event event = findEvent(request.getEventId(), request.getEventCode());
+        Event event = findEventForUpdate(request.getEventId(), request.getEventCode());
+
+        int quantity = request.getQuantity() != null ? request.getQuantity() : 1;
+        if (quantity < 1 || quantity > 20) {
+            throw new IllegalArgumentException("Booking quantity must be between 1 and 20 tickets");
+        }
+
+        String customerEmail = request.getCustomerEmail() != null ? request.getCustomerEmail().toLowerCase().trim() : "";
+        if (customerEmail.isBlank()) {
+            throw new IllegalArgumentException("Customer email is required");
+        }
+
+        // Prevent rapid repeated duplicate submissions (replay protection within 5 seconds)
+        LocalDateTime recentCutoff = LocalDateTime.now().minusSeconds(5);
+        Optional<TicketBooking> duplicate = bookingRepository.findTopByCustomerEmailIgnoreCaseAndEvent_IdAndBookingTimeAfterOrderByBookingTimeDesc(
+                customerEmail, event.getId(), recentCutoff);
+        if (duplicate.isPresent()) {
+            throw new IllegalStateException("Duplicate booking detected. A booking for this event was just processed. Please check your bookings before submitting again.");
+        }
+
+        // Enforce inventory constraints under pessimistic lock and thread safety
+        synchronized (event) {
+            if (event.getAvailableSeats() == null || event.getAvailableSeats() < quantity) {
+                throw new IllegalStateException("Insufficient seats available for event: " + event.getTitle() +
+                        ". Requested: " + quantity + ", Available: " + (event.getAvailableSeats() == null ? 0 : event.getAvailableSeats()));
+            }
+
+            // Transactionally deduct seats
+            event.setAvailableSeats(event.getAvailableSeats() - quantity);
+            eventRepository.save(event);
+        }
 
         User user = null;
         if (currentUserEmail != null && !currentUserEmail.isBlank()) {
             user = userRepository.findByEmail(currentUserEmail).orElse(null);
-        } else if (request.getCustomerEmail() != null) {
-            user = userRepository.findByEmail(request.getCustomerEmail().toLowerCase().trim()).orElse(null);
+        } else {
+            user = userRepository.findByEmail(customerEmail).orElse(null);
         }
 
-        int quantity = request.getQuantity() != null && request.getQuantity() > 0 ? request.getQuantity() : 1;
-        BigDecimal unitPrice = event.getStartingPrice();
+        // Calculate prices strictly on backend
+        BigDecimal unitPrice = event.getStartingPrice() != null ? event.getStartingPrice() : BigDecimal.ZERO;
         BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(quantity));
-
-        // Deduct seats if available
-        if (event.getAvailableSeats() != null && event.getAvailableSeats() >= quantity) {
-            event.setAvailableSeats(event.getAvailableSeats() - quantity);
-            eventRepository.save(event);
-        }
 
         String bookingCode = generateUniqueBookingCode();
 
@@ -62,7 +88,7 @@ public class BookingService {
                 event,
                 user,
                 request.getCustomerName().trim(),
-                request.getCustomerEmail().toLowerCase().trim(),
+                customerEmail,
                 request.getCustomerPhone(),
                 request.getTicketTier() != null ? request.getTicketTier() : "General Admission",
                 quantity,
@@ -78,9 +104,34 @@ public class BookingService {
 
     @Transactional(readOnly = true)
     public BookingResponseDto getBookingByCode(String code) {
+        return getBookingByCode(code, null, false);
+    }
+
+    @Transactional(readOnly = true)
+    public BookingResponseDto getBookingByCode(String code, String currentUserEmail, boolean isAdmin) {
         TicketBooking booking = bookingRepository.findByBookingCode(code.trim().toUpperCase())
                 .orElseThrow(() -> new NoSuchElementException("Booking not found with code: " + code));
-        return new BookingResponseDto(booking);
+
+        boolean isOwner = false;
+        if (currentUserEmail != null && !currentUserEmail.isBlank()) {
+            if (booking.getUser() != null && currentUserEmail.equalsIgnoreCase(booking.getUser().getEmail())) {
+                isOwner = true;
+            } else if (currentUserEmail.equalsIgnoreCase(booking.getCustomerEmail())) {
+                isOwner = true;
+            }
+        }
+
+        // IDOR protection: Registered user bookings cannot be inspected by unauthorized parties
+        if (booking.getUser() != null && !isOwner && !isAdmin) {
+            throw new AccessDeniedException("You do not have permission to view this private booking");
+        }
+
+        BookingResponseDto dto = new BookingResponseDto(booking);
+        // Guest receipt protection: Sanitize sensitive personal details if not authenticated owner or admin
+        if (!isOwner && !isAdmin) {
+            dto.maskSensitiveDetails();
+        }
+        return dto;
     }
 
     @Transactional(readOnly = true)
@@ -93,12 +144,20 @@ public class BookingService {
                 .toList();
     }
 
-    private Event findEvent(Long id, String code) {
+    private Event findEventForUpdate(Long id, String code) {
         if (id != null) {
+            Optional<Event> locked = eventRepository.findByIdForUpdate(id);
+            if (locked != null && locked.isPresent()) {
+                return locked.get();
+            }
             return eventRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("Event not found with ID: " + id));
         }
         if (code != null && !code.isBlank()) {
+            Optional<Event> locked = eventRepository.findByCodeForUpdate(code.trim());
+            if (locked != null && locked.isPresent()) {
+                return locked.get();
+            }
             return eventRepository.findByCode(code.trim())
                     .orElseThrow(() -> new NoSuchElementException("Event not found with code: " + code));
         }

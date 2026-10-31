@@ -74,6 +74,25 @@ class AuthServiceTest {
     }
 
     @Test
+    void testRegisterNormalizesEmail() {
+        RegisterRequest req = new RegisterRequest();
+        req.setName("Caps User");
+        req.setEmail("  CapsUser@VenueVista.IN  ");
+        req.setPassword("Password@123");
+        req.setPhone("+91 91234 56789");
+
+        when(userRepository.existsByEmail("capsuser@venuevista.in")).thenReturn(false);
+        when(passwordEncoder.encode("Password@123")).thenReturn("encodedPassword");
+
+        User savedUser = new User("Caps User", "capsuser@venuevista.in", "encodedPassword", "+91 91234 56789", Role.ROLE_USER);
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        UserDto dto = authService.register(req);
+        assertNotNull(dto);
+        assertEquals("capsuser@venuevista.in", dto.getEmail());
+    }
+
+    @Test
     void testLoginSuccess() {
         LoginRequest req = new LoginRequest();
         req.setEmail("test@venuevista.in");

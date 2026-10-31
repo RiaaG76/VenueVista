@@ -55,6 +55,26 @@ public class InquiryResponseDto {
         }
     }
 
+    /**
+     * Sanitizes contact and private note details for unauthorized / guest inquiry lookups.
+     */
+    public void maskSensitiveDetails() {
+        if (this.contactPhoneEmail != null) {
+            if (this.contactPhoneEmail.contains("@")) {
+                String[] parts = this.contactPhoneEmail.split("@", 2);
+                String name = parts[0];
+                String masked = name.length() > 2 ? name.substring(0, 2) + "***" : name.charAt(0) + "***";
+                this.contactPhoneEmail = masked + "@" + parts[1];
+            } else if (this.contactPhoneEmail.length() >= 4) {
+                int len = this.contactPhoneEmail.length();
+                this.contactPhoneEmail = "******" + this.contactPhoneEmail.substring(len - 4);
+            } else {
+                this.contactPhoneEmail = "***";
+            }
+        }
+        this.notes = null;
+    }
+
     public Long getId() {
         return id;
     }
