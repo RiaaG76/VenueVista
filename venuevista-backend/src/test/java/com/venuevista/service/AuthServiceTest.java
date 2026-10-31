@@ -50,15 +50,25 @@ class AuthServiceTest {
         req.setPhone("+91 99999 88888");
 
         when(userRepository.existsByEmail("test@venuevista.in")).thenReturn(false);
+        when(userRepository.existsByPhone("+91 99999 88888")).thenReturn(false);
         when(passwordEncoder.encode("Password@123")).thenReturn("encodedPassword");
 
         User savedUser = new User("Test User", "test@venuevista.in", "encodedPassword", "+91 99999 88888", Role.ROLE_USER);
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        savedUser.setEmailVerified(true);
+        savedUser.setPhoneVerified(true);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User u = invocation.getArgument(0);
+            assertTrue(u.getEmailVerified(), "emailVerified must be true for created user");
+            assertTrue(u.getPhoneVerified(), "phoneVerified must be true for created user");
+            return savedUser;
+        });
 
         UserDto dto = authService.register(req);
         assertNotNull(dto);
         assertEquals("Test User", dto.getName());
         assertEquals("test@venuevista.in", dto.getEmail());
+        assertTrue(dto.getEmailVerified());
+        assertTrue(dto.getPhoneVerified());
     }
 
     @Test
@@ -74,6 +84,21 @@ class AuthServiceTest {
     }
 
     @Test
+    void testRegisterDuplicatePhone() {
+        RegisterRequest req = new RegisterRequest();
+        req.setName("Test User");
+        req.setEmail("unique@venuevista.in");
+        req.setPassword("Password@123");
+        req.setPhone("+91 99999 88888");
+
+        when(userRepository.existsByEmail("unique@venuevista.in")).thenReturn(false);
+        when(userRepository.existsByPhone("+91 99999 88888")).thenReturn(true);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> authService.register(req));
+        assertTrue(ex.getMessage().contains("Phone number is already registered"));
+    }
+
+    @Test
     void testRegisterNormalizesEmail() {
         RegisterRequest req = new RegisterRequest();
         req.setName("Caps User");
@@ -82,14 +107,19 @@ class AuthServiceTest {
         req.setPhone("+91 91234 56789");
 
         when(userRepository.existsByEmail("capsuser@venuevista.in")).thenReturn(false);
+        when(userRepository.existsByPhone("+91 91234 56789")).thenReturn(false);
         when(passwordEncoder.encode("Password@123")).thenReturn("encodedPassword");
 
         User savedUser = new User("Caps User", "capsuser@venuevista.in", "encodedPassword", "+91 91234 56789", Role.ROLE_USER);
+        savedUser.setEmailVerified(true);
+        savedUser.setPhoneVerified(true);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         UserDto dto = authService.register(req);
         assertNotNull(dto);
         assertEquals("capsuser@venuevista.in", dto.getEmail());
+        assertTrue(dto.getEmailVerified());
+        assertTrue(dto.getPhoneVerified());
     }
 
     @Test

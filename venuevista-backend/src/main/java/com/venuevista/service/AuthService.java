@@ -36,13 +36,20 @@ public class AuthService {
             throw new IllegalArgumentException("Email is already registered: " + normalizedEmail);
         }
 
+        String phone = request.getPhone() != null && !request.getPhone().isBlank() ? request.getPhone().trim() : null;
+        if (phone != null && userRepository.existsByPhone(phone)) {
+            throw new IllegalArgumentException("Phone number is already registered: " + phone);
+        }
+
         User user = new User(
                 request.getName(),
                 normalizedEmail,
                 passwordEncoder.encode(request.getPassword()),
-                request.getPhone(),
+                phone,
                 Role.ROLE_USER
         );
+        user.setEmailVerified(Boolean.TRUE);
+        user.setPhoneVerified(Boolean.TRUE);
 
         User saved = userRepository.save(user);
         return new UserDto(saved);

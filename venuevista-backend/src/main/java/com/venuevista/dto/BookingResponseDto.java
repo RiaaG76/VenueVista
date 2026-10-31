@@ -23,6 +23,7 @@ public class BookingResponseDto {
     private BigDecimal unitPrice;
     private BigDecimal totalAmount;
     private String currency;
+    private Integer availableSeats;
     private BookingStatus status;
     private LocalDateTime bookingTime;
     private String qrCodePayload;
@@ -42,6 +43,7 @@ public class BookingResponseDto {
                 this.eventDateTime = booking.getEvent().getDateTime();
                 this.eventVenue = booking.getEvent().getVenue();
                 this.eventCity = booking.getEvent().getCity();
+                this.availableSeats = booking.getEvent().getAvailableSeats();
             }
             this.customerName = booking.getCustomerName();
             this.customerEmail = booking.getCustomerEmail();
@@ -234,5 +236,13 @@ public class BookingResponseDto {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Integer getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(Integer availableSeats) {
+        this.availableSeats = availableSeats;
     }
 }

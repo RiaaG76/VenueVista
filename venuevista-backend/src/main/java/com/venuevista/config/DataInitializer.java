@@ -71,25 +71,49 @@ public class DataInitializer implements CommandLineRunner {
         if (!userRepository.existsByEmail("demo@venuevista.in")) {
             User demoUser = new User("Aarav Sharma", "demo@venuevista.in", passwordEncoder.encode("DemoUser@2026"),
                     "+91 98765 43210", Role.ROLE_USER);
+            demoUser.setEmailVerified(Boolean.TRUE);
+            demoUser.setPhoneVerified(Boolean.TRUE);
             users.put("demo@venuevista.in", userRepository.save(demoUser));
         } else {
-            users.put("demo@venuevista.in", userRepository.findByEmail("demo@venuevista.in").orElse(null));
+            User existing = userRepository.findByEmail("demo@venuevista.in").orElse(null);
+            if (existing != null && (!Boolean.TRUE.equals(existing.getEmailVerified()) || !Boolean.TRUE.equals(existing.getPhoneVerified()))) {
+                existing.setEmailVerified(Boolean.TRUE);
+                existing.setPhoneVerified(Boolean.TRUE);
+                userRepository.save(existing);
+            }
+            users.put("demo@venuevista.in", existing);
         }
 
         if (!userRepository.existsByEmail("admin@venuevista.in")) {
             User adminUser = new User("VenueVista Admin", "admin@venuevista.in", passwordEncoder.encode("Admin@2026"),
                     "+91 98111 22233", Role.ROLE_ADMIN);
+            adminUser.setEmailVerified(Boolean.TRUE);
+            adminUser.setPhoneVerified(Boolean.TRUE);
             users.put("admin@venuevista.in", userRepository.save(adminUser));
         } else {
-            users.put("admin@venuevista.in", userRepository.findByEmail("admin@venuevista.in").orElse(null));
+            User existing = userRepository.findByEmail("admin@venuevista.in").orElse(null);
+            if (existing != null && (!Boolean.TRUE.equals(existing.getEmailVerified()) || !Boolean.TRUE.equals(existing.getPhoneVerified()))) {
+                existing.setEmailVerified(Boolean.TRUE);
+                existing.setPhoneVerified(Boolean.TRUE);
+                userRepository.save(existing);
+            }
+            users.put("admin@venuevista.in", existing);
         }
 
         if (!userRepository.existsByEmail("organizer@venuevista.in")) {
             User orgUser = new User("Priya Patel", "organizer@venuevista.in", passwordEncoder.encode("Organizer@2026"),
                     "+91 98222 33344", Role.ROLE_ORGANIZER);
+            orgUser.setEmailVerified(Boolean.TRUE);
+            orgUser.setPhoneVerified(Boolean.TRUE);
             users.put("organizer@venuevista.in", userRepository.save(orgUser));
         } else {
-            users.put("organizer@venuevista.in", userRepository.findByEmail("organizer@venuevista.in").orElse(null));
+            User existing = userRepository.findByEmail("organizer@venuevista.in").orElse(null);
+            if (existing != null && (!Boolean.TRUE.equals(existing.getEmailVerified()) || !Boolean.TRUE.equals(existing.getPhoneVerified()))) {
+                existing.setEmailVerified(Boolean.TRUE);
+                existing.setPhoneVerified(Boolean.TRUE);
+                userRepository.save(existing);
+            }
+            users.put("organizer@venuevista.in", existing);
         }
 
         return users;

@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VenueVista - Discover events and find your perfect venue across India. Two journeys, one destination.">
+    <title>VenueVista | Discover Events &amp; Find Your Perfect Venue</title>
+
+    <!-- Theme Flash Prevention: Initialize theme immediately before CSS paint -->
+    <script>
+        (function() {
+            try {
+                const storedTheme = localStorage.getItem('vv_theme');
+                if (storedTheme === 'light' || storedTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', storedTheme);
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <!-- Google Fonts for Editorial Typography (Plus Jakarta Sans & Newsreader) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Preload authoritative logo variants to prevent theme-switch reflow -->
+    <link rel="preload" href="/assets/logo-dark.png" as="image">
+    <link rel="preload" href="/assets/logo-light.png" as="image">
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="container header-container">
+            <a href="/" class="brand-logo" id="brand-logo-link" aria-label="VenueVista Home">
+                <img id="navbar-brand-logo" class="brand-logo-img" src="/assets/logo-dark.png" alt="VenueVista - Events • Tickets • Venues" width="250" height="68">
+            </a>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="header-nav-wrapper">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+
+            <!-- Collapsible Navigation & Actions Wrapper (Contextual per Experience) -->
+            <div class="header-nav-wrapper" id="header-nav-wrapper">
+                <nav class="main-nav" id="main-nav" aria-label="Main Navigation">
+                    <ul class="nav-links" id="nav-links">
+                        <!-- Populated dynamically by router according to experience context -->
+                        <li><a href="/" class="nav-link active" data-nav="home">Home</a></li>
+                        <li><a href="/events" class="nav-link" data-nav="events">Explore Events</a></li>
+                        <li><a href="/venues" class="nav-link" data-nav="venues">Find Venues</a></li>
+                        <li><a href="/#how-it-works" class="nav-link" data-nav="how-it-works">How It Works</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <!-- Icon-Only Sun and Moon Theme Toggle Button -->
+                    <button class="theme-toggle-btn icon-only" id="theme-toggle-btn" type="button" aria-label="Switch to light theme" title="Toggle theme (Midnight Aurora / Aurora Light)">
+                        <span class="theme-icon icon-sun" aria-hidden="true">☀️</span>
+                        <span class="theme-icon icon-moon" aria-hidden="true">🌙</span>
+                    </button>
+
+                    <button class="btn btn-outline" id="btn-login" type="button">Sign In</button>
+                    <button class="btn btn-primary" id="btn-register" type="button">Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area with Distinct Layout Route Views -->
+    <main id="main-content">
+
+        <!-- ===================================================================
+             1. SHARED HOMEPAGE ROUTE: /
+             =================================================================== -->
+        <div id="view-home" class="route-view active" role="region" aria-label="VenueVista Home">
+            <!-- Home Hero Section -->
+            <section class="home-hero-section">
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
+
+                <div class="container hero-container text-center">
+                    <div class="hero-badge">
+                        <span class="badge-dot" aria-hidden="true"></span>
+                        <span class="badge-text">India-First Platform • College Demo MVP</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        <span class="title-main">Discover <em class="hero-highlight hero-italic-events">events</em>. Find your</span>
+                        <span class="title-sub">perfect <em class="hero-highlight hero-italic-venue">venue</em>.</span>
+                    </h1>
+                    <div class="hero-tagline-sub">Two journeys, one destination.</div>
+
+                    <p class="hero-intro-text">
+                        VenueVista connects attendees looking for verified live concerts, tech conclaves, and cultural experiences with organizers seeking iconic rental spaces across <strong>New Delhi, Mumbai, Bengaluru, Hyderabad, Pune, and Chennai</strong>.
+                    </p>
+
+                    <div class="hero-scroll-indicator" aria-hidden="true">
+                        <a href="#how-it-works" class="scroll-arrow-link" aria-label="Scroll down to details">⌄</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dual Journey Spotlight Cards (Choose Your Path) -->
+            <section class="journey-showcase-section">
+                <div class="container">
+                    <div class="section-header text-center">
+                        <h2 class="section-title">Choose Your Path</h2>
+                        <p class="section-subtitle">Your next experience starts here.</p>
+                    </div>
+
+                    <div class="journey-cards-grid">
+                        <!-- Journey 1: Event Discovery -->
+                        <article class="journey-card">
+                            <div>
+                                <span class="journey-card-icon" aria-hidden="true">🎟️</span>
+                                <div class="journey-card-tag">For Attendees &amp; Fans</div>
+                                <h3 class="journey-card-title">Explore Live Events</h3>
+                                <p class="journey-card-desc">
+                                    Browse curated concerts, tech summits, architecture sprints, badminton opens, and Broadway-grade theatre shows across India's top metropolitan hubs.
+                                </p>
+                                <ul class="journey-card-features">
+                                    <li><span class="check-icon">✓</span> 6 diverse event categories with verified INR pricing</li>
+                                    <li><span class="check-icon">✓</span> Upfront seating tiers and IST event schedules</li>
+                                    <li><span class="check-icon">✓</span> Instant pass reservation demo with QR pass delivery</li>
+                                </ul>
+                            </div>
+                            <a href="/events/categories" class="btn btn-primary w-full" id="btn-start-event-journey">
+                                <span>Start Event Journey →</span>
+                            </a>
+                        </article>
+
+                        <!-- Journey 2: Venue Rental -->
+                        <article class="journey-card">
+                            <div>
+                                <span class="journey-card-icon" aria-hidden="true">🏛️</span>
+                                <div class="journey-card-tag">For Organizers &amp; Hosts</div>
+                                <h3 class="journey-card-title">Find a Venue</h3>
+                                <p class="journey-card-desc">
+                                    Discover verified auditoriums, convention centres, luxury banquet halls, executive conference hubs, and open lawns for conclaves, weddings, or festivals.
+                                </p>
+                                <ul class="journey-card-features">
+                                    <li><span class="check-icon">✓</span> 6 distinct venue types with capacity and amenity specs</li>
+                                    <li><span class="check-icon">✓</span> Transparent indicative daily rental rates in INR</li>
+                                    <li><span class="check-icon">✓</span> Custom booking inquiry request workflow</li>
+                                </ul>
+                            </div>
+                            <a href="/venues/categories" class="btn btn-primary w-full" id="btn-start-venue-journey">
+                                <span>Start Venue Journey →</span>
+                            </a>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Home How It Works Section -->
+            <section class="how-it-works-section" id="how-it-works">
+                <div class="container">
+                    <div class="text-center">
+                        <div class="section-tag">Platform Overview</div>
+                        <h2 class="section-title">How VenueVista Works</h2>
+                        <p class="section-subtitle max-w-600">
+                            A clear, friction-free process for both event-goers and space organizers.
+                        </p>
+                    </div>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">01</div>
+                            <h3 class="step-title">Select Your Journey</h3>
+                            <p class="step-description">
+                                Choose between <strong>Explore Events</strong> to discover upcoming live experiences or <strong>Find a Venue</strong> to browse verified rental spaces across Indian metros.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">02</div>
+                            <h3 class="step-title">Explore &amp; Filter</h3>
+                            <p class="step-description">
+                                Attendees filter events by category, city, and date. Event organizers compare venue capacity, acoustics, stage rigs, and indicative daily rental pricing.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">03</div>
+                            <h3 class="step-title">Book or Inquire</h3>
+                            <p class="step-description">
+                                Reserve admission passes with instant confirmation, or submit a venue booking inquiry directly to verified space managers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ===================================================================
+             2. EVENT CATEGORIES LANDING PAGE: /events/categories
+             =================================================================== -->
+        <div id="view-events-categories" class="route-view" role="region" aria-label="Event Categories Landing Page">
+            <!-- Event Hero Banner (Moved here from Explore Events) -->
+            <section class="hero-section">
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
+
+                <div class="container hero-container text-center">
+                    <div class="hero-badge">
+                        <span class="badge-dot" aria-hidden="true"></span>
+                        <span>Event Discovery Experience</span>
+                    </div>
+
+                    <h1 class="hero-title">Curated Live Experiences Across India</h1>
+                    <p class="hero-subtitle">
+                        Discover live concerts, tech meetups, hands-on workshops, sports tournaments, conferences, and theatre performances across Mumbai, Delhi NCR, Bengaluru, Hyderabad, Pune, and Chennai.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 6 Event Categories Showcase Grid -->
+            <section class="category-showcase-section" aria-label="Event Categories Selection">
+                <div class="container">
+                    <div class="view-back-bar">
+                        <div class="view-breadcrumbs">
+                            <a href="/">Home</a> <span>/</span> <strong>Categories</strong>
+                        </div>
+                        <a href="/events/all" class="btn-show-all">
+                            <span>Browse All Events →</span>
+                        </a>
+                    </div>
+
+                    <div class="category-page-header">
+                        <div class="section-tag">Browse by Category</div>
+                        <h1 class="section-title">Explore Event Categories</h1>
+                        <p class="section-subtitle">
+                            Select an event category below to view dedicated listings across India with verified INR pricing and IST schedules.
+                        </p>
+                    </div>
+
+                    <!-- 6 Event Category Cards Grid with SVG illustrations -->
+                    <div class="category-cards-grid" id="events-full-categories-grid">
+                        <!-- Populated dynamically via app.js with links to /events/<slug> -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ===================================================================
+             3. EXPLORE EVENTS ROUTE: /events, /events/all, /events/:categorySlug
+             =================================================================== -->
+        <div id="view-events" class="route-view" role="region" aria-label="Explore Events">
+            <div class="container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs" id="events-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <a href="/events/categories">Categories</a> <span>/</span> <strong id="events-breadcrumb-active">All Events</strong>
+                    </div>
+                    <a href="/events/categories" class="btn-back-nav">
+                        <span>← Back to Categories</span>
+                    </a>
+                </div>
+
+                <!-- Compact, Responsive Category Navigation Row (Top of Explore Events) -->
+                <nav class="compact-category-nav-bar" id="events-compact-nav" aria-label="Event Categories">
+                    <div class="compact-nav-inner">
+                        <a href="/events/all" class="compact-cat-pill active" data-slug="all">All Events</a>
+                        <a href="/events/music" class="compact-cat-pill" data-slug="music">🎵 Music</a>
+                        <a href="/events/technology" class="compact-cat-pill" data-slug="technology">💻 Technology</a>
+                        <a href="/events/workshops" class="compact-cat-pill" data-slug="workshops">🛠️ Workshops</a>
+                        <a href="/events/sports" class="compact-cat-pill" data-slug="sports">🏆 Sports</a>
+                        <a href="/events/conferences" class="compact-cat-pill" data-slug="conferences">🎤 Conferences</a>
+                        <a href="/events/theatre" class="compact-cat-pill" data-slug="theatre">🎭 Theatre</a>
+                    </div>
+                </nav>
+
+                <!-- Section Header (Dynamic Heading, Tag, Subtitle & Count) -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag" id="events-heading-tag">Complete Catalog</div>
+                        <h1 class="section-title" id="events-heading-title">All Upcoming Events in India</h1>
+                        <p class="section-subtitle" id="events-heading-subtitle">
+                            Browse all available demonstration events. Search by title, venue, or metro city, and filter by category.
+                        </p>
+                    </div>
+
+                    <div class="section-controls">
+                        <span class="results-count" id="events-results-count" aria-live="polite">Showing 18 events</span>
+                        <button class="btn btn-sm btn-outline btn-reset" id="btn-events-reset" type="button" style="display: none;">
+                            <span>✕ Reset Filters</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search and Filter Form -->
+                <form class="search-bar" id="events-search-form" role="search" onsubmit="return false;">
+                    <div class="search-input-group">
+                        <label for="events-search-query" class="visually-hidden">Search by event title, venue, or Indian city</label>
+                        <span class="input-icon" aria-hidden="true">🔍</span>
+                        <input type="text" id="events-search-query" placeholder="Search by event title, venue, or city (e.g. Mumbai, Bengaluru, Delhi)..." autocomplete="off">
+                    </div>
+
+                    <div class="search-select-group">
+                        <label for="events-category-select" class="visually-hidden">Filter by Category</label>
+                        <select id="events-category-select" aria-label="Filter events by category">
+                            <option value="">All Categories</option>
+                            <option value="Music">Music &amp; Concerts</option>
+                            <option value="Technology">Technology &amp; AI</option>
+                            <option value="Workshops">Workshops &amp; Design</option>
+                            <option value="Sports">Sports &amp; Fitness</option>
+                            <option value="Conferences">Conferences &amp; Summits</option>
+                            <option value="Theatre">Theatre &amp; Musical</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary btn-search" id="btn-events-search-trigger" type="button">
+                        <span>Filter Events</span>
+                    </button>
+                </form>
+
+                <!-- Responsive Event Grid -->
+                <div class="event-grid" id="events-grid" aria-live="polite">
+                    <!-- Populated dynamically via app.js -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="events-empty-state" style="display: none;" role="status">
+                    <div class="empty-state-icon" aria-hidden="true">🔍</div>
+                    <h3 class="empty-state-title">No Events Found</h3>
+                    <p class="empty-state-text" id="events-empty-msg">
+                        We couldn't find any events matching your criteria. Try adjusting your search query or selecting another category.
+                    </p>
+                    <button class="btn btn-primary" id="btn-events-empty-reset" type="button">Show All Events</button>
+                </div>
+            </div>
+
+            <!-- How Explore Events Works Section -->
+            <section class="how-it-works-section" id="how-events-work" aria-label="How Explore Events Works" style="margin-top: 4rem;">
+                <div class="container">
+                    <div class="text-center">
+                        <div class="section-tag">Attendee Guide</div>
+                        <h2 class="section-title">How Explore Events Works</h2>
+                        <p class="section-subtitle max-w-600">
+                            A straightforward four-step process for discovering and booking live experiences across India.
+                        </p>
+                    </div>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">01</div>
+                            <h3 class="step-title">Discover Events</h3>
+                            <p class="step-description">
+                                Filter by music, technology, workshops, sports, conferences, or theatre. Search by event name, venue, or metro city.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">02</div>
+                            <h3 class="step-title">Select Tickets</h3>
+                            <p class="step-description">
+                                Review transparent INR ticket pricing, date and IST time schedules, and venue accessibility specifications.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">03</div>
+                            <h3 class="step-title">Complete Booking</h3>
+                            <p class="step-description">
+                                Reserve your admission tier via our streamlined checkout flow integrated with Spring Boot REST API endpoints.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">04</div>
+                            <h3 class="step-title">Instant Confirmation</h3>
+                            <p class="step-description">
+                                Receive instant digital pass confirmation with unique QR codes for fast contactless entry at the event venue.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ===================================================================
+             4. VENUE CATEGORIES LANDING PAGE: /venues/categories
+             =================================================================== -->
+        <div id="view-venues-categories" class="route-view" role="region" aria-label="Venue Categories Landing Page">
+            <!-- Venue Hero Banner (Moved here from Explore Venues) -->
+            <section class="hero-section">
+                <!-- Atmospheric Aurora Ribbons, Horizon Arc & Sparkles -->
+                <div class="hero-aurora-container" aria-hidden="true">
+                    <div class="aurora-curtain aurora-curtain-left"></div>
+                    <div class="aurora-curtain aurora-curtain-right"></div>
+                    <div class="aurora-horizon-arc"></div>
+                    <div class="aurora-reflection-pool"></div>
+                    <div class="aurora-sparkle sparkle-1">✦</div>
+                    <div class="aurora-sparkle sparkle-2">✦</div>
+                </div>
+
+                <div class="container hero-container text-center">
+                    <div class="hero-badge">
+                        <span class="badge-dot" aria-hidden="true"></span>
+                        <span>Venue Rental Experience</span>
+                    </div>
+
+                    <h1 class="hero-title">Find &amp; Book Verified Venues in India</h1>
+                    <p class="hero-subtitle">
+                        From grand auditoriums and mega convention centres to luxury banquet halls and open lawns, hire certified spaces for conclaves, concerts, or celebrations.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 6 Venue Categories Showcase Grid -->
+            <section class="category-showcase-section" aria-label="Venue Categories Selection">
+                <div class="container">
+                    <div class="view-back-bar">
+                        <div class="view-breadcrumbs">
+                            <a href="/">Home</a> <span>/</span> <strong>Categories</strong>
+                        </div>
+                        <a href="/venues/all" class="btn-show-all">
+                            <span>Browse All Venues →</span>
+                        </a>
+                    </div>
+
+                    <div class="category-page-header">
+                        <div class="section-tag">Browse by Venue Type</div>
+                        <h1 class="section-title">Explore Venue Categories</h1>
+                        <p class="section-subtitle">
+                            Certified rental spaces categorized by architectural format, acoustic engineering, and guest capacity.
+                        </p>
+                    </div>
+
+                    <!-- 6 Venue Category Cards Grid with SVG illustrations -->
+                    <div class="category-cards-grid" id="venues-full-categories-grid">
+                        <!-- Populated dynamically via app.js with links to /venues/<slug> -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ===================================================================
+             5. EXPLORE VENUES ROUTE: /venues, /venues/all, /venues/:venueCategorySlug
+             =================================================================== -->
+        <div id="view-venues" class="route-view" role="region" aria-label="Explore Venues">
+            <div class="container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs" id="venues-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <a href="/venues/categories">Categories</a> <span>/</span> <strong id="venues-breadcrumb-active">All Venues</strong>
+                    </div>
+                    <a href="/venues/categories" class="btn-back-nav">
+                        <span>← Back to Categories</span>
+                    </a>
+                </div>
+
+                <!-- Compact, Responsive Category Navigation Row (Top of Explore Venues) -->
+                <nav class="compact-category-nav-bar" id="venues-compact-nav" aria-label="Venue Categories">
+                    <div class="compact-nav-inner">
+                        <a href="/venues/all" class="compact-cat-pill active" data-slug="all">All Venues</a>
+                        <a href="/venues/banquet-halls" class="compact-cat-pill" data-slug="banquet-halls">🏰 Banquet Halls</a>
+                        <a href="/venues/auditoriums" class="compact-cat-pill" data-slug="auditoriums">🎭 Auditoriums</a>
+                        <a href="/venues/conference-centres" class="compact-cat-pill" data-slug="conference-centres">💼 Conference Centres</a>
+                        <a href="/venues/convention-halls" class="compact-cat-pill" data-slug="convention-halls">🌐 Convention Halls</a>
+                        <a href="/venues/outdoor-lawns" class="compact-cat-pill" data-slug="outdoor-lawns">🌿 Outdoor Lawns</a>
+                        <a href="/venues/party-venues" class="compact-cat-pill" data-slug="party-venues">🎉 Party Venues</a>
+                    </div>
+                </nav>
+
+                <!-- Section Header (Dynamic Heading, Tag, Subtitle & Count) -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag" id="venues-heading-tag">All Rental Spaces</div>
+                        <h1 class="section-title" id="venues-heading-title">All Demonstration Venues in India</h1>
+                        <p class="section-subtitle" id="venues-heading-subtitle">
+                            Certified event venues across New Delhi, Mumbai, Bengaluru, Hyderabad, Pune, and Chennai. Filter by venue type and location.
+                        </p>
+                    </div>
+
+                    <div class="section-controls">
+                        <span class="results-count" id="venues-results-count" aria-live="polite">Showing 8 venues</span>
+                        <button class="btn btn-sm btn-outline btn-reset" id="btn-venues-reset" type="button" style="display: none;">
+                            <span>✕ Reset Filters</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Venue Filtering and Search Bar -->
+                <div class="venue-filters-bar" role="search">
+                    <div class="filter-group">
+                        <label for="venues-category-select" class="form-label">Venue Type</label>
+                        <select id="venues-category-select" class="form-control" aria-label="Filter by Venue Category">
+                            <option value="">All Venue Types</option>
+                            <option value="Banquet Halls">Banquet Halls</option>
+                            <option value="Auditoriums">Auditoriums</option>
+                            <option value="Conference Centres">Conference Centres</option>
+                            <option value="Convention Halls">Convention Halls</option>
+                            <option value="Outdoor Lawns">Outdoor Lawns</option>
+                            <option value="Party Venues">Party Venues</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="venues-city-select" class="form-label">Location (City)</label>
+                        <select id="venues-city-select" class="form-control" aria-label="Filter by City Location">
+                            <option value="">All Indian Cities</option>
+                            <option value="New Delhi">New Delhi (NCR)</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Chennai">Chennai</option>
+                        </select>
+                    </div>
+
+                    <div class="search-group">
+                        <div class="w-full">
+                            <label for="venues-search-input" class="form-label">Search Venue</label>
+                            <input type="text" id="venues-search-input" class="form-control" placeholder="Search by venue name or locality..." autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-filter-action" id="btn-venues-apply" type="button">
+                        <span>Filter Venues</span>
+                    </button>
+                </div>
+
+                <!-- Responsive Venue Grid -->
+                <div class="venue-grid" id="venues-grid" aria-live="polite">
+                    <!-- Populated dynamically via app.js -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="venues-empty-state" style="display: none;" role="status">
+                    <div class="empty-state-icon" aria-hidden="true">🏛️</div>
+                    <h3 class="empty-state-title">No Venues Found</h3>
+                    <p class="empty-state-text" id="venues-empty-msg">
+                        We couldn't find any venues matching your criteria. Try adjusting your category or city filter.
+                    </p>
+                    <button class="btn btn-primary" id="btn-venues-empty-reset" type="button">Show All Venues</button>
+                </div>
+            </div>
+
+            <!-- How Finding a Venue Works Section -->
+            <section class="how-it-works-section" id="how-venues-work" aria-label="How Finding a Venue Works" style="margin-top: 4rem;">
+                <div class="container">
+                    <div class="text-center">
+                        <div class="section-tag">Organizer Guide</div>
+                        <h2 class="section-title">How Finding a Venue Works</h2>
+                        <p class="section-subtitle max-w-600">
+                            A transparent, four-step process for evaluating and hiring verified event spaces.
+                        </p>
+                    </div>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">01</div>
+                            <h3 class="step-title">Browse Venue Types</h3>
+                            <p class="step-description">
+                                Filter by banquet halls, auditoriums, convention centres, conference centres, outdoor lawns, or party venues in your target city.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">02</div>
+                            <h3 class="step-title">Compare Venues</h3>
+                            <p class="step-description">
+                                Evaluate guest seating capacities, acoustic rigging, audiovisual equipment, and transparent base rental rates in INR.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">03</div>
+                            <h3 class="step-title">Review Facilities</h3>
+                            <p class="step-description">
+                                Inspect green rooms, valet parking limits, freight elevators, modular partitions, and dedicated power grids.
+                            </p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-number">04</div>
+                            <h3 class="step-title">Submit Inquiry</h3>
+                            <p class="step-description">
+                                Submit a rental inquiry specifying your event type, date, and attendance size for customized quotation by space managers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ===================================================================
+             10. 404 NOT FOUND ROUTE
+             =================================================================== -->
+        <div id="view-not-found" class="route-view" role="region" aria-label="Page Not Found">
+            <div class="container not-found-section">
+                <div class="not-found-card">
+                    <div class="not-found-code">404</div>
+                    <h1 class="not-found-title">Page Not Found</h1>
+                    <p class="not-found-desc">
+                        The page or route you requested does not exist or has been moved. Explore our live events or find verified venues across India below.
+                    </p>
+                    <div class="not-found-actions">
+                        <a href="/" class="btn btn-primary">
+                            <span>Return to Home</span>
+                        </a>
+                        <a href="/events" class="btn btn-outline">
+                            <span>Explore Events</span>
+                        </a>
+                        <a href="/venues" class="btn btn-outline">
+                            <span>Find Venues</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             11. MY BOOKINGS ROUTE: /my-bookings
+             =================================================================== -->
+        <div id="view-my-bookings" class="route-view" role="region" aria-label="My Bookings Dashboard">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>My Bookings</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Personal Dashboard</div>
+                        <h1 class="section-title">My Bookings</h1>
+                        <p class="section-subtitle">
+                            Keep track of your event tickets and venue rental requests.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tabs -->
+                <div class="account-tabs-bar" role="tablist" aria-label="My Bookings Sections">
+                    <button class="account-tab-btn active" id="tab-btn-tickets" type="button" role="tab" aria-selected="true" data-tab="tickets">
+                        <span class="tab-icon">🎟️</span>
+                        <span>My Tickets</span>
+                        <span class="tab-badge-count" id="badge-tickets-count">0</span>
+                    </button>
+                    <button class="account-tab-btn" id="tab-btn-inquiries" type="button" role="tab" aria-selected="false" data-tab="inquiries">
+                        <span class="tab-icon">🏛️</span>
+                        <span>My Venue Inquiries</span>
+                        <span class="tab-badge-count" id="badge-inquiries-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Tab Content A: My Tickets -->
+                <div class="account-tab-pane active" id="pane-my-tickets" role="tabpanel" aria-labelledby="tab-btn-tickets">
+                    <div id="my-tickets-loading" class="account-loading-spinner" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading your event tickets...</p>
+                    </div>
+                    <div id="my-tickets-error" class="account-error-alert" style="display:none;">
+                        <p id="my-tickets-error-text">Unable to load ticket bookings.</p>
+                        <button class="btn btn-outline btn-sm" id="btn-retry-tickets" type="button">Retry</button>
+                    </div>
+                    <div id="my-tickets-empty" class="empty-state" style="display:none;">
+                        <div class="empty-state-icon" aria-hidden="true">🎟️</div>
+                        <h3 class="empty-state-title">No Event Bookings Found</h3>
+                        <p class="empty-state-text">
+                            You haven't reserved tickets for any events yet. Explore upcoming concerts, workshops, and sports matches across India.
+                        </p>
+                        <a href="/events/all" class="btn btn-primary">
+                            <span>Explore Events</span>
+                        </a>
+                    </div>
+                    <div id="my-tickets-list" class="account-cards-grid"></div>
+                </div>
+
+                <!-- Tab Content B: My Venue Inquiries -->
+                <div class="account-tab-pane" id="pane-my-inquiries" role="tabpanel" aria-labelledby="tab-btn-inquiries" style="display:none;">
+                    <div id="my-inquiries-loading" class="account-loading-spinner" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading your venue inquiries...</p>
+                    </div>
+                    <div id="my-inquiries-error" class="account-error-alert" style="display:none;">
+                        <p id="my-inquiries-error-text">Unable to load venue inquiries.</p>
+                        <button class="btn btn-outline btn-sm" id="btn-retry-inquiries" type="button">Retry</button>
+                    </div>
+                    <div id="my-inquiries-empty" class="empty-state" style="display:none;">
+                        <div class="empty-state-icon" aria-hidden="true">🏛️</div>
+                        <h3 class="empty-state-title">No Venue Inquiries Found</h3>
+                        <p class="empty-state-text">
+                            You haven't submitted any venue rental requests yet. Explore premium banquets, auditoriums, and convention centers.
+                        </p>
+                        <a href="/venues/all" class="btn btn-primary">
+                            <span>Explore Venues</span>
+                        </a>
+                    </div>
+                    <div id="my-inquiries-list" class="account-cards-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             12. MY PROFILE ROUTE: /my-profile
+             =================================================================== -->
+        <div id="view-my-profile" class="route-view" role="region" aria-label="My Profile">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>My Profile</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Account Credentials</div>
+                        <h1 class="section-title">My Profile</h1>
+                        <p class="section-subtitle">
+                            Your authenticated personal profile and account credentials.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Profile Overview Card -->
+                <div class="profile-card">
+                    <div class="profile-header-banner">
+                        <div class="profile-avatar-large" id="profile-avatar-display">U</div>
+                        <div class="profile-header-meta">
+                            <h2 class="profile-display-name" id="profile-name-display">User Name</h2>
+                            <div class="profile-display-role-pill" id="profile-role-display">ROLE_USER</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Full Name</div>
+                            <div class="profile-info-val" id="profile-val-name">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Email Address</div>
+                            <div class="profile-info-val" id="profile-val-email">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Phone Number</div>
+                            <div class="profile-info-val" id="profile-val-phone">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account Role</div>
+                            <div class="profile-info-val" id="profile-val-role">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account ID</div>
+                            <div class="profile-info-val" id="profile-val-id">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account Status</div>
+                            <div class="profile-info-val">
+                                <span class="status-badge status-confirmed">Active Session</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions-row">
+                        <a href="/my-bookings" class="btn btn-primary">
+                            <span>View My Bookings</span>
+                        </a>
+                        <a href="/account-settings" class="btn btn-outline">
+                            <span>Account Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             13. ACCOUNT SETTINGS ROUTE: /account-settings
+             =================================================================== -->
+        <div id="view-account-settings" class="route-view" role="region" aria-label="Account Settings">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>Account Settings</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Preferences &amp; Security</div>
+                        <h1 class="section-title">Account Settings</h1>
+                        <p class="section-subtitle">
+                            Manage your interface preferences and active session.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Settings Cards Stack -->
+                <div class="settings-cards-stack">
+                    <!-- Card 1: Theme Preference -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <h3 class="settings-card-title">Interface Theme</h3>
+                            <p class="settings-card-desc">
+                                Choose between VenueVista's dark and light aesthetic styles.
+                            </p>
+                        </div>
+                        <div class="theme-options-grid">
+                            <div class="theme-option-card" id="theme-card-dark" role="button" tabindex="0">
+                                <div class="theme-preview theme-preview-dark">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-body"></div>
+                                </div>
+                                <div class="theme-option-meta">
+                                    <div class="theme-option-name">🌙 Midnight Glow (Dark)</div>
+                                    <div class="theme-option-desc">Deep navy, flowing aurora ribbons &amp; vivid luminescence.</div>
+                                </div>
+                                <div class="theme-check-indicator" id="theme-check-dark">✓ Active</div>
+                            </div>
+
+                            <div class="theme-option-card" id="theme-card-light" role="button" tabindex="0">
+                                <div class="theme-preview theme-preview-light">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-body"></div>
+                                </div>
+                                <div class="theme-option-meta">
+                                    <div class="theme-option-name">☀️ Aurora View (Light)</div>
+                                    <div class="theme-option-desc">Warm soft-white surfaces with high-contrast navy typography.</div>
+                                </div>
+                                <div class="theme-check-indicator" id="theme-check-light">✓ Active</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Session & Sign Out -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <h3 class="settings-card-title">Active Session</h3>
+                            <p class="settings-card-desc" id="settings-session-desc">
+                                You are currently signed in.
+                            </p>
+                        </div>
+                        <div class="settings-card-actions">
+                            <button type="button" class="btn btn-outline" id="btn-settings-signout" style="color:#ef4444;border-color:rgba(239,68,68,0.4);">
+                                <span>Sign Out of Account</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===================================================================
+         GLOBAL MODALS & TOAST NOTIFICATIONS (Shared across all routes)
+         =================================================================== -->
+
+    <!-- Event Details Modal Dialog -->
+    <div class="modal-backdrop" id="event-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-event-title">
+        <div class="modal-card">
+            <button class="modal-close-btn" id="modal-close-btn" type="button" aria-label="Close details modal">&times;</button>
+            <div class="modal-media-header" id="modal-media-header">
+                <img id="modal-event-image" src="" alt="Event banner" class="modal-image">
+                <div class="modal-category-badge" id="modal-event-category">Category</div>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-title" id="modal-event-title">Event Title</h3>
+
+                <div class="modal-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">📅</span>
+                        <div>
+                            <span class="meta-label">Date &amp; Time (IST)</span>
+                            <span class="meta-value" id="modal-event-date">Date info</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">📍</span>
+                        <div>
+                            <span class="meta-label">Venue Location</span>
+                            <span class="meta-value" id="modal-event-venue">Venue info</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">🎟️</span>
+                        <div>
+                            <span class="meta-label">Tickets From</span>
+                            <span class="meta-value text-primary font-bold" id="modal-event-price">From ₹0</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">🏛️</span>
+                        <div>
+                            <span class="meta-label">Event Organizer</span>
+                            <span class="meta-value" id="modal-event-organizer">Organizer</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">🎫</span>
+                        <div>
+                            <span class="meta-label">Ticket Availability</span>
+                            <span class="meta-value" id="modal-event-seats">
+                                <span class="inventory-pill inventory-available">
+                                    <span class="inventory-pill-dot" aria-hidden="true"></span>
+                                    <span class="inventory-text">Checking seats...</span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-description-wrapper">
+                    <h4 class="modal-subheading">About This Experience</h4>
+                    <p class="modal-description" id="modal-event-description">Event description text goes here.</p>
+                </div>
+
+                <!-- Event Ticket Booking Form (Connected to POST /api/bookings) -->
+                <div class="event-booking-section" id="event-booking-section">
+                    <h4 class="modal-subheading">Reserve Tickets</h4>
+                    <div id="modal-booking-sold-out-alert" class="event-booking-sold-out-msg" style="display:none;">
+                        <span aria-hidden="true">🚫</span>
+                        <span>Sold Out — All tickets for this event have been reserved.</span>
+                    </div>
+                    <form class="event-booking-form" id="event-booking-form" onsubmit="return false;">
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-ticket-tier" class="form-label">Ticket Tier</label>
+                                <select id="booking-ticket-tier" class="form-control">
+                                    <option value="Standard Pass">Standard Pass</option>
+                                    <option value="VIP Access Pass">VIP Access Pass (+50%)</option>
+                                    <option value="Early Bird Pass">Early Bird Pass (-15%)</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="booking-quantity" class="form-label">Number of Tickets</label>
+                                <select id="booking-quantity" class="form-control">
+                                    <option value="1">1 Ticket</option>
+                                    <option value="2" selected>2 Tickets</option>
+                                    <option value="3">3 Tickets</option>
+                                    <option value="4">4 Tickets</option>
+                                    <option value="5">5 Tickets</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-name" class="form-label">Attendee Full Name</label>
+                                <input type="text" id="booking-name" class="form-control" placeholder="e.g. Rahul Verma" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="booking-email" class="form-label">Email Address</label>
+                                <input type="email" id="booking-email" class="form-control" placeholder="e.g. rahul@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="booking-phone" class="form-label">Mobile Number</label>
+                                <input type="tel" id="booking-phone" class="form-control" placeholder="+91 98765 43210" value="+91 98765 43210" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label">Estimated Total</label>
+                                <div class="form-control font-bold text-primary" id="booking-total-display" style="display:flex;align-items:center;background:var(--bg-surface-alt);">
+                                    ₹1,998
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="padding:1rem 0 0;margin-top:0.5rem;">
+                            <button class="btn btn-outline" id="modal-close-action" type="button">Close</button>
+                            <button class="btn btn-primary" id="btn-modal-book" type="submit">
+                                <span>Confirm Ticket Pass</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Event Booking Confirmation Card (Shown after successful POST /api/bookings) -->
+                <div class="event-booking-confirmation" id="event-booking-confirmation" style="display:none;">
+                    <div class="confirmation-card">
+                        <div class="confirmation-badge-pill">✓ Reservation Confirmed</div>
+                        <h4 style="margin:0.25rem 0 0.5rem;color:var(--text-primary);font-size:1.2rem;">Your Booking Pass is Ready</h4>
+                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Keep this reference code for admission check-in:</p>
+                        <div class="confirmation-code-display" id="booking-confirmed-code">VV-BK-2026-0001</div>
+                        <div style="font-size:0.9rem;color:var(--text-primary);line-height:1.6;margin-top:0.75rem;text-align:left;background:var(--bg-surface);padding:0.75rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                            <div><strong>Event:</strong> <span id="booking-confirmed-event">-</span></div>
+                            <div><strong>Quantity:</strong> <span id="booking-confirmed-qty">-</span></div>
+                            <div><strong>Total Amount:</strong> <span id="booking-confirmed-amount" class="text-primary font-bold">-</span></div>
+                            <div><strong>Attendee:</strong> <span id="booking-confirmed-attendee">-</span></div>
+                            <div><strong>Status:</strong> <span style="color:#10b981;font-weight:700;">CONFIRMED</span></div>
+                        </div>
+                        <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:center;">
+                            <button class="btn btn-outline btn-sm" id="btn-booking-another" type="button">Book Another Pass</button>
+                            <button class="btn btn-primary btn-sm" id="btn-booking-done" type="button">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Venue Rental Inquiry Modal Dialog -->
+    <div class="modal-backdrop" id="venue-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="venue-modal-title">
+        <div class="modal-card">
+            <button class="modal-close-btn" id="venue-modal-close-btn" type="button" aria-label="Close venue inquiry modal">&times;</button>
+            <div class="modal-media-header" id="venue-modal-media-header">
+                <img id="venue-modal-image" src="" alt="Venue exterior" class="modal-image">
+                <div class="modal-category-badge" id="venue-modal-badge">Venue Rental</div>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-title" id="venue-modal-title">Rent Venue</h3>
+                <p class="modal-venue-subtitle" id="venue-modal-location">City, State</p>
+
+                <div class="modal-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">👥</span>
+                        <div>
+                            <span class="meta-label">Capacity</span>
+                            <span class="meta-value" id="venue-modal-capacity">1,000 Guests</span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">💰</span>
+                        <div>
+                            <span class="meta-label">Base Rental</span>
+                            <span class="meta-value text-primary font-bold" id="venue-modal-price">₹0 / day</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rental Request Form -->
+                <form class="venue-inquiry-form" id="venue-inquiry-form" onsubmit="return false;">
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="inquiry-event-type" class="form-label">Event Type</label>
+                            <select id="inquiry-event-type" class="form-control" required>
+                                <option value="Concert">Live Music / Concert</option>
+                                <option value="Conference">Tech Summit / Corporate Conclave</option>
+                                <option value="Workshop">Design / Coding Workshop</option>
+                                <option value="Wedding">Wedding / Banquet Reception</option>
+                                <option value="Theatre">Dramatic Play / Art Exhibition</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="inquiry-date" class="form-label">Requested Date</label>
+                            <input type="date" id="inquiry-date" class="form-control" value="2026-11-20" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="inquiry-attendance" class="form-label">Expected Attendance</label>
+                            <select id="inquiry-attendance" class="form-control">
+                                <option value="50-200">50 - 200 Guests</option>
+                                <option value="200-500">200 - 500 Guests</option>
+                                <option value="500-1500" selected>500 - 1,500 Guests</option>
+                                <option value="1500+">1,500+ Guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="inquiry-duration" class="form-label">Rental Duration</label>
+                            <select id="inquiry-duration" class="form-control">
+                                <option value="Full Day (10 Hours)" selected>Full Day (10 Hours)</option>
+                                <option value="Half Day (5 Hours)">Half Day (5 Hours)</option>
+                                <option value="Multi-Day (2-3 Days)">Multi-Day (2-3 Days)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="inquiry-name" class="form-label">Your Name / Organization</label>
+                            <input type="text" id="inquiry-name" class="form-control" placeholder="e.g. Arjun Sharma / TechVentures India" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="inquiry-contact" class="form-label">Contact Phone / Email</label>
+                            <input type="text" id="inquiry-contact" class="form-control" placeholder="+91 98765 43210 or name@domain.in" required>
+                        </div>
+                    </div>
+
+                    <!-- Demo Notice Alert -->
+                    <div class="demo-notice-box" style="margin-bottom:0.75rem;">
+                        <span class="demo-badge">Venue Rental API</span>
+                        <p>
+                            Venue rental inquiries calculate indicative quotes and dispatch immediately to the Spring Boot venue manager API (<code>/api/venues/inquiries</code>).
+                        </p>
+                    </div>
+
+                    <div class="modal-footer" style="padding:1rem 0 0;margin-top:0.5rem;">
+                        <button class="btn btn-outline" id="venue-modal-close-action" type="button">Cancel</button>
+                        <button class="btn btn-primary" id="btn-submit-inquiry" type="submit">Submit Rental Inquiry</button>
+                    </div>
+                </form>
+
+                <!-- Venue Inquiry Confirmation Card (Shown after successful POST /api/venues/inquiries) -->
+                <div class="venue-inquiry-confirmation" id="venue-inquiry-confirmation" style="display:none;">
+                    <div class="confirmation-card">
+                        <div class="confirmation-badge-pill">✓ Inquiry Received</div>
+                        <h4 style="margin:0.25rem 0 0.5rem;color:var(--text-primary);font-size:1.2rem;">Rental Inquiry Confirmed</h4>
+                        <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;">Your booking inquiry reference code:</p>
+                        <div class="confirmation-code-display" id="inquiry-confirmed-code">VV-INQ-2026-0001</div>
+                        <div style="font-size:0.9rem;color:var(--text-primary);line-height:1.6;margin-top:0.75rem;text-align:left;background:var(--bg-surface);padding:0.75rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                            <div><strong>Venue:</strong> <span id="inquiry-confirmed-venue">-</span></div>
+                            <div><strong>Event Type:</strong> <span id="inquiry-confirmed-type">-</span></div>
+                            <div><strong>Requested Date:</strong> <span id="inquiry-confirmed-date">-</span></div>
+                            <div><strong>Duration:</strong> <span id="inquiry-confirmed-duration">-</span></div>
+                            <div><strong>Estimated Quote:</strong> <span id="inquiry-confirmed-quote" class="text-primary font-bold">-</span></div>
+                            <div><strong>Status:</strong> <span style="color:#10b981;font-weight:700;">RECEIVED</span></div>
+                        </div>
+                        <div style="margin-top:1.25rem;display:flex;gap:0.75rem;justify-content:center;">
+                            <button class="btn btn-outline btn-sm" id="btn-inquiry-another" type="button">Submit Another Inquiry</button>
+                            <button class="btn btn-primary btn-sm" id="btn-inquiry-done" type="button">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Authentication Modal (Sign In / Register) -->
+    <div class="modal-backdrop" id="auth-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div class="modal-card modal-card-sm">
+            <button class="modal-close-btn" id="auth-modal-close-btn" type="button" aria-label="Close modal">&times;</button>
+            <div class="modal-body">
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab-btn active" id="auth-tab-login" type="button" role="tab" aria-selected="true">Sign In</button>
+                    <button class="auth-tab-btn" id="auth-tab-register" type="button" role="tab" aria-selected="false">Register</button>
+                </div>
+
+                <div id="auth-error-alert" class="auth-error-alert" style="display:none;"></div>
+
+                <!-- Sign In Form -->
+                <form id="form-auth-login" onsubmit="return false;">
+                    <div style="margin-bottom:1rem;text-align:center;">
+                        <button type="button" class="btn btn-outline btn-sm" id="btn-auth-quick-fill" style="width:100%;font-size:0.8rem;border-style:dashed;">
+                            ⚡ Quick Demo Login: demo@venuevista.in
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label for="login-email" class="form-label">Email Address</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="demo@venuevista.in" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1.25rem;">
+                        <label for="login-password" class="form-label">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+
+                    <button class="btn btn-primary w-full" id="btn-submit-login" type="submit">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Registration Flow: Dual OTP Verification -->
+                <div id="form-auth-register" style="display:none;">
+                    <!-- Step Progress Indicator -->
+                    <div class="reg-stepper" id="reg-stepper" aria-label="Registration Progress">
+                        <div class="reg-step active" id="step-badge-1">
+                            <span class="step-num">1</span>
+                            <span class="step-label">Details</span>
+                        </div>
+                        <div class="step-line" id="step-line-1"></div>
+                        <div class="reg-step" id="step-badge-2">
+                            <span class="step-num">2</span>
+                            <span class="step-label">Email OTP</span>
+                        </div>
+                        <div class="step-line" id="step-line-2"></div>
+                        <div class="reg-step" id="step-badge-3">
+                            <span class="step-num">3</span>
+                            <span class="step-label">Phone OTP</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Details -->
+                    <form id="reg-step-1" onsubmit="return false;">
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-name" class="form-label">Full Name</label>
+                            <input type="text" id="reg-name" class="form-control" placeholder="e.g. Vikram Malhotra" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-email" class="form-label">Email Address</label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="e.g. vikram@example.com" required autocomplete="email">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-phone" class="form-label">Indian Mobile Number</label>
+                            <input type="tel" id="reg-phone" class="form-control" placeholder="e.g. +91 98765 43210 or 9876543210" required autocomplete="tel">
+                            <span style="font-size:0.72rem;color:var(--text-muted);display:block;margin-top:0.25rem;">Standard 10-digit Indian mobile starting with 6, 7, 8, or 9</span>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-password" class="form-label">Password (min 6 characters)</label>
+                            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;">
+                            <label for="reg-confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" id="reg-confirm-password" class="form-control" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-submit-register" type="submit">
+                            <span>Continue to Verification →</span>
+                        </button>
+                    </form>
+
+                    <!-- Step 2: Email OTP -->
+                    <form id="reg-step-2" onsubmit="return false;" style="display:none;">
+                        <div class="otp-step-header">
+                            <h4 class="otp-title">Email Verification</h4>
+                            <p class="otp-desc">
+                                Demo verification for <strong id="reg-display-email" style="color:var(--text-primary);"></strong>. Use the generated demo code below to verify your email address.
+                            </p>
+                        </div>
+
+                        <!-- Development-only Demo Email OTP Panel -->
+                        <div class="demo-otp-panel" id="demo-email-otp-panel" style="display:none;">
+                            <div class="demo-otp-header">
+                                <span class="demo-badge">DEV / DEMO OTP</span>
+                                <button type="button" class="demo-fill-btn" id="btn-fill-email-otp" title="Autofill code into input">⚡ Quick Fill</button>
+                            </div>
+                            <div class="demo-otp-content">
+                                <span class="demo-otp-label">Demo Email OTP:</span>
+                                <span class="demo-otp-value" id="demo-email-otp-val">------</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;text-align:center;">
+                            <label for="reg-email-otp" class="form-label" style="text-align:left;">Enter 6-Digit Email Verification Code</label>
+                            <input type="text" id="reg-email-otp" class="form-control otp-input-centered" placeholder="123456" maxlength="6" inputmode="numeric" pattern="\d{6}" required autocomplete="one-time-code">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-verify-email-otp" type="submit">
+                            <span>Verify Email →</span>
+                        </button>
+
+                        <div class="otp-actions-row">
+                            <button type="button" class="btn-link-action" id="btn-resend-email-otp">Request New Demo Email OTP</button>
+                            <span id="reg-email-countdown" class="cooldown-timer" style="display:none;">(30s)</span>
+                            <span class="sep-dot">•</span>
+                            <button type="button" class="btn-link-action" id="btn-back-step1">Change Details</button>
+                        </div>
+                    </form>
+
+                    <!-- Step 3: Phone OTP -->
+                    <form id="reg-step-3" onsubmit="return false;" style="display:none;">
+                        <div class="otp-step-header">
+                            <div class="otp-verified-pill">✓ Email Verified</div>
+                            <h4 class="otp-title" style="margin-top:0.4rem;">Phone Verification</h4>
+                            <p class="otp-desc">
+                                Demo verification for <strong id="reg-display-phone" style="color:var(--text-primary);"></strong>. Use the generated demo code below to verify your phone number.
+                            </p>
+                        </div>
+
+                        <!-- Development-only Demo Phone OTP Panel -->
+                        <div class="demo-otp-panel" id="demo-phone-otp-panel" style="display:none;">
+                            <div class="demo-otp-header">
+                                <span class="demo-badge">DEV / DEMO OTP</span>
+                                <button type="button" class="demo-fill-btn" id="btn-fill-phone-otp" title="Autofill code into input">⚡ Quick Fill</button>
+                            </div>
+                            <div class="demo-otp-content">
+                                <span class="demo-otp-label">Demo Phone OTP:</span>
+                                <span class="demo-otp-value" id="demo-phone-otp-val">------</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;text-align:center;">
+                            <label for="reg-phone-otp" class="form-label" style="text-align:left;">Enter 6-Digit Phone Verification Code</label>
+                            <input type="text" id="reg-phone-otp" class="form-control otp-input-centered" placeholder="123456" maxlength="6" inputmode="numeric" pattern="\d{6}" required autocomplete="one-time-code">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-verify-phone-otp" type="submit">
+                            <span>Verify & Complete Registration</span>
+                        </button>
+
+                        <div class="otp-actions-row">
+                            <button type="button" class="btn-link-action" id="btn-resend-phone-otp">Request New Demo Phone OTP</button>
+                            <span id="reg-phone-countdown" class="cooldown-timer" style="display:none;">(30s)</span>
+                        </div>
+                    </form>
+
+                    <!-- Step 4: Success Confirmation -->
+                    <div id="reg-step-4" style="display:none;text-align:center;padding:1rem 0;">
+                        <div class="reg-success-icon">✓</div>
+                        <h3 class="otp-title" style="margin: 0.75rem 0 0.5rem;">Account Created!</h3>
+                        <p class="otp-desc" style="margin-bottom: 1.5rem;">
+                            Both your email and phone have been verified successfully. Your VenueVista account is active and ready to use.
+                        </p>
+                        <button class="btn btn-primary w-full" id="btn-reg-go-login" type="button">
+                            <span>Sign In Now</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Item Details Modal (Receipts & Inquiry Details) -->
+    <div class="modal-backdrop" id="account-details-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="account-details-modal-title">
+        <div class="modal-card" style="max-width: 600px;">
+            <button class="modal-close-btn" id="account-details-modal-close-btn" type="button" aria-label="Close details modal">&times;</button>
+            <div class="modal-body" id="account-details-modal-body" style="padding: 1.75rem;">
+                <!-- Populated dynamically by showBookingDetails() or showInquiryDetails() -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <span class="toast-message" id="toast-message">Message text</span>
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="app-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="/" class="brand-logo footer-logo" aria-label="VenueVista Home">
+                    <img id="footer-brand-logo" class="brand-logo-img" src="/assets/logo-dark.png" alt="VenueVista - Events • Tickets • Venues" width="250" height="68">
+                </a>
+                <p class="footer-tagline">
+                    Discover events. Find your perfect venue. Two journeys, one destination. Developed with clean architecture for College Project Demonstration.
+                </p>
+                <div class="footer-city-tags">
+                    <span>Delhi NCR</span> • <span>Mumbai</span> • <span>Bengaluru</span> • <span>Hyderabad</span> • <span>Pune</span> • <span>Chennai</span>
+                </div>
+            </div>
+
+            <div class="footer-links-group">
+                <div class="footer-col">
+                    <h4 class="footer-heading">Event Discovery</h4>
+                    <ul class="footer-nav">
+                        <li><a href="/events">Explore Events Home</a></li>
+                        <li><a href="/events/categories">All Event Categories</a></li>
+                        <li><a href="/events/music">Music Concerts</a></li>
+                        <li><a href="/events/technology">Technology Conclaves</a></li>
+                        <li><a href="/events/all">All 18 Events Catalog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Find a Venue</h4>
+                    <ul class="footer-nav">
+                        <li><a href="/venues">Find a Venue Home</a></li>
+                        <li><a href="/venues/categories">All Venue Categories</a></li>
+                        <li><a href="/venues/banquet-halls">Banquet Halls</a></li>
+                        <li><a href="/venues/auditoriums">Auditoriums</a></li>
+                        <li><a href="/venues/all">All Demonstration Venues</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Architecture</h4>
+                    <ul class="footer-nav">
+                        <li><span>Frontend: Pure Vanilla JS Router</span></li>
+                        <li><span>Themes: Midnight &amp; Aurora</span></li>
+                        <li><span>Routing: History API (pushState)</span></li>
+                        <li><span>Currency: INR (₹)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <p>&copy; 2026 VenueVista India. College Project Demonstration.</p>
+            <div class="footer-status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span>Port 3000 • History API &amp; Distinct Page Routes Active</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vanilla JavaScript Application -->
+    <script src="/js/app.js"></script>
+</body>
+</html>

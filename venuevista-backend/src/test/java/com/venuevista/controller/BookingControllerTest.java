@@ -47,6 +47,7 @@ class BookingControllerTest {
         BookingResponseDto resp = new BookingResponseDto();
         resp.setBookingCode("VV-BK-2026-TEST");
         resp.setQuantity(2);
+        resp.setAvailableSeats(448);
 
         when(bookingService.createBooking(any(BookingRequestDto.class), any())).thenReturn(resp);
 
@@ -61,7 +62,8 @@ class BookingControllerTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.bookingCode").value("VV-BK-2026-TEST"));
+                .andExpect(jsonPath("$.data.bookingCode").value("VV-BK-2026-TEST"))
+                .andExpect(jsonPath("$.data.availableSeats").value(448));
     }
 
     @Test

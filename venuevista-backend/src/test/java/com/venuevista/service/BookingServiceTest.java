@@ -81,7 +81,50 @@ class BookingServiceTest {
         assertEquals(2, resp.getQuantity());
         assertEquals(new BigDecimal("1998.00"), resp.getTotalAmount());
         assertEquals(BookingStatus.CONFIRMED, resp.getStatus());
+        assertEquals(448, resp.getAvailableSeats());
         assertEquals(448, sampleEvent.getAvailableSeats());
+    }
+
+    @Test
+    void testInventoryDeductionLifecycleAndRejectionIntegrity() {
+        // Step 1: Record initial inventory
+        int initialSeats = sampleEvent.getAvailableSeats();
+        assertEquals(450, initialSeats);
+
+        when(eventRepository.findByCodeForUpdate("evt-music-1")).thenReturn(Optional.of(sampleEvent));
+        when(bookingRepository.findByBookingCode(anyString())).thenReturn(Optional.empty());
+        when(bookingRepository.findTopByCustomerEmailIgnoreCaseAndEvent_IdAndBookingTimeAfterOrderByBookingTimeDesc(anyString(), eq(101L), any(LocalDateTime.class)))
+                .thenReturn(Optional.empty());
+        when(bookingRepository.save(any(TicketBooking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Step 2: Book 2 tickets
+        BookingRequestDto req = new BookingRequestDto();
+        req.setEventCode("evt-music-1");
+        req.setCustomerName("Aditi Rao");
+        req.setCustomerEmail("aditi@example.com");
+        req.setCustomerPhone("+91 98765 11111");
+        req.setQuantity(2);
+        req.setTicketTier("Standard Pass");
+
+        BookingResponseDto resp = bookingService.createBooking(req, null);
+
+        // Step 3: Verify availableSeats decreased by exactly 2
+        assertNotNull(resp);
+        assertEquals(initialSeats - 2, resp.getAvailableSeats());
+        assertEquals(448, sampleEvent.getAvailableSeats());
+
+        // Step 4: Attempt invalid booking (insufficient seats)
+        sampleEvent.setAvailableSeats(1);
+        BookingRequestDto invalidReq = new BookingRequestDto();
+        invalidReq.setEventCode("evt-music-1");
+        invalidReq.setCustomerName("Karan Singh");
+        invalidReq.setCustomerEmail("karan@example.com");
+        invalidReq.setQuantity(5); // Requested 5 but only 1 available
+
+        assertThrows(IllegalStateException.class, () -> bookingService.createBooking(invalidReq, null));
+
+        // Step 5: Verify inventory remains unchanged after rejected booking
+        assertEquals(1, sampleEvent.getAvailableSeats());
     }
 
     @Test

@@ -22,7 +22,10 @@ const routes = [
     'venues/convention-halls',
     'venues/outdoor-lawns',
     'venues/party-venues',
-    'venues/all'
+    'venues/all',
+    'my-bookings',
+    'my-profile',
+    'account-settings'
 ];
 
 console.log('Generating route entrypoints for static Python HTTP server...');
@@ -38,4 +41,4 @@ routes.forEach(route => {
     console.log(`✅ Synchronized: ${route}/index.html`);
 });
 
-console.log('All 18 route entrypoints generated successfully.');
+console.log(`All ${routes.length} route entrypoints generated successfully.`);

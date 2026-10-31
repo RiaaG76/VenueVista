@@ -643,6 +643,252 @@
             </div>
         </div>
 
+        <!-- ===================================================================
+             11. MY BOOKINGS ROUTE: /my-bookings
+             =================================================================== -->
+        <div id="view-my-bookings" class="route-view" role="region" aria-label="My Bookings Dashboard">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>My Bookings</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Personal Dashboard</div>
+                        <h1 class="section-title">My Bookings</h1>
+                        <p class="section-subtitle">
+                            Keep track of your event tickets and venue rental requests.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tabs -->
+                <div class="account-tabs-bar" role="tablist" aria-label="My Bookings Sections">
+                    <button class="account-tab-btn active" id="tab-btn-tickets" type="button" role="tab" aria-selected="true" data-tab="tickets">
+                        <span class="tab-icon">🎟️</span>
+                        <span>My Tickets</span>
+                        <span class="tab-badge-count" id="badge-tickets-count">0</span>
+                    </button>
+                    <button class="account-tab-btn" id="tab-btn-inquiries" type="button" role="tab" aria-selected="false" data-tab="inquiries">
+                        <span class="tab-icon">🏛️</span>
+                        <span>My Venue Inquiries</span>
+                        <span class="tab-badge-count" id="badge-inquiries-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Tab Content A: My Tickets -->
+                <div class="account-tab-pane active" id="pane-my-tickets" role="tabpanel" aria-labelledby="tab-btn-tickets">
+                    <div id="my-tickets-loading" class="account-loading-spinner" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading your event tickets...</p>
+                    </div>
+                    <div id="my-tickets-error" class="account-error-alert" style="display:none;">
+                        <p id="my-tickets-error-text">Unable to load ticket bookings.</p>
+                        <button class="btn btn-outline btn-sm" id="btn-retry-tickets" type="button">Retry</button>
+                    </div>
+                    <div id="my-tickets-empty" class="empty-state" style="display:none;">
+                        <div class="empty-state-icon" aria-hidden="true">🎟️</div>
+                        <h3 class="empty-state-title">No Event Bookings Found</h3>
+                        <p class="empty-state-text">
+                            You haven't reserved tickets for any events yet. Explore upcoming concerts, workshops, and sports matches across India.
+                        </p>
+                        <a href="/events/all" class="btn btn-primary">
+                            <span>Explore Events</span>
+                        </a>
+                    </div>
+                    <div id="my-tickets-list" class="account-cards-grid"></div>
+                </div>
+
+                <!-- Tab Content B: My Venue Inquiries -->
+                <div class="account-tab-pane" id="pane-my-inquiries" role="tabpanel" aria-labelledby="tab-btn-inquiries" style="display:none;">
+                    <div id="my-inquiries-loading" class="account-loading-spinner" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>Loading your venue inquiries...</p>
+                    </div>
+                    <div id="my-inquiries-error" class="account-error-alert" style="display:none;">
+                        <p id="my-inquiries-error-text">Unable to load venue inquiries.</p>
+                        <button class="btn btn-outline btn-sm" id="btn-retry-inquiries" type="button">Retry</button>
+                    </div>
+                    <div id="my-inquiries-empty" class="empty-state" style="display:none;">
+                        <div class="empty-state-icon" aria-hidden="true">🏛️</div>
+                        <h3 class="empty-state-title">No Venue Inquiries Found</h3>
+                        <p class="empty-state-text">
+                            You haven't submitted any venue rental requests yet. Explore premium banquets, auditoriums, and convention centers.
+                        </p>
+                        <a href="/venues/all" class="btn btn-primary">
+                            <span>Explore Venues</span>
+                        </a>
+                    </div>
+                    <div id="my-inquiries-list" class="account-cards-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             12. MY PROFILE ROUTE: /my-profile
+             =================================================================== -->
+        <div id="view-my-profile" class="route-view" role="region" aria-label="My Profile">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>My Profile</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Account Credentials</div>
+                        <h1 class="section-title">My Profile</h1>
+                        <p class="section-subtitle">
+                            Your authenticated personal profile and account credentials.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Profile Overview Card -->
+                <div class="profile-card">
+                    <div class="profile-header-banner">
+                        <div class="profile-avatar-large" id="profile-avatar-display">U</div>
+                        <div class="profile-header-meta">
+                            <h2 class="profile-display-name" id="profile-name-display">User Name</h2>
+                            <div class="profile-display-role-pill" id="profile-role-display">ROLE_USER</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Full Name</div>
+                            <div class="profile-info-val" id="profile-val-name">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Email Address</div>
+                            <div class="profile-info-val" id="profile-val-email">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Phone Number</div>
+                            <div class="profile-info-val" id="profile-val-phone">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account Role</div>
+                            <div class="profile-info-val" id="profile-val-role">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account ID</div>
+                            <div class="profile-info-val" id="profile-val-id">—</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account Status</div>
+                            <div class="profile-info-val">
+                                <span class="status-badge status-confirmed">Active Session</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions-row">
+                        <a href="/my-bookings" class="btn btn-primary">
+                            <span>View My Bookings</span>
+                        </a>
+                        <a href="/account-settings" class="btn btn-outline">
+                            <span>Account Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             13. ACCOUNT SETTINGS ROUTE: /account-settings
+             =================================================================== -->
+        <div id="view-account-settings" class="route-view" role="region" aria-label="Account Settings">
+            <div class="container account-dashboard-container">
+                <!-- Navigation / Breadcrumbs Bar -->
+                <div class="view-back-bar">
+                    <div class="view-breadcrumbs">
+                        <a href="/">Home</a> <span>/</span> <strong>Account Settings</strong>
+                    </div>
+                    <a href="/" class="btn-back-nav">
+                        <span>← Return to Home</span>
+                    </a>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">
+                    <div>
+                        <div class="section-tag">Preferences &amp; Security</div>
+                        <h1 class="section-title">Account Settings</h1>
+                        <p class="section-subtitle">
+                            Manage your interface preferences and active session.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Settings Cards Stack -->
+                <div class="settings-cards-stack">
+                    <!-- Card 1: Theme Preference -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <h3 class="settings-card-title">Interface Theme</h3>
+                            <p class="settings-card-desc">
+                                Choose between VenueVista's dark and light aesthetic styles.
+                            </p>
+                        </div>
+                        <div class="theme-options-grid">
+                            <div class="theme-option-card" id="theme-card-dark" role="button" tabindex="0">
+                                <div class="theme-preview theme-preview-dark">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-body"></div>
+                                </div>
+                                <div class="theme-option-meta">
+                                    <div class="theme-option-name">🌙 Midnight Glow (Dark)</div>
+                                    <div class="theme-option-desc">Deep navy, flowing aurora ribbons &amp; vivid luminescence.</div>
+                                </div>
+                                <div class="theme-check-indicator" id="theme-check-dark">✓ Active</div>
+                            </div>
+
+                            <div class="theme-option-card" id="theme-card-light" role="button" tabindex="0">
+                                <div class="theme-preview theme-preview-light">
+                                    <div class="preview-header"></div>
+                                    <div class="preview-body"></div>
+                                </div>
+                                <div class="theme-option-meta">
+                                    <div class="theme-option-name">☀️ Aurora View (Light)</div>
+                                    <div class="theme-option-desc">Warm soft-white surfaces with high-contrast navy typography.</div>
+                                </div>
+                                <div class="theme-check-indicator" id="theme-check-light">✓ Active</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Session & Sign Out -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <h3 class="settings-card-title">Active Session</h3>
+                            <p class="settings-card-desc" id="settings-session-desc">
+                                You are currently signed in.
+                            </p>
+                        </div>
+                        <div class="settings-card-actions">
+                            <button type="button" class="btn btn-outline" id="btn-settings-signout" style="color:#ef4444;border-color:rgba(239,68,68,0.4);">
+                                <span>Sign Out of Account</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- ===================================================================
@@ -689,6 +935,18 @@
                             <span class="meta-value" id="modal-event-organizer">Organizer</span>
                         </div>
                     </div>
+                    <div class="meta-item">
+                        <span class="meta-icon" aria-hidden="true">🎫</span>
+                        <div>
+                            <span class="meta-label">Ticket Availability</span>
+                            <span class="meta-value" id="modal-event-seats">
+                                <span class="inventory-pill inventory-available">
+                                    <span class="inventory-pill-dot" aria-hidden="true"></span>
+                                    <span class="inventory-text">Checking seats...</span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-description-wrapper">
@@ -699,6 +957,10 @@
                 <!-- Event Ticket Booking Form (Connected to POST /api/bookings) -->
                 <div class="event-booking-section" id="event-booking-section">
                     <h4 class="modal-subheading">Reserve Tickets</h4>
+                    <div id="modal-booking-sold-out-alert" class="event-booking-sold-out-msg" style="display:none;">
+                        <span aria-hidden="true">🚫</span>
+                        <span>Sold Out — All tickets for this event have been reserved.</span>
+                    </div>
                     <form class="event-booking-form" id="event-booking-form" onsubmit="return false;">
                         <div class="form-row">
                             <div class="form-group flex-1">
@@ -931,32 +1193,156 @@
                     </button>
                 </form>
 
-                <!-- Registration Form -->
-                <form id="form-auth-register" onsubmit="return false;" style="display:none;">
-                    <div class="form-group" style="margin-bottom:0.85rem;">
-                        <label for="reg-name" class="form-label">Full Name</label>
-                        <input type="text" id="reg-name" class="form-control" placeholder="e.g. Vikram Malhotra" required>
+                <!-- Registration Flow: Dual OTP Verification -->
+                <div id="form-auth-register" style="display:none;">
+                    <!-- Step Progress Indicator -->
+                    <div class="reg-stepper" id="reg-stepper" aria-label="Registration Progress">
+                        <div class="reg-step active" id="step-badge-1">
+                            <span class="step-num">1</span>
+                            <span class="step-label">Details</span>
+                        </div>
+                        <div class="step-line" id="step-line-1"></div>
+                        <div class="reg-step" id="step-badge-2">
+                            <span class="step-num">2</span>
+                            <span class="step-label">Email OTP</span>
+                        </div>
+                        <div class="step-line" id="step-line-2"></div>
+                        <div class="reg-step" id="step-badge-3">
+                            <span class="step-num">3</span>
+                            <span class="step-label">Phone OTP</span>
+                        </div>
                     </div>
 
-                    <div class="form-group" style="margin-bottom:0.85rem;">
-                        <label for="reg-email" class="form-label">Email Address</label>
-                        <input type="email" id="reg-email" class="form-control" placeholder="e.g. vikram@example.com" required>
-                    </div>
+                    <!-- Step 1: Details -->
+                    <form id="reg-step-1" onsubmit="return false;">
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-name" class="form-label">Full Name</label>
+                            <input type="text" id="reg-name" class="form-control" placeholder="e.g. Vikram Malhotra" required autocomplete="name">
+                        </div>
 
-                    <div class="form-group" style="margin-bottom:0.85rem;">
-                        <label for="reg-phone" class="form-label">Phone Number</label>
-                        <input type="tel" id="reg-phone" class="form-control" placeholder="+91 98765 43210">
-                    </div>
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-email" class="form-label">Email Address</label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="e.g. vikram@example.com" required autocomplete="email">
+                        </div>
 
-                    <div class="form-group" style="margin-bottom:1.25rem;">
-                        <label for="reg-password" class="form-label">Password (min 6 characters)</label>
-                        <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required minlength="6">
-                    </div>
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-phone" class="form-label">Indian Mobile Number</label>
+                            <input type="tel" id="reg-phone" class="form-control" placeholder="e.g. +91 98765 43210 or 9876543210" required autocomplete="tel">
+                            <span style="font-size:0.72rem;color:var(--text-muted);display:block;margin-top:0.25rem;">Standard 10-digit Indian mobile starting with 6, 7, 8, or 9</span>
+                        </div>
 
-                    <button class="btn btn-primary w-full" id="btn-submit-register" type="submit">
-                        <span>Create Account</span>
-                    </button>
-                </form>
+                        <div class="form-group" style="margin-bottom:0.75rem;">
+                            <label for="reg-password" class="form-label">Password (min 6 characters)</label>
+                            <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;">
+                            <label for="reg-confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" id="reg-confirm-password" class="form-control" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-submit-register" type="submit">
+                            <span>Continue to Verification →</span>
+                        </button>
+                    </form>
+
+                    <!-- Step 2: Email OTP -->
+                    <form id="reg-step-2" onsubmit="return false;" style="display:none;">
+                        <div class="otp-step-header">
+                            <h4 class="otp-title">Email Verification</h4>
+                            <p class="otp-desc">
+                                Demo verification for <strong id="reg-display-email" style="color:var(--text-primary);"></strong>. Use the generated demo code below to verify your email address.
+                            </p>
+                        </div>
+
+                        <!-- Development-only Demo Email OTP Panel -->
+                        <div class="demo-otp-panel" id="demo-email-otp-panel" style="display:none;">
+                            <div class="demo-otp-header">
+                                <span class="demo-badge">DEV / DEMO OTP</span>
+                                <button type="button" class="demo-fill-btn" id="btn-fill-email-otp" title="Autofill code into input">⚡ Quick Fill</button>
+                            </div>
+                            <div class="demo-otp-content">
+                                <span class="demo-otp-label">Demo Email OTP:</span>
+                                <span class="demo-otp-value" id="demo-email-otp-val">------</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;text-align:center;">
+                            <label for="reg-email-otp" class="form-label" style="text-align:left;">Enter 6-Digit Email Verification Code</label>
+                            <input type="text" id="reg-email-otp" class="form-control otp-input-centered" placeholder="123456" maxlength="6" inputmode="numeric" pattern="\d{6}" required autocomplete="one-time-code">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-verify-email-otp" type="submit">
+                            <span>Verify Email →</span>
+                        </button>
+
+                        <div class="otp-actions-row">
+                            <button type="button" class="btn-link-action" id="btn-resend-email-otp">Request New Demo Email OTP</button>
+                            <span id="reg-email-countdown" class="cooldown-timer" style="display:none;">(30s)</span>
+                            <span class="sep-dot">•</span>
+                            <button type="button" class="btn-link-action" id="btn-back-step1">Change Details</button>
+                        </div>
+                    </form>
+
+                    <!-- Step 3: Phone OTP -->
+                    <form id="reg-step-3" onsubmit="return false;" style="display:none;">
+                        <div class="otp-step-header">
+                            <div class="otp-verified-pill">✓ Email Verified</div>
+                            <h4 class="otp-title" style="margin-top:0.4rem;">Phone Verification</h4>
+                            <p class="otp-desc">
+                                Demo verification for <strong id="reg-display-phone" style="color:var(--text-primary);"></strong>. Use the generated demo code below to verify your phone number.
+                            </p>
+                        </div>
+
+                        <!-- Development-only Demo Phone OTP Panel -->
+                        <div class="demo-otp-panel" id="demo-phone-otp-panel" style="display:none;">
+                            <div class="demo-otp-header">
+                                <span class="demo-badge">DEV / DEMO OTP</span>
+                                <button type="button" class="demo-fill-btn" id="btn-fill-phone-otp" title="Autofill code into input">⚡ Quick Fill</button>
+                            </div>
+                            <div class="demo-otp-content">
+                                <span class="demo-otp-label">Demo Phone OTP:</span>
+                                <span class="demo-otp-value" id="demo-phone-otp-val">------</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.25rem;text-align:center;">
+                            <label for="reg-phone-otp" class="form-label" style="text-align:left;">Enter 6-Digit Phone Verification Code</label>
+                            <input type="text" id="reg-phone-otp" class="form-control otp-input-centered" placeholder="123456" maxlength="6" inputmode="numeric" pattern="\d{6}" required autocomplete="one-time-code">
+                        </div>
+
+                        <button class="btn btn-primary w-full" id="btn-verify-phone-otp" type="submit">
+                            <span>Verify & Complete Registration</span>
+                        </button>
+
+                        <div class="otp-actions-row">
+                            <button type="button" class="btn-link-action" id="btn-resend-phone-otp">Request New Demo Phone OTP</button>
+                            <span id="reg-phone-countdown" class="cooldown-timer" style="display:none;">(30s)</span>
+                        </div>
+                    </form>
+
+                    <!-- Step 4: Success Confirmation -->
+                    <div id="reg-step-4" style="display:none;text-align:center;padding:1rem 0;">
+                        <div class="reg-success-icon">✓</div>
+                        <h3 class="otp-title" style="margin: 0.75rem 0 0.5rem;">Account Created!</h3>
+                        <p class="otp-desc" style="margin-bottom: 1.5rem;">
+                            Both your email and phone have been verified successfully. Your VenueVista account is active and ready to use.
+                        </p>
+                        <button class="btn btn-primary w-full" id="btn-reg-go-login" type="button">
+                            <span>Sign In Now</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Item Details Modal (Receipts & Inquiry Details) -->
+    <div class="modal-backdrop" id="account-details-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="account-details-modal-title">
+        <div class="modal-card" style="max-width: 600px;">
+            <button class="modal-close-btn" id="account-details-modal-close-btn" type="button" aria-label="Close details modal">&times;</button>
+            <div class="modal-body" id="account-details-modal-body" style="padding: 1.75rem;">
+                <!-- Populated dynamically by showBookingDetails() or showInquiryDetails() -->
             </div>
         </div>
     </div>

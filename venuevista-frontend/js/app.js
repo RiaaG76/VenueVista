@@ -99,7 +99,7 @@ const VenueVista = (() => {
         }
     };
 
-    // Six Event Categories with dedicated route slugs and descriptions (using local SVG illustrations)
+    // Six Event Categories with dedicated route slugs and descriptions (using user-supplied category photographs)
     const EVENT_CATEGORIES = [
         {
             key: 'Music',
@@ -110,7 +110,7 @@ const VenueVista = (() => {
             description: 'From electrifying open-air arena music festivals to intimate sufi-acoustic twilight sessions, explore premier live musical performances across Mumbai, Delhi NCR, and Bengaluru.',
             icon: '🎵',
             badgeClass: 'badge-music',
-            image: '/assets/event-music.svg',
+            image: '/assets/categories/music-concert.jpg',
             eventCount: 3
         },
         {
@@ -122,7 +122,7 @@ const VenueVista = (() => {
             description: 'Connect with India\'s premier software architects, AI founders, and cloud engineers exploring multimodal foundation models, distributed Kubernetes clusters, and low-latency system design.',
             icon: '💻',
             badgeClass: 'badge-tech',
-            image: '/assets/event-tech.svg',
+            image: '/assets/categories/technology.jpg',
             eventCount: 3
         },
         {
@@ -134,7 +134,7 @@ const VenueVista = (() => {
             description: 'Deep-dive intensive masterclasses and hands-on technical sprints covering distributed system architecture, Figma design tokens, WCAG AA accessibility, and automated CI/CD pipelines.',
             icon: '🛠️',
             badgeClass: 'badge-workshops',
-            image: '/assets/event-workshop.svg',
+            image: '/assets/categories/workshop.jpeg',
             eventCount: 3
         },
         {
@@ -146,7 +146,7 @@ const VenueVista = (() => {
             description: 'Experience thrilling live sports tournaments across India, from high-octane all-India badminton opens and midnight coastal marathons to competitive table tennis championships.',
             icon: '🏆',
             badgeClass: 'badge-sports',
-            image: '/assets/event-sports.svg',
+            image: '/assets/categories/sports.jpeg',
             eventCount: 3
         },
         {
@@ -158,7 +158,7 @@ const VenueVista = (() => {
             description: 'Flagship industry leadership conclaves bringing together policymakers, angel investors, and enterprise executives addressing clean energy, EV infrastructure, FinTech, and venture capital.',
             icon: '🎤',
             badgeClass: 'badge-conferences',
-            image: '/assets/event-conference.svg',
+            image: '/assets/categories/conference.jpeg',
             eventCount: 3
         },
         {
@@ -170,7 +170,7 @@ const VenueVista = (() => {
             description: 'Immerse yourself in grand stage productions featuring Broadway-grade musical spectacles, classical Shakespeare adaptations in Hindustani cadences, and intimate experimental drama.',
             icon: '🎭',
             badgeClass: 'badge-theatre',
-            image: '/assets/event-theatre.svg',
+            image: '/assets/categories/theatre.jpg',
             eventCount: 3
         }
     ];
@@ -265,6 +265,8 @@ const VenueVista = (() => {
             venue: 'NESCO Open Amphitheatre',
             city: 'Mumbai',
             startingPrice: 999,
+            totalSeats: 500,
+            availableSeats: 420,
             image: '/assets/categories/music-concert.jpg',
             organizer: 'BlueTree Live India',
             description: 'An intimate open-air twilight concert featuring India\'s top indie singer-songwriters, fusion sarod-guitar duets, and sunset skyline views overlooking Mumbai.'
@@ -280,7 +282,9 @@ const VenueVista = (() => {
             venue: 'Siri Fort Auditorium',
             city: 'New Delhi',
             startingPrice: 1299,
-            image: '/assets/categories/music-concert.jpg',
+            totalSeats: 600,
+            availableSeats: 510,
+            image: '/assets/categories/music.jpg',
             organizer: 'Dastangoi Sufi Society',
             description: 'A mesmerizing evening of classical qawwali harmonies blended with contemporary acoustic bass and live tabla rhythms in Delhi\'s iconic cultural auditorium.'
         },
@@ -295,7 +299,9 @@ const VenueVista = (() => {
             venue: 'Jayamahal Palace Grounds',
             city: 'Bengaluru',
             startingPrice: 1799,
-            image: '/assets/event-music.svg',
+            totalSeats: 2000,
+            availableSeats: 1850,
+            image: '/assets/categories/music-concert.jpg',
             organizer: 'Percept Live Events',
             description: 'Massive outdoor electronic music festival with international DJs, holographic laser stages, curated artisan food pop-ups, and 10,000+ passionate music fans.'
         },
@@ -312,6 +318,8 @@ const VenueVista = (() => {
             venue: 'BIEC Convention Centre, Tumkur Road',
             city: 'Bengaluru',
             startingPrice: 2499,
+            totalSeats: 1200,
+            availableSeats: 980,
             image: '/assets/categories/technology.jpg',
             organizer: 'TechSparks India Council',
             description: 'Connect with India\'s leading AI engineers, venture founders, and cloud architects exploring LLM agents, scalable microservices, and silicon innovations.'
@@ -327,6 +335,8 @@ const VenueVista = (() => {
             venue: 'HICC Novotel Arena, Hitec City',
             city: 'Hyderabad',
             startingPrice: 1999,
+            totalSeats: 800,
+            availableSeats: 710,
             image: '/assets/categories/technology.jpg',
             organizer: 'Telangana Tech Forum',
             description: 'A deep-dive technical conclave on multimodal models, retrieval-augmented generation architectures, and sovereign AI deployment on domestic cloud clusters.'
@@ -342,7 +352,9 @@ const VenueVista = (() => {
             venue: 'Auto Cluster Exhibition Center, Chinchwad',
             city: 'Pune',
             startingPrice: 1499,
-            image: '/assets/event-tech.svg',
+            totalSeats: 600,
+            availableSeats: 490,
+            image: '/assets/categories/technology.jpg',
             organizer: 'CloudNative Community Pune',
             description: 'Hands-on tech sessions covering eBPF observability, Istio service mesh, zero-trust container security, and high-throughput Kafka streaming backbones.'
         },
@@ -359,6 +371,8 @@ const VenueVista = (() => {
             venue: 'WeWork Galaxy, Residency Road',
             city: 'Bengaluru',
             startingPrice: 1299,
+            totalSeats: 150,
+            availableSeats: 110,
             image: '/assets/categories/workshop.jpeg',
             organizer: 'CodeCraft India',
             description: 'An interactive 6-hour intensive architecture sprint designing low-latency payment rails, distributed locks, database sharding, and resilience patterns.'
@@ -374,6 +388,8 @@ const VenueVista = (() => {
             venue: '91springboard, BKC Kurla',
             city: 'Mumbai',
             startingPrice: 1499,
+            totalSeats: 120,
+            availableSeats: 95,
             image: '/assets/categories/workshop.jpeg',
             organizer: 'Design Guild Bombay',
             description: 'Master modern Figma design tokens, micro-interactions, responsive typographic scales, and WCAG AA accessibility patterns for high-growth consumer apps.'
@@ -389,7 +405,9 @@ const VenueVista = (() => {
             venue: 'Innov8 Coworking, Connaught Place',
             city: 'New Delhi',
             startingPrice: 1199,
-            image: '/assets/event-workshop.svg',
+            totalSeats: 100,
+            availableSeats: 75,
+            image: '/assets/categories/workshop.jpeg',
             organizer: 'DevOps Bharat',
             description: 'Live coding walkthrough covering Terraform infrastructure-as-code, GitHub Actions CI/CD pipelines, Docker container optimization, and ArgoCD rollouts.'
         },
@@ -406,6 +424,8 @@ const VenueVista = (() => {
             venue: 'Gachibowli Indoor Stadium',
             city: 'Hyderabad',
             startingPrice: 499,
+            totalSeats: 1500,
+            availableSeats: 1340,
             image: '/assets/categories/sports.jpeg',
             organizer: 'Badminton Association of India (BAI)',
             description: 'Watch top national singles and doubles shuttlers battle for championship ranking points in a high-octane indoor stadium setting.'
@@ -421,6 +441,8 @@ const VenueVista = (() => {
             venue: 'Marine Drive Promenade to Bandra Worli Sea Link',
             city: 'Mumbai',
             startingPrice: 799,
+            totalSeats: 3000,
+            availableSeats: 2650,
             image: '/assets/categories/sports.jpeg',
             organizer: 'Run Mumbai Foundation',
             description: 'A scenic 10K and 21K night marathon along Mumbai\'s iconic sea-breeze coastline with RFID timing bibs, hydration zones, and sunrise finisher medals.'
@@ -436,7 +458,9 @@ const VenueVista = (() => {
             venue: 'Kanteerava Indoor Stadium',
             city: 'Bengaluru',
             startingPrice: 399,
-            image: '/assets/event-sports.svg',
+            totalSeats: 1000,
+            availableSeats: 890,
+            image: '/assets/categories/sports.jpeg',
             organizer: 'Karnataka State TT Federation',
             description: 'Electrifying table tennis action featuring Olympic and Commonwealth athletes competing in singles and mixed team knockout showdowns.'
         },
@@ -453,6 +477,8 @@ const VenueVista = (() => {
             venue: 'Bharat Mandapam (IECC), Pragati Maidan',
             city: 'New Delhi',
             startingPrice: 3499,
+            totalSeats: 2500,
+            availableSeats: 2180,
             image: '/assets/categories/conference.jpeg',
             organizer: 'Ministry of Power & Renewable Energy Alliances',
             description: 'India\'s flagship policymaker and corporate conclave addressing battery gigafactories, solar grid parity, green hydrogen, and EV charging corridors.'
@@ -468,6 +494,8 @@ const VenueVista = (() => {
             venue: 'Jio World Convention Centre, BKC',
             city: 'Mumbai',
             startingPrice: 3999,
+            totalSeats: 1800,
+            availableSeats: 1620,
             image: '/assets/categories/conference.jpeg',
             organizer: 'FinTech Leaders Forum India',
             description: 'Meet senior bankers, payment gateway executives, and venture investors discussing UPI global integrations, CBDC digital rupee, and AI fraud prevention.'
@@ -483,7 +511,9 @@ const VenueVista = (() => {
             venue: 'The Leela Palace Ballrooms, Old Airport Road',
             city: 'Bengaluru',
             startingPrice: 2999,
-            image: '/assets/event-conference.svg',
+            totalSeats: 500,
+            availableSeats: 430,
+            image: '/assets/categories/conference.jpeg',
             organizer: 'VentureVista Angel Network',
             description: 'Curated 1-on-1 investor matchmaking, speed pitching stages, and fireside chats with India\'s newest unicorn founders.'
         },
@@ -500,6 +530,8 @@ const VenueVista = (() => {
             venue: 'NMACC Grand Theatre, BKC',
             city: 'Mumbai',
             startingPrice: 1999,
+            totalSeats: 1500,
+            availableSeats: 1210,
             image: '/assets/categories/theatre.jpg',
             organizer: 'Feroz Abbas Khan Productions',
             description: 'Broadway-grade musical extravaganza with 300+ live Kathak dancers, Manish Malhotra royal costumes, and mesmerizing live acoustic vocals.'
@@ -515,6 +547,8 @@ const VenueVista = (() => {
             venue: 'Kamani Auditorium, Mandi House',
             city: 'New Delhi',
             startingPrice: 899,
+            totalSeats: 650,
+            availableSeats: 580,
             image: '/assets/categories/theatre.jpg',
             organizer: 'National School of Drama Ensemble',
             description: 'A powerful adaptation blending classic Elizabethan tragedy with Hindustani poetic cadences and traditional Indian percussion.'
@@ -530,7 +564,9 @@ const VenueVista = (() => {
             venue: 'Ranga Shankara, JP Nagar',
             city: 'Bengaluru',
             startingPrice: 699,
-            image: '/assets/event-theatre.svg',
+            totalSeats: 300,
+            availableSeats: 260,
+            image: '/assets/categories/theatre.jpg',
             organizer: 'The Playpen Collective',
             description: 'An award-winning intimate physical theatre performance tackling modern existentialism, urban solitude, and human connection in the digital age.'
         }
@@ -675,6 +711,214 @@ const VenueVista = (() => {
         }
     ];
 
+    /**
+     * Authoritative Asset Registry & Consistency Resolvers
+     * Maps supplied local photographic media to event categories and vector SVGs to venue categories.
+     * Guarantees 100% visual consistency across cards, modals, category landing pages, and backend responses.
+     */
+    const ASSET_REGISTRY = {
+        events: {
+            music: [
+                '/assets/categories/music-concert.jpg',
+                '/assets/categories/music.jpg'
+            ],
+            technology: '/assets/categories/technology.jpg',
+            workshops: '/assets/categories/workshop.jpeg',
+            sports: '/assets/categories/sports.jpeg',
+            conferences: '/assets/categories/conference.jpeg',
+            theatre: '/assets/categories/theatre.jpg'
+        },
+        venues: {
+            'banquet-halls': '/assets/venue-banquet-hall.svg',
+            'auditoriums': '/assets/venue-grand-auditorium.svg',
+            'conference-centres': '/assets/venue-conference-centre.svg',
+            'convention-halls': '/assets/venue-tech-convention.svg',
+            'outdoor-lawns': '/assets/venue-heritage-lawn.svg',
+            'party-venues': '/assets/venue-party-venue.svg'
+        }
+    };
+
+    /**
+     * Resolve photographic asset for an event category
+     */
+    function resolveCategoryImage(cat) {
+        if (!cat) return ASSET_REGISTRY.events.music[0];
+        const key = (cat.slug || cat.key || cat.title || '').toLowerCase();
+        if (key.includes('music')) return ASSET_REGISTRY.events.music[0];
+        if (key.includes('tech')) return ASSET_REGISTRY.events.technology;
+        if (key.includes('workshop')) return ASSET_REGISTRY.events.workshops;
+        if (key.includes('sport')) return ASSET_REGISTRY.events.sports;
+        if (key.includes('conference')) return ASSET_REGISTRY.events.conferences;
+        if (key.includes('theatr')) return ASSET_REGISTRY.events.theatre;
+        if (cat.image && cat.image.includes('/assets/categories/')) return cat.image;
+        return ASSET_REGISTRY.events.music[0];
+    }
+
+    /**
+     * Resolve photographic asset for an event, distributing multiple images where available (Music)
+     */
+    function resolveEventImage(event) {
+        if (!event) return ASSET_REGISTRY.events.music[0];
+        const cat = (event.categorySlug || event.category || '').toLowerCase();
+        const id = (event.id || event.code || '').toLowerCase();
+        const title = (event.title || '').toLowerCase();
+        const currentImg = event.image || '';
+
+        if (cat.includes('music')) {
+            // Distribute between music-concert.jpg and music.jpg
+            if (id.includes('music-2') || id.includes('music-002') || title.includes('sufi') || currentImg.endsWith('music.jpg')) {
+                return ASSET_REGISTRY.events.music[1];
+            }
+            return ASSET_REGISTRY.events.music[0];
+        }
+
+        if (cat.includes('tech')) return ASSET_REGISTRY.events.technology;
+        if (cat.includes('workshop')) return ASSET_REGISTRY.events.workshops;
+        if (cat.includes('sport')) return ASSET_REGISTRY.events.sports;
+        if (cat.includes('conference')) return ASSET_REGISTRY.events.conferences;
+        if (cat.includes('theatr')) return ASSET_REGISTRY.events.theatre;
+
+        if (currentImg && currentImg.includes('/assets/categories/')) {
+            return currentImg;
+        }
+        return ASSET_REGISTRY.events.music[0];
+    }
+
+    /**
+     * Resolve vector illustration asset for a venue category or venue listing
+     */
+    function resolveVenueImage(venue) {
+        if (!venue) return ASSET_REGISTRY.venues['convention-halls'];
+        const cat = (venue.categorySlug || venue.category || venue.slug || venue.key || '').toLowerCase();
+        if (cat.includes('banquet')) return ASSET_REGISTRY.venues['banquet-halls'];
+        if (cat.includes('auditorium')) return ASSET_REGISTRY.venues['auditoriums'];
+        if (cat.includes('conference')) return ASSET_REGISTRY.venues['conference-centres'];
+        if (cat.includes('convention')) return ASSET_REGISTRY.venues['convention-halls'];
+        if (cat.includes('lawn')) return ASSET_REGISTRY.venues['outdoor-lawns'];
+        if (cat.includes('party')) return ASSET_REGISTRY.venues['party-venues'];
+
+        if (venue.image && venue.image.startsWith('/assets/venue-')) {
+            return venue.image;
+        }
+        return ASSET_REGISTRY.venues['convention-halls'];
+    }
+
+    /**
+     * Generate visual availability badge markup based on current inventory
+     */
+    function getInventoryBadgeHtml(availableSeats, totalSeats) {
+        if (availableSeats === undefined || availableSeats === null) {
+            return `
+                <div class="event-inventory-row">
+                    <span class="inventory-pill inventory-available">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Tickets Available</span>
+                    </span>
+                </div>
+            `;
+        }
+
+        const count = parseInt(availableSeats, 10);
+        if (count <= 0) {
+            return `
+                <div class="event-inventory-row">
+                    <span class="inventory-pill inventory-sold-out">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Sold Out</span>
+                    </span>
+                </div>
+            `;
+        }
+
+        if (count <= 50) {
+            return `
+                <div class="event-inventory-row">
+                    <span class="inventory-pill inventory-low">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Only ${count} seat${count === 1 ? '' : 's'} left</span>
+                    </span>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="event-inventory-row">
+                <span class="inventory-pill inventory-available">
+                    <span class="inventory-pill-dot" aria-hidden="true"></span>
+                    <span class="inventory-text">${count} seats available</span>
+                </span>
+            </div>
+        `;
+    }
+
+    /**
+     * Update modal availability indicator and booking form controls
+     */
+    function updateModalAvailability(event) {
+        if (!event) return;
+        const count = (event.availableSeats !== undefined && event.availableSeats !== null)
+            ? parseInt(event.availableSeats, 10)
+            : null;
+        const seatsEl = dom.modalEventSeats || document.getElementById('modal-event-seats');
+        const soldOutAlert = dom.modalBookingSoldOutAlert || document.getElementById('modal-booking-sold-out-alert');
+        const bookingForm = dom.eventBookingForm || document.getElementById('event-booking-form');
+        const submitBtn = dom.btnModalBook || document.getElementById('btn-modal-book');
+
+        if (seatsEl) {
+            if (count === null) {
+                seatsEl.innerHTML = `
+                    <span class="inventory-pill inventory-available">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Tickets Available</span>
+                    </span>
+                `;
+            } else if (count <= 0) {
+                seatsEl.innerHTML = `
+                    <span class="inventory-pill inventory-sold-out">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Sold Out</span>
+                    </span>
+                `;
+            } else if (count <= 50) {
+                seatsEl.innerHTML = `
+                    <span class="inventory-pill inventory-low">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">Only ${count} seat${count === 1 ? '' : 's'} left</span>
+                    </span>
+                `;
+            } else {
+                seatsEl.innerHTML = `
+                    <span class="inventory-pill inventory-available">
+                        <span class="inventory-pill-dot" aria-hidden="true"></span>
+                        <span class="inventory-text">${count} seats available</span>
+                    </span>
+                `;
+            }
+        }
+
+        if (count !== null && count <= 0) {
+            if (soldOutAlert) soldOutAlert.style.display = 'flex';
+            if (bookingForm) {
+                bookingForm.style.opacity = '0.55';
+                bookingForm.querySelectorAll('input, select').forEach(el => el.disabled = true);
+            }
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Sold Out</span>';
+            }
+        } else {
+            if (soldOutAlert) soldOutAlert.style.display = 'none';
+            if (bookingForm) {
+                bookingForm.style.opacity = '1';
+                bookingForm.querySelectorAll('input, select').forEach(el => el.disabled = false);
+            }
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Confirm Ticket Pass</span>';
+            }
+        }
+    }
+
     // Reactive application state
     const state = {
         theme: 'dark',
@@ -689,6 +933,11 @@ const VenueVista = (() => {
         selectedVenue: null,
         // Backend integration state
         currentUser: null,
+        postLoginRedirect: null,
+        myBookings: [],
+        myInquiries: [],
+        myBookingsLoading: false,
+        myInquiriesLoading: false,
         eventCategories: [],
         venueCategories: [],
         venueCities: [],
@@ -728,6 +977,9 @@ const VenueVista = (() => {
         dom.viewVenuesCategories = document.getElementById('view-venues-categories');
         dom.viewVenues = document.getElementById('view-venues');
         dom.viewNotFound = document.getElementById('view-not-found');
+        dom.viewMyBookings = document.getElementById('view-my-bookings');
+        dom.viewMyProfile = document.getElementById('view-my-profile');
+        dom.viewAccountSettings = document.getElementById('view-account-settings');
 
         // Aliases for any backward-compatible checks
         dom.viewEventsAll = dom.viewEvents;
@@ -741,8 +993,34 @@ const VenueVista = (() => {
             dom.viewEvents,
             dom.viewVenuesCategories,
             dom.viewVenues,
-            dom.viewNotFound
+            dom.viewNotFound,
+            dom.viewMyBookings,
+            dom.viewMyProfile,
+            dom.viewAccountSettings
         ].filter(Boolean);
+
+        // Account Details Modal
+        dom.accountDetailsModal = document.getElementById('account-details-modal-backdrop');
+        dom.accountDetailsModalCloseBtn = document.getElementById('account-details-modal-close-btn');
+        dom.accountDetailsModalBody = document.getElementById('account-details-modal-body');
+
+        // My Bookings Tabs & Elements
+        dom.tabBtnTickets = document.getElementById('tab-btn-tickets');
+        dom.tabBtnInquiries = document.getElementById('tab-btn-inquiries');
+        dom.badgeTicketsCount = document.getElementById('badge-tickets-count');
+        dom.badgeInquiriesCount = document.getElementById('badge-inquiries-count');
+        dom.paneMyTickets = document.getElementById('pane-my-tickets');
+        dom.paneMyInquiries = document.getElementById('pane-my-inquiries');
+        dom.myTicketsLoading = document.getElementById('my-tickets-loading');
+        dom.myInquiriesLoading = document.getElementById('my-inquiries-loading');
+        dom.myTicketsError = document.getElementById('my-tickets-error');
+        dom.myInquiriesError = document.getElementById('my-inquiries-error');
+        dom.myTicketsEmpty = document.getElementById('my-tickets-empty');
+        dom.myInquiriesEmpty = document.getElementById('my-inquiries-empty');
+        dom.myTicketsList = document.getElementById('my-tickets-list');
+        dom.myInquiriesList = document.getElementById('my-inquiries-list');
+        dom.btnRetryTickets = document.getElementById('btn-retry-tickets');
+        dom.btnRetryInquiries = document.getElementById('btn-retry-inquiries');
 
         // Experience 2A: Events Categories Landing Page DOM
         dom.eventsFullCategoriesGrid = document.getElementById('events-full-categories-grid');
@@ -825,10 +1103,12 @@ const VenueVista = (() => {
         dom.modalEventVenue = document.getElementById('modal-event-venue');
         dom.modalEventPrice = document.getElementById('modal-event-price');
         dom.modalEventOrganizer = document.getElementById('modal-event-organizer');
+        dom.modalEventSeats = document.getElementById('modal-event-seats');
         dom.modalEventDescription = document.getElementById('modal-event-description');
         dom.btnModalBook = document.getElementById('btn-modal-book');
         dom.eventBookingSection = document.getElementById('event-booking-section');
         dom.eventBookingForm = document.getElementById('event-booking-form');
+        dom.modalBookingSoldOutAlert = document.getElementById('modal-booking-sold-out-alert');
         dom.eventBookingConfirmation = document.getElementById('event-booking-confirmation');
         dom.bookingTicketTier = document.getElementById('booking-ticket-tier');
         dom.bookingQuantity = document.getElementById('booking-quantity');
@@ -1071,7 +1351,61 @@ const VenueVista = (() => {
                 documentTitle = 'VenueVista | Page Not Found';
             }
         }
-        // 8. Unknown Route: Not Found
+        // 8. My Bookings Route: /my-bookings
+        else if (cleanPath === '/my-bookings') {
+            if (!state.currentUser) {
+                state.postLoginRedirect = cleanPath + (search || '');
+                openAuthModal('login');
+                showToast('Please sign in to access your bookings.');
+                activeViewId = 'view-home';
+                navExperience = 'home';
+                state.currentRoute = 'home';
+                documentTitle = 'VenueVista | Discover Events & Find Your Perfect Venue';
+            } else {
+                activeViewId = 'view-my-bookings';
+                navExperience = 'account';
+                state.currentRoute = 'my-bookings';
+                documentTitle = 'VenueVista | My Bookings';
+                renderMyBookingsPage(queryParams.get('tab'));
+            }
+        }
+        // 9. My Profile Route: /my-profile
+        else if (cleanPath === '/my-profile') {
+            if (!state.currentUser) {
+                state.postLoginRedirect = cleanPath + (search || '');
+                openAuthModal('login');
+                showToast('Please sign in to view your profile.');
+                activeViewId = 'view-home';
+                navExperience = 'home';
+                state.currentRoute = 'home';
+                documentTitle = 'VenueVista | Discover Events & Find Your Perfect Venue';
+            } else {
+                activeViewId = 'view-my-profile';
+                navExperience = 'account';
+                state.currentRoute = 'my-profile';
+                documentTitle = 'VenueVista | My Profile';
+                renderMyProfilePage();
+            }
+        }
+        // 10. Account Settings Route: /account-settings
+        else if (cleanPath === '/account-settings') {
+            if (!state.currentUser) {
+                state.postLoginRedirect = cleanPath + (search || '');
+                openAuthModal('login');
+                showToast('Please sign in to access account settings.');
+                activeViewId = 'view-home';
+                navExperience = 'home';
+                state.currentRoute = 'home';
+                documentTitle = 'VenueVista | Discover Events & Find Your Perfect Venue';
+            } else {
+                activeViewId = 'view-account-settings';
+                navExperience = 'account';
+                state.currentRoute = 'account-settings';
+                documentTitle = 'VenueVista | Account Settings';
+                renderAccountSettingsPage();
+            }
+        }
+        // 11. Unknown Route: Not Found
         else {
             activeViewId = 'view-not-found';
             navExperience = 'home';
@@ -1157,6 +1491,14 @@ const VenueVista = (() => {
                 <li><a href="/venues/categories" class="nav-link ${isVenueCatActive ? 'active' : ''}" data-nav="venue-categories">Categories</a></li>
                 <li><a href="/venues/all" class="nav-link ${isExploreVenuesActive ? 'active' : ''}" data-nav="explore-venues">Explore Venues</a></li>
                 <li><a href="/venues#how-venues-work" class="nav-link ${isHowVenueWorksActive ? 'active' : ''}" data-nav="how-venues-work">How Finding a Venue Works</a></li>
+            `;
+        } else if (experience === 'account') {
+            const isMyBookingsActive = path === '/my-bookings';
+            navHtml = `
+                <li><a href="/" class="nav-link" data-nav="home">Home</a></li>
+                <li><a href="/events" class="nav-link" data-nav="events">Explore Events</a></li>
+                <li><a href="/venues" class="nav-link" data-nav="venues">Find Venues</a></li>
+                <li><a href="/my-bookings" class="nav-link ${isMyBookingsActive ? 'active' : ''}" data-nav="my-bookings">My Bookings</a></li>
             `;
         } else {
             // Homepage Navigation (Exact Order):
@@ -1261,6 +1603,9 @@ const VenueVista = (() => {
 
             const res = await apiClient.get('/api/events', queryParams);
             const events = (res && res.data) ? res.data : [];
+            events.forEach(e => {
+                e.image = resolveEventImage(e);
+            });
             state.eventsData = events;
             state.eventsLoading = false;
 
@@ -1426,6 +1771,9 @@ const VenueVista = (() => {
 
             const res = await apiClient.get('/api/venues', queryParams);
             const venues = (res && res.data) ? res.data : [];
+            venues.forEach(v => {
+                v.image = resolveVenueImage(v);
+            });
             state.venuesData = venues;
             state.venuesLoading = false;
 
@@ -1514,10 +1862,11 @@ const VenueVista = (() => {
      * Card HTML Generators
      */
     function createCategoryCardHtml(cat) {
+        const catImg = resolveCategoryImage(cat);
         return `
             <a href="${escapeHtml(cat.path)}" class="category-card" data-slug="${escapeHtml(cat.slug)}" aria-label="Explore ${escapeHtml(cat.title)}">
                 <div class="category-card-media">
-                    <img src="${escapeHtml(cat.image)}" alt="${escapeHtml(cat.title)}" class="category-card-image" loading="lazy">
+                    <img src="${escapeHtml(catImg)}" alt="${escapeHtml(cat.title)}" class="category-card-image" loading="lazy">
                     <div class="category-badge-floating ${escapeHtml(cat.badgeClass)}">
                         <span>${escapeHtml(cat.icon)} ${escapeHtml(cat.title)}</span>
                     </div>
@@ -1535,10 +1884,11 @@ const VenueVista = (() => {
     }
 
     function createVenueCategoryCardHtml(vc) {
+        const vcImg = resolveVenueImage(vc);
         return `
             <a href="${escapeHtml(vc.path)}" class="category-card" data-slug="${escapeHtml(vc.slug)}" aria-label="Explore ${escapeHtml(vc.title)}">
                 <div class="category-card-media">
-                    <img src="${escapeHtml(vc.image)}" alt="${escapeHtml(vc.title)}" class="category-card-image" loading="lazy">
+                    <img src="${escapeHtml(vcImg)}" alt="${escapeHtml(vc.title)}" class="category-card-image" loading="lazy">
                     <div class="category-badge-floating ${escapeHtml(vc.badgeClass)}">
                         <span>${escapeHtml(vc.icon)} ${escapeHtml(vc.title)}</span>
                     </div>
@@ -1557,11 +1907,12 @@ const VenueVista = (() => {
 
     function createEventCardHtml(event) {
         const priceFormatted = inrFormatter.format(event.startingPrice);
+        const eventImg = resolveEventImage(event);
         return `
             <article class="event-card" data-event-id="${escapeHtml(event.id)}" tabindex="0" role="article" aria-label="${escapeHtml(event.title)}">
                 <div class="event-card-media">
-                    <img 
-                        src="${escapeHtml(event.image)}" 
+                    <img
+                        src="${escapeHtml(eventImg)}"
                         alt="${escapeHtml(event.title)}" 
                         class="event-card-image"
                         loading="lazy"
@@ -1587,6 +1938,8 @@ const VenueVista = (() => {
                         </span>
                     </div>
 
+                    ${getInventoryBadgeHtml(event.availableSeats, event.totalSeats)}
+
                     <div class="event-card-footer">
                         <div class="event-price-block">
                             <span class="price-label">Tickets From</span>
@@ -1604,13 +1957,14 @@ const VenueVista = (() => {
 
     function createVenueCardHtml(venue) {
         const rentalFormatted = inrFormatter.format(venue.baseRental);
-        const amenitiesHtml = venue.amenities.slice(0, 3).map(a => `<span class="venue-tag">${escapeHtml(a)}</span>`).join('');
+        const amenitiesHtml = (venue.amenities || []).slice(0, 3).map(a => `<span class="venue-tag">${escapeHtml(a)}</span>`).join('');
+        const venueImg = resolveVenueImage(venue);
 
         return `
             <article class="venue-card" data-venue-id="${escapeHtml(venue.id)}" tabindex="0" role="article" aria-label="${escapeHtml(venue.name)}">
                 <div class="venue-card-media">
-                    <img 
-                        src="${escapeHtml(venue.image)}" 
+                    <img
+                        src="${escapeHtml(venueImg)}"
                         alt="${escapeHtml(venue.name)}" 
                         class="venue-card-image"
                         loading="lazy"
@@ -1735,7 +2089,7 @@ const VenueVista = (() => {
 
         state.selectedEvent = event;
         if (dom.modalEventImage) {
-            dom.modalEventImage.src = event.image;
+            dom.modalEventImage.src = resolveEventImage(event);
             dom.modalEventImage.alt = event.title;
         }
         if (dom.modalEventCategory) {
@@ -1748,6 +2102,7 @@ const VenueVista = (() => {
         if (dom.modalEventPrice) dom.modalEventPrice.textContent = `From ${inrFormatter.format(event.startingPrice)}`;
         if (dom.modalEventOrganizer) dom.modalEventOrganizer.textContent = event.organizer;
         if (dom.modalEventDescription) dom.modalEventDescription.textContent = event.description;
+        updateModalAvailability(event);
 
         // Reset booking form and confirmation state
         if (dom.eventBookingSection) dom.eventBookingSection.style.display = 'block';
@@ -1774,9 +2129,15 @@ const VenueVista = (() => {
         try {
             const fresh = await apiClient.get(`/api/events/${encodeURIComponent(eventId)}`);
             if (fresh && fresh.data) {
-                state.selectedEvent = { ...event, ...fresh.data };
+                const freshEvent = { ...event, ...fresh.data };
+                freshEvent.image = resolveEventImage(freshEvent);
+                state.selectedEvent = freshEvent;
                 event = state.selectedEvent;
+                if (dom.modalEventImage) {
+                    dom.modalEventImage.src = event.image;
+                }
                 if (dom.modalEventPrice) dom.modalEventPrice.textContent = `From ${inrFormatter.format(event.startingPrice)}`;
+                updateModalAvailability(event);
                 updateBookingTotal();
             }
         } catch (e) {
@@ -1854,9 +2215,38 @@ const VenueVista = (() => {
 
             showToast(`✓ Ticket Confirmed! Booking code: ${booking.bookingCode}`);
 
-            // If events grid is rendered, reload events in background so seat counts update
-            if (state.currentRoute === 'events-all' || state.currentRoute === 'event-category') {
-                applyEventFilters();
+            // Immediately update and synchronize seat availability across card, modal, and state
+            const targetCode = state.selectedEvent.id || state.selectedEvent.code;
+            let updatedSeats = (booking.availableSeats !== undefined && booking.availableSeats !== null)
+                ? booking.availableSeats
+                : (state.selectedEvent.availableSeats !== undefined ? state.selectedEvent.availableSeats - quantity : null);
+
+            try {
+                const freshRes = await apiClient.get(`/api/events/${encodeURIComponent(targetCode)}`);
+                if (freshRes && freshRes.data && freshRes.data.availableSeats !== undefined) {
+                    updatedSeats = freshRes.data.availableSeats;
+                    state.selectedEvent = { ...state.selectedEvent, ...freshRes.data };
+                }
+            } catch (freshErr) {
+                console.debug('[VenueVista] Using response/local calculation for seat update:', freshErr);
+            }
+
+            if (updatedSeats !== null) {
+                state.selectedEvent.availableSeats = updatedSeats;
+                updateModalAvailability(state.selectedEvent);
+
+                // Update in state.eventsData
+                const matchedInEvents = state.eventsData.find(e => (e.id === targetCode || e.code === targetCode));
+                if (matchedInEvents) {
+                    matchedInEvents.availableSeats = updatedSeats;
+                }
+                const matchedInSample = SAMPLE_EVENTS.find(e => (e.id === targetCode || e.code === targetCode));
+                if (matchedInSample) {
+                    matchedInSample.availableSeats = updatedSeats;
+                }
+
+                // Immediately re-render the event cards on the active page
+                renderEventsGrid(state.eventsData);
             }
         } catch (err) {
             console.error('[VenueVista] Booking submission failed:', err);
@@ -1876,7 +2266,7 @@ const VenueVista = (() => {
 
         state.selectedVenue = venue;
         if (dom.venueModalImage) {
-            dom.venueModalImage.src = venue.image;
+            dom.venueModalImage.src = resolveVenueImage(venue);
             dom.venueModalImage.alt = venue.name;
         }
         if (dom.venueModalBadge) {
@@ -1910,8 +2300,13 @@ const VenueVista = (() => {
         try {
             const fresh = await apiClient.get(`/api/venues/${encodeURIComponent(venueId)}`);
             if (fresh && fresh.data) {
-                state.selectedVenue = { ...venue, ...fresh.data };
+                const freshVenue = { ...venue, ...fresh.data };
+                freshVenue.image = resolveVenueImage(freshVenue);
+                state.selectedVenue = freshVenue;
                 venue = state.selectedVenue;
+                if (dom.venueModalImage) {
+                    dom.venueModalImage.src = venue.image;
+                }
                 if (dom.venueModalPrice) dom.venueModalPrice.textContent = `${inrFormatter.format(venue.baseRental)} / day (Indicative Base)`;
             }
         } catch (e) {
@@ -2032,6 +2427,10 @@ const VenueVista = (() => {
             }
             if (dom.formAuthRegister) dom.formAuthRegister.style.display = 'block';
             if (dom.formAuthLogin) dom.formAuthLogin.style.display = 'none';
+
+            if (!state.registrationSession) {
+                setRegistrationStep(1);
+            }
         } else {
             if (dom.authTabLogin) {
                 dom.authTabLogin.classList.add('active');
@@ -2043,6 +2442,11 @@ const VenueVista = (() => {
             }
             if (dom.formAuthLogin) dom.formAuthLogin.style.display = 'block';
             if (dom.formAuthRegister) dom.formAuthRegister.style.display = 'none';
+
+            if (state.lastRegisteredEmail) {
+                const em = document.getElementById('login-email');
+                if (em) em.value = state.lastRegisteredEmail;
+            }
         }
     }
 
@@ -2060,6 +2464,13 @@ const VenueVista = (() => {
         dom.authModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
         if (dom.authErrorAlert) dom.authErrorAlert.style.display = 'none';
+
+        if (state.postLoginRedirect && !state.currentUser) {
+            state.postLoginRedirect = null;
+            if (window.location.pathname.startsWith('/my-') || window.location.pathname.startsWith('/account-')) {
+                navigateTo('/');
+            }
+        }
     }
 
     async function handleLoginSubmit(e) {
@@ -2098,6 +2509,13 @@ const VenueVista = (() => {
                 // Pre-fill modal contact fields if open
                 if (dom.bookingName) dom.bookingName.value = res.data.user.name;
                 if (dom.bookingEmail) dom.bookingEmail.value = res.data.user.email;
+
+                // Restore navigation to intended protected account page if pending
+                if (state.postLoginRedirect) {
+                    const dest = state.postLoginRedirect;
+                    state.postLoginRedirect = null;
+                    navigateTo(dest);
+                }
             } else {
                 throw new Error('Unexpected authentication response format.');
             }
@@ -2112,58 +2530,350 @@ const VenueVista = (() => {
         }
     }
 
-    async function handleRegisterSubmit(e) {
+    /**
+     * Dual OTP Registration Multi-Step State & Handlers
+     */
+    function setRegistrationStep(step) {
+        state.registrationStep = step;
+        if (dom.authErrorAlert) {
+            dom.authErrorAlert.style.display = 'none';
+            dom.authErrorAlert.textContent = '';
+        }
+
+        const step1 = document.getElementById('reg-step-1');
+        const step2 = document.getElementById('reg-step-2');
+        const step3 = document.getElementById('reg-step-3');
+        const step4 = document.getElementById('reg-step-4');
+
+        const b1 = document.getElementById('step-badge-1');
+        const b2 = document.getElementById('step-badge-2');
+        const b3 = document.getElementById('step-badge-3');
+        const l1 = document.getElementById('step-line-1');
+        const l2 = document.getElementById('step-line-2');
+
+        if (step1) step1.style.display = (step === 1) ? 'block' : 'none';
+        if (step2) step2.style.display = (step === 2) ? 'block' : 'none';
+        if (step3) step3.style.display = (step === 3) ? 'block' : 'none';
+        if (step4) step4.style.display = (step === 4) ? 'block' : 'none';
+
+        if (b1) {
+            b1.className = 'reg-step' + (step === 1 ? ' active' : (step > 1 ? ' completed' : ''));
+            const num1 = b1.querySelector('.step-num');
+            if (num1) num1.textContent = (step > 1) ? '✓' : '1';
+        }
+        if (l1) {
+            l1.className = 'step-line' + (step > 1 ? ' completed' : '');
+        }
+
+        if (b2) {
+            b2.className = 'reg-step' + (step === 2 ? ' active' : (step > 2 ? ' completed' : ''));
+            const num2 = b2.querySelector('.step-num');
+            if (num2) num2.textContent = (step > 2) ? '✓' : '2';
+        }
+        if (l2) {
+            l2.className = 'step-line' + (step > 2 ? ' completed' : '');
+        }
+
+        if (b3) {
+            b3.className = 'reg-step' + (step === 3 ? ' active' : (step > 3 ? ' completed' : ''));
+            const num3 = b3.querySelector('.step-num');
+            if (num3) num3.textContent = (step > 3) ? '✓' : '3';
+        }
+    }
+
+    function resetRegistrationWizard() {
+        if (state.emailCooldownTimer) {
+            clearInterval(state.emailCooldownTimer);
+            state.emailCooldownTimer = null;
+        }
+        if (state.phoneCooldownTimer) {
+            clearInterval(state.phoneCooldownTimer);
+            state.phoneCooldownTimer = null;
+        }
+
+        const nameInput = document.getElementById('reg-name');
+        const emailInput = document.getElementById('reg-email');
+        const phoneInput = document.getElementById('reg-phone');
+        const passInput = document.getElementById('reg-password');
+        const confirmPassInput = document.getElementById('reg-confirm-password');
+        const emailOtpInput = document.getElementById('reg-email-otp');
+        const phoneOtpInput = document.getElementById('reg-phone-otp');
+
+        if (nameInput) nameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (passInput) passInput.value = '';
+        if (confirmPassInput) confirmPassInput.value = '';
+        if (emailOtpInput) emailOtpInput.value = '';
+        if (phoneOtpInput) phoneOtpInput.value = '';
+
+        state.registrationSession = null;
+        setRegistrationStep(1);
+    }
+
+    function startResendCooldown(target, seconds) {
+        let remaining = seconds || 30;
+        const btnId = target === 'EMAIL' ? 'btn-resend-email-otp' : 'btn-resend-phone-otp';
+        const timerId = target === 'EMAIL' ? 'reg-email-countdown' : 'reg-phone-countdown';
+        const timerProp = target === 'EMAIL' ? 'emailCooldownTimer' : 'phoneCooldownTimer';
+
+        const btn = document.getElementById(btnId);
+        const timerElem = document.getElementById(timerId);
+
+        if (state[timerProp]) {
+            clearInterval(state[timerProp]);
+            state[timerProp] = null;
+        }
+
+        if (btn) btn.disabled = true;
+        if (timerElem) {
+            timerElem.textContent = `(${remaining}s)`;
+            timerElem.style.display = 'inline';
+        }
+
+        state[timerProp] = setInterval(() => {
+            remaining--;
+            if (remaining > 0) {
+                if (timerElem) timerElem.textContent = `(${remaining}s)`;
+            } else {
+                clearInterval(state[timerProp]);
+                state[timerProp] = null;
+                if (btn) btn.disabled = false;
+                if (timerElem) timerElem.style.display = 'none';
+            }
+        }, 1000);
+    }
+
+    async function handleRegistrationStart(e) {
         if (e) e.preventDefault();
         const nameInput = document.getElementById('reg-name');
         const emailInput = document.getElementById('reg-email');
         const phoneInput = document.getElementById('reg-phone');
         const passInput = document.getElementById('reg-password');
+        const confirmPassInput = document.getElementById('reg-confirm-password');
 
         const name = nameInput ? nameInput.value.trim() : '';
         const email = emailInput ? emailInput.value.trim() : '';
         const phone = phoneInput ? phoneInput.value.trim() : '';
         const password = passInput ? passInput.value : '';
+        const confirmPassword = confirmPassInput ? confirmPassInput.value : '';
 
-        if (!name || !email || !password) {
-            showAuthError('Please fill in name, email, and a password (minimum 6 characters).');
+        if (!name || !email || !phone || !password || !confirmPassword) {
+            showAuthError('Please fill in all registration fields.');
+            return;
+        }
+
+        if (password.length < 6) {
+            showAuthError('Password must be at least 6 characters.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showAuthError('Passwords do not match. Please re-enter.');
             return;
         }
 
         const submitBtn = document.getElementById('btn-submit-register');
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>Creating Account...</span>';
+            submitBtn.innerHTML = '<span>Generating Verification Code...</span>';
         }
 
         try {
-            await apiClient.post('/api/auth/register', { name, email, phone, password });
+            const res = await apiClient.post('/api/auth/registration/start', {
+                name,
+                email,
+                phone,
+                password,
+                confirmPassword
+            });
 
-            // Automatically authenticate after registration
-            const loginRes = await apiClient.post('/api/auth/login', { email, password });
-            if (loginRes && loginRes.data && loginRes.data.token) {
-                try {
-                    localStorage.setItem(CONFIG.tokenStorageKey, loginRes.data.token);
-                    localStorage.setItem(CONFIG.userStorageKey, JSON.stringify(loginRes.data.user));
-                } catch (storeErr) {
-                    console.warn('[VenueVista] Could not store JWT:', storeErr);
+            if (res && res.data && res.data.sessionId) {
+                state.registrationSession = res.data;
+
+                const displayEmail = document.getElementById('reg-display-email');
+                if (displayEmail) displayEmail.textContent = res.data.email;
+
+                const demoPanel = document.getElementById('demo-email-otp-panel');
+                const demoVal = document.getElementById('demo-email-otp-val');
+                if (res.data.demoMode && res.data.demoEmailOtp) {
+                    if (demoVal) demoVal.textContent = res.data.demoEmailOtp;
+                    if (demoPanel) demoPanel.style.display = 'block';
+                } else if (demoPanel) {
+                    demoPanel.style.display = 'none';
                 }
 
-                state.currentUser = loginRes.data.user;
-                updateAuthNav();
-                closeAuthModal();
-                showToast(`✓ Account created! Welcome, ${loginRes.data.user.name}!`);
+                setRegistrationStep(2);
+                startResendCooldown('EMAIL', res.data.resendCooldownSeconds || 30);
+
+                const otpInput = document.getElementById('reg-email-otp');
+                if (otpInput) {
+                    otpInput.value = '';
+                    otpInput.focus();
+                }
             } else {
-                switchAuthTab('login');
-                showToast('Registration successful! Please sign in with your credentials.');
+                throw new Error('Invalid response from registration service.');
             }
         } catch (err) {
-            console.error('[VenueVista] Registration failed:', err);
-            showAuthError(err.message || 'Registration failed. Email may already be in use.');
+            console.error('[VenueVista] Registration start failed:', err);
+            showAuthError(err.message || 'Unable to start registration. Email or phone may already be registered.');
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>Create Account</span>';
+                submitBtn.innerHTML = '<span>Continue to Verification →</span>';
             }
+        }
+    }
+
+    async function handleVerifyEmailOtp(e) {
+        if (e) e.preventDefault();
+        if (!state.registrationSession || !state.registrationSession.sessionId) {
+            showAuthError('Registration session expired. Please restart.');
+            setRegistrationStep(1);
+            return;
+        }
+
+        const otpInput = document.getElementById('reg-email-otp');
+        const otp = otpInput ? otpInput.value.trim() : '';
+
+        if (!otp || !/^\d{6}$/.test(otp)) {
+            showAuthError('Please enter the 6-digit numeric verification code.');
+            return;
+        }
+
+        const verifyBtn = document.getElementById('btn-verify-email-otp');
+        if (verifyBtn) {
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<span>Verifying Email...</span>';
+        }
+
+        try {
+            const res = await apiClient.post('/api/auth/registration/verify-email', {
+                sessionId: state.registrationSession.sessionId,
+                otp
+            });
+
+            if (res && res.data) {
+                state.registrationSession = res.data;
+
+                const displayPhone = document.getElementById('reg-display-phone');
+                if (displayPhone) displayPhone.textContent = res.data.phone;
+
+                const demoPanel = document.getElementById('demo-phone-otp-panel');
+                const demoVal = document.getElementById('demo-phone-otp-val');
+                if (res.data.demoMode && res.data.demoPhoneOtp) {
+                    if (demoVal) demoVal.textContent = res.data.demoPhoneOtp;
+                    if (demoPanel) demoPanel.style.display = 'block';
+                } else if (demoPanel) {
+                    demoPanel.style.display = 'none';
+                }
+
+                setRegistrationStep(3);
+                startResendCooldown('PHONE', res.data.resendCooldownSeconds || 30);
+
+                const phoneOtpInput = document.getElementById('reg-phone-otp');
+                if (phoneOtpInput) {
+                    phoneOtpInput.value = '';
+                    phoneOtpInput.focus();
+                }
+            } else {
+                throw new Error('Invalid response during email verification.');
+            }
+        } catch (err) {
+            console.error('[VenueVista] Email OTP verification failed:', err);
+            showAuthError(err.message || 'Invalid or expired email verification code.');
+        } finally {
+            if (verifyBtn) {
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<span>Verify Email →</span>';
+            }
+        }
+    }
+
+    async function handleVerifyPhoneOtp(e) {
+        if (e) e.preventDefault();
+        if (!state.registrationSession || !state.registrationSession.sessionId) {
+            showAuthError('Registration session expired. Please restart.');
+            setRegistrationStep(1);
+            return;
+        }
+
+        const otpInput = document.getElementById('reg-phone-otp');
+        const otp = otpInput ? otpInput.value.trim() : '';
+
+        if (!otp || !/^\d{6}$/.test(otp)) {
+            showAuthError('Please enter the 6-digit numeric verification code.');
+            return;
+        }
+
+        const verifyBtn = document.getElementById('btn-verify-phone-otp');
+        if (verifyBtn) {
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<span>Creating Account...</span>';
+        }
+
+        try {
+            const res = await apiClient.post('/api/auth/registration/verify-phone', {
+                sessionId: state.registrationSession.sessionId,
+                otp
+            });
+
+            if (res && res.data && res.data.currentStep === 'COMPLETED') {
+                const userEmail = state.registrationSession.email;
+                state.registrationSession = null;
+                setRegistrationStep(4);
+                showToast('✓ Registration complete! Both email and phone verified.');
+
+                // Store registered email for quick sign-in prefill
+                state.lastRegisteredEmail = userEmail;
+            } else {
+                throw new Error('Registration could not be completed.');
+            }
+        } catch (err) {
+            console.error('[VenueVista] Phone OTP verification failed:', err);
+            showAuthError(err.message || 'Invalid or expired phone verification code.');
+        } finally {
+            if (verifyBtn) {
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<span>Verify & Complete Registration</span>';
+            }
+        }
+    }
+
+    async function handleResendOtp(target) {
+        if (!state.registrationSession || !state.registrationSession.sessionId) {
+            showAuthError('Registration session expired. Please restart.');
+            setRegistrationStep(1);
+            return;
+        }
+
+        try {
+            const res = await apiClient.post('/api/auth/registration/resend-otp', {
+                sessionId: state.registrationSession.sessionId,
+                target
+            });
+
+            if (res && res.data) {
+                state.registrationSession = res.data;
+                if (target === 'EMAIL') {
+                    if (res.data.demoEmailOtp) {
+                        const demoVal = document.getElementById('demo-email-otp-val');
+                        if (demoVal) demoVal.textContent = res.data.demoEmailOtp;
+                    }
+                    startResendCooldown('EMAIL', res.data.resendCooldownSeconds || 30);
+                    showToast('A new demo email verification code has been generated.');
+                } else if (target === 'PHONE') {
+                    if (res.data.demoPhoneOtp) {
+                        const demoVal = document.getElementById('demo-phone-otp-val');
+                        if (demoVal) demoVal.textContent = res.data.demoPhoneOtp;
+                    }
+                    startResendCooldown('PHONE', res.data.resendCooldownSeconds || 30);
+                    showToast('A new demo phone verification code has been generated.');
+                }
+            }
+        } catch (err) {
+            console.error(`[VenueVista] Resend ${target} OTP failed:`, err);
+            showAuthError(err.message || `Could not resend ${target} OTP. Cooldown may still be active.`);
         }
     }
 
@@ -2176,6 +2886,30 @@ const VenueVista = (() => {
         }
     }
 
+    function closeAccountDropdown() {
+        const menu = document.getElementById('account-dropdown-menu');
+        const btn = document.getElementById('account-menu-toggle');
+        if (menu) menu.style.display = 'none';
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleAccountDropdown(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const menu = document.getElementById('account-dropdown-menu');
+        const btn = document.getElementById('account-menu-toggle');
+        if (!menu || !btn) return;
+        const isOpen = menu.style.display !== 'none';
+        if (isOpen) {
+            closeAccountDropdown();
+        } else {
+            menu.style.display = 'block';
+            btn.setAttribute('aria-expanded', 'true');
+        }
+    }
+
     function handleLogout() {
         try {
             localStorage.removeItem(CONFIG.tokenStorageKey);
@@ -2184,47 +2918,144 @@ const VenueVista = (() => {
             console.warn('[VenueVista] Error clearing token:', e);
         }
         state.currentUser = null;
+        state.myBookings = [];
+        state.myInquiries = [];
+        closeAccountDropdown();
         updateAuthNav();
         showToast('Signed out successfully.');
+        navigateTo('/');
     }
 
     function updateAuthNav() {
         const headerActions = dom.headerActions;
         if (!headerActions) return;
 
-        const existingWrapper = document.getElementById('auth-user-wrapper');
+        const existingMenu = document.getElementById('account-menu-wrapper');
+        const legacyWrapper = document.getElementById('auth-user-wrapper');
+        if (legacyWrapper) legacyWrapper.remove();
 
         if (state.currentUser) {
             if (dom.btnLogin) dom.btnLogin.style.display = 'none';
             if (dom.btnRegister) dom.btnRegister.style.display = 'none';
 
-            if (!existingWrapper) {
-                const userWrapper = document.createElement('div');
-                userWrapper.className = 'auth-user-wrapper';
-                userWrapper.id = 'auth-user-wrapper';
-                const initial = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+            const initial = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+            const userName = state.currentUser.name || 'User';
+            const userEmail = state.currentUser.email || '';
 
-                userWrapper.innerHTML = `
-                    <div class="auth-user-chip" title="${escapeHtml(state.currentUser.email)}">
+            if (!existingMenu) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'account-menu-wrapper';
+                wrapper.id = 'account-menu-wrapper';
+
+                wrapper.innerHTML = `
+                    <button class="account-menu-btn" id="account-menu-toggle" type="button" aria-haspopup="true" aria-expanded="false" title="Account menu">
                         <div class="auth-user-avatar">${escapeHtml(initial)}</div>
-                        <span>${escapeHtml(state.currentUser.name)}</span>
+                        <span class="account-user-name">${escapeHtml(userName)}</span>
+                        <svg class="dropdown-chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="account-dropdown-menu" id="account-dropdown-menu" role="menu" aria-label="User Account Menu" style="display: none;">
+                        <div class="account-dropdown-header">
+                            <div class="account-header-avatar">${escapeHtml(initial)}</div>
+                            <div class="account-header-info">
+                                <div class="account-header-name">${escapeHtml(userName)}</div>
+                                <div class="account-header-email">${escapeHtml(userEmail)}</div>
+                            </div>
+                        </div>
+                        <div class="account-dropdown-divider"></div>
+                        <div class="account-dropdown-list">
+                            <a href="/my-profile" class="account-dropdown-item" role="menuitem" data-action="profile">
+                                <svg class="dropdown-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="/my-bookings" class="account-dropdown-item" role="menuitem" data-action="bookings">
+                                <svg class="dropdown-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span>My Bookings</span>
+                            </a>
+                            <div class="account-dropdown-sublinks">
+                                <a href="/my-bookings?tab=tickets" class="account-dropdown-subitem" role="menuitem" data-action="tickets">
+                                    <svg class="dropdown-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                                    </svg>
+                                    <span>My Tickets</span>
+                                </a>
+                                <a href="/my-bookings?tab=inquiries" class="account-dropdown-subitem" role="menuitem" data-action="inquiries">
+                                    <svg class="dropdown-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 21h18"></path>
+                                        <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path>
+                                        <path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path>
+                                        <path d="M14 9h1"></path><path d="M14 13h1"></path><path d="M14 17h1"></path>
+                                    </svg>
+                                    <span>My Venue Inquiries</span>
+                                </a>
+                            </div>
+                            <a href="/account-settings" class="account-dropdown-item" role="menuitem" data-action="settings">
+                                <svg class="dropdown-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span>Account Settings</span>
+                            </a>
+                        </div>
+                        <div class="account-dropdown-divider"></div>
+                        <button type="button" class="account-dropdown-item account-dropdown-logout" id="btn-dropdown-logout" role="menuitem">
+                            <svg class="dropdown-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Sign Out</span>
+                        </button>
                     </div>
-                    <button class="btn btn-outline btn-sm" id="btn-logout" type="button">Sign Out</button>
                 `;
-                headerActions.appendChild(userWrapper);
+                headerActions.appendChild(wrapper);
 
-                const logoutBtn = userWrapper.querySelector('#btn-logout');
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', handleLogout);
+                const toggleBtn = wrapper.querySelector('#account-menu-toggle');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', toggleAccountDropdown);
                 }
+
+                const logoutBtn = wrapper.querySelector('#btn-dropdown-logout');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        closeAccountDropdown();
+                        handleLogout();
+                    });
+                }
+
+                // Close dropdown on option selection
+                wrapper.querySelectorAll('.account-dropdown-item, .account-dropdown-subitem').forEach(item => {
+                    if (item.id !== 'btn-dropdown-logout') {
+                        item.addEventListener('click', () => {
+                            closeAccountDropdown();
+                        });
+                    }
+                });
             } else {
-                const chipSpan = existingWrapper.querySelector('.auth-user-chip span');
-                const avatar = existingWrapper.querySelector('.auth-user-avatar');
-                if (chipSpan) chipSpan.textContent = state.currentUser.name;
-                if (avatar) avatar.textContent = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+                const nameEl = existingMenu.querySelector('.account-user-name');
+                const headerName = existingMenu.querySelector('.account-header-name');
+                const headerEmail = existingMenu.querySelector('.account-header-email');
+                const avatar = existingMenu.querySelector('.account-menu-btn .auth-user-avatar');
+                const headerAvatar = existingMenu.querySelector('.account-header-avatar');
+
+                if (nameEl) nameEl.textContent = userName;
+                if (headerName) headerName.textContent = userName;
+                if (headerEmail) headerEmail.textContent = userEmail;
+                if (avatar) avatar.textContent = initial;
+                if (headerAvatar) headerAvatar.textContent = initial;
             }
         } else {
-            if (existingWrapper) existingWrapper.remove();
+            if (existingMenu) existingMenu.remove();
             if (dom.btnLogin) dom.btnLogin.style.display = '';
             if (dom.btnRegister) dom.btnRegister.style.display = '';
         }
@@ -2232,21 +3063,33 @@ const VenueVista = (() => {
 
     async function initAuthSession() {
         let storedToken = null;
+        let storedUser = null;
         try {
             storedToken = localStorage.getItem(CONFIG.tokenStorageKey);
+            const rawUser = localStorage.getItem(CONFIG.userStorageKey);
+            if (rawUser) storedUser = JSON.parse(rawUser);
         } catch (e) {
-            console.warn('[VenueVista] Could not read token from storage:', e);
+            console.warn('[VenueVista] Could not read session from storage:', e);
         }
 
         if (!storedToken) {
+            state.currentUser = null;
             updateAuthNav();
             return;
+        }
+
+        if (storedUser) {
+            state.currentUser = storedUser;
+            updateAuthNav();
         }
 
         try {
             const res = await apiClient.get('/api/auth/me');
             if (res && res.data) {
                 state.currentUser = res.data;
+                try {
+                    localStorage.setItem(CONFIG.userStorageKey, JSON.stringify(res.data));
+                } catch (e) {}
                 console.log(`[VenueVista] Authenticated session restored for: ${res.data.name} (${res.data.email})`);
                 updateAuthNav();
             }
@@ -2261,6 +3104,486 @@ const VenueVista = (() => {
         }
     }
 
+    // --- Helpers and Renderers for Account Dashboard ---
+
+    function formatIsoDateTime(isoStr) {
+        if (!isoStr) return '—';
+        try {
+            const d = new Date(isoStr);
+            if (isNaN(d.getTime())) return isoStr;
+            return d.toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        } catch (e) {
+            return isoStr;
+        }
+    }
+
+    function getBookingStatusClass(status) {
+        const s = (status || '').toUpperCase();
+        if (s === 'CONFIRMED') return 'status-confirmed';
+        if (s === 'PENDING' || s === 'PENDING_PAYMENT') return 'status-pending';
+        if (s === 'CANCELLED') return 'status-cancelled';
+        if (s === 'REFUNDED') return 'status-expired';
+        return 'status-confirmed';
+    }
+
+    function getInquiryStatusClass(status) {
+        const s = (status || '').toUpperCase();
+        if (s === 'CONFIRMED') return 'status-confirmed';
+        if (s === 'UNDER_REVIEW') return 'status-review';
+        if (s === 'QUOTED') return 'status-quoted';
+        if (s === 'PENDING') return 'status-pending';
+        if (s === 'REJECTED') return 'status-cancelled';
+        if (s === 'EXPIRED') return 'status-expired';
+        return 'status-pending';
+    }
+
+    function closeAccountDetailsModal() {
+        if (!dom.accountDetailsModal) return;
+        dom.accountDetailsModal.classList.remove('is-open', 'show');
+        dom.accountDetailsModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+    }
+
+    function openBookingDetailsModal(bookingCode) {
+        if (!dom.accountDetailsModal || !dom.accountDetailsModalBody) return;
+        const booking = (state.myBookings || []).find(b => b.bookingCode === bookingCode);
+        if (!booking) {
+            showToast('Booking details not found.');
+            return;
+        }
+
+        const eventImg = resolveEventImage({
+            code: booking.eventCode,
+            title: booking.eventTitle
+        });
+
+        const statusClass = getBookingStatusClass(booking.status);
+        const formattedDate = formatIsoDateTime(booking.bookingTime);
+
+        dom.accountDetailsModalBody.innerHTML = `
+            <div class="receipt-header-row">
+                <h3 class="receipt-title">Ticket Booking Receipt</h3>
+                <span class="status-badge ${statusClass}">${escapeHtml(booking.status || 'CONFIRMED')}</span>
+            </div>
+
+            <div class="receipt-banner-card">
+                <img src="${eventImg}" alt="${escapeHtml(booking.eventTitle || 'Event')}" class="receipt-banner-img">
+                <div class="receipt-banner-info">
+                    <h4>${escapeHtml(booking.eventTitle || 'Event')}</h4>
+                    <div class="receipt-banner-meta">📅 ${escapeHtml(booking.eventDateTime || 'Date TBA')}</div>
+                    <div class="receipt-banner-meta">📍 ${escapeHtml(booking.eventVenue ? `${booking.eventVenue}, ${booking.eventCity || ''}` : (booking.eventCity || 'Venue TBA'))}</div>
+                </div>
+            </div>
+
+            <table class="receipt-table">
+                <tbody>
+                    <tr>
+                        <td class="receipt-td-label">Booking Reference</td>
+                        <td class="receipt-td-val" style="font-family:var(--font-mono);font-weight:700;color:var(--primary);">${escapeHtml(booking.bookingCode)}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Attendee Name</td>
+                        <td class="receipt-td-val">${escapeHtml(booking.customerName || '—')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Contact Email</td>
+                        <td class="receipt-td-val">${escapeHtml(booking.customerEmail || '—')}</td>
+                    </tr>
+                    ${booking.customerPhone ? `
+                    <tr>
+                        <td class="receipt-td-label">Contact Phone</td>
+                        <td class="receipt-td-val">${escapeHtml(booking.customerPhone)}</td>
+                    </tr>` : ''}
+                    <tr>
+                        <td class="receipt-td-label">Ticket Tier</td>
+                        <td class="receipt-td-val">${escapeHtml(booking.ticketTier || 'General Admission')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Quantity</td>
+                        <td class="receipt-td-val">${booking.quantity || 1} Tickets</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Unit Price</td>
+                        <td class="receipt-td-val">${inrFormatter.format(booking.unitPrice || 0)}</td>
+                    </tr>
+                    <tr style="border-top: 2px solid var(--border-color);">
+                        <td class="receipt-td-label" style="font-weight:700;color:var(--text-primary);font-size:1.05rem;">Total Amount Paid</td>
+                        <td class="receipt-td-val" style="font-size:1.2rem;font-weight:800;color:var(--primary);">${inrFormatter.format(booking.totalAmount || 0)}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Booked On</td>
+                        <td class="receipt-td-val">${escapeHtml(formattedDate)}</td>
+                    </tr>
+                    ${booking.notes ? `
+                    <tr>
+                        <td class="receipt-td-label">Notes</td>
+                        <td class="receipt-td-val">${escapeHtml(booking.notes)}</td>
+                    </tr>` : ''}
+                </tbody>
+            </table>
+
+            <div class="receipt-qr-card">
+                <div style="font-size:1.8rem;">📱</div>
+                <div class="receipt-qr-code">${escapeHtml(booking.qrCodePayload || booking.bookingCode)}</div>
+                <p class="receipt-qr-note">Scan this digital pass QR code at venue security gate for verified admission check-in.</p>
+            </div>
+
+            <div style="text-align:center;margin-top:1.25rem;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-close-account-modal">Close Receipt</button>
+            </div>
+        `;
+
+        const closeBtn = dom.accountDetailsModalBody.querySelector('#btn-close-account-modal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeAccountDetailsModal);
+        }
+
+        dom.accountDetailsModal.classList.add('is-open', 'show');
+        dom.accountDetailsModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+    }
+
+    function openInquiryDetailsModal(inquiryCode) {
+        if (!dom.accountDetailsModal || !dom.accountDetailsModalBody) return;
+        const inquiry = (state.myInquiries || []).find(i => i.inquiryCode === inquiryCode);
+        if (!inquiry) {
+            showToast('Venue inquiry details not found.');
+            return;
+        }
+
+        const venueImg = resolveVenueImage({
+            code: inquiry.venueCode,
+            name: inquiry.venueName
+        });
+
+        const statusClass = getInquiryStatusClass(inquiry.status);
+        const formattedDate = formatIsoDateTime(inquiry.inquiryTime);
+
+        dom.accountDetailsModalBody.innerHTML = `
+            <div class="receipt-header-row">
+                <h3 class="receipt-title">Venue Inquiry Summary</h3>
+                <span class="status-badge ${statusClass}">${escapeHtml(inquiry.status || 'PENDING')}</span>
+            </div>
+
+            <div class="receipt-banner-card">
+                <img src="${venueImg}" alt="${escapeHtml(inquiry.venueName || 'Venue')}" class="receipt-banner-img">
+                <div class="receipt-banner-info">
+                    <h4>${escapeHtml(inquiry.venueName || 'Venue')}</h4>
+                    <div class="receipt-banner-meta">📍 ${escapeHtml(inquiry.venueLocation ? `${inquiry.venueLocation}, ${inquiry.venueCity || ''}` : (inquiry.venueCity || 'City TBA'))}</div>
+                    <div class="receipt-banner-meta">🏷️ Event Type: ${escapeHtml(inquiry.eventType || 'Rental')}</div>
+                </div>
+            </div>
+
+            <table class="receipt-table">
+                <tbody>
+                    <tr>
+                        <td class="receipt-td-label">Inquiry Reference</td>
+                        <td class="receipt-td-val" style="font-family:var(--font-mono);font-weight:700;color:var(--primary);">${escapeHtml(inquiry.inquiryCode)}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Primary Contact</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.contactName || '—')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Contact Details</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.contactPhoneEmail || '—')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Requested Date</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.requestedDate || 'Date TBA')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Expected Attendance</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.expectedAttendance || 'TBA')}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Rental Duration</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.rentalDuration || 'Full Day')}</td>
+                    </tr>
+                    <tr style="border-top: 2px solid var(--border-color);">
+                        <td class="receipt-td-label" style="font-weight:700;color:var(--text-primary);font-size:1.05rem;">Estimated Quotation</td>
+                        <td class="receipt-td-val" style="font-size:1.2rem;font-weight:800;color:var(--primary);">${inrFormatter.format(inquiry.estimatedQuote || 0)}</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-td-label">Submitted On</td>
+                        <td class="receipt-td-val">${escapeHtml(formattedDate)}</td>
+                    </tr>
+                    ${inquiry.notes ? `
+                    <tr>
+                        <td class="receipt-td-label">Special Requirements</td>
+                        <td class="receipt-td-val">${escapeHtml(inquiry.notes)}</td>
+                    </tr>` : ''}
+                </tbody>
+            </table>
+
+            <div style="text-align:center;margin-top:1.25rem;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-close-account-modal">Close Summary</button>
+            </div>
+        `;
+
+        const closeBtn = dom.accountDetailsModalBody.querySelector('#btn-close-account-modal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeAccountDetailsModal);
+        }
+
+        dom.accountDetailsModal.classList.add('is-open', 'show');
+        dom.accountDetailsModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+    }
+
+    async function fetchMyBookings(force = false) {
+        if (!dom.myTicketsList) return;
+        if (state.myBookingsLoading) return;
+
+        state.myBookingsLoading = true;
+        if (dom.myTicketsLoading) dom.myTicketsLoading.style.display = 'flex';
+        if (dom.myTicketsError) dom.myTicketsError.style.display = 'none';
+        if (dom.myTicketsEmpty) dom.myTicketsEmpty.style.display = 'none';
+        dom.myTicketsList.innerHTML = '';
+
+        try {
+            const res = await apiClient.get('/api/bookings/my');
+            state.myBookingsLoading = false;
+            if (dom.myTicketsLoading) dom.myTicketsLoading.style.display = 'none';
+
+            const bookings = (res && res.data) ? res.data : [];
+            state.myBookings = bookings;
+            if (dom.badgeTicketsCount) dom.badgeTicketsCount.textContent = bookings.length;
+
+            if (bookings.length === 0) {
+                if (dom.myTicketsEmpty) dom.myTicketsEmpty.style.display = 'block';
+                return;
+            }
+
+            dom.myTicketsList.innerHTML = bookings.map(b => {
+                const img = resolveEventImage({ code: b.eventCode, title: b.eventTitle });
+                const statusCls = getBookingStatusClass(b.status);
+                const bookedOn = formatIsoDateTime(b.bookingTime);
+                return `
+                    <div class="my-booking-card" data-code="${escapeHtml(b.bookingCode)}">
+                        <div class="booking-card-media">
+                            <img src="${img}" alt="${escapeHtml(b.eventTitle || 'Event')}" class="booking-card-img" loading="lazy">
+                            <span class="status-badge ${statusCls}">${escapeHtml(b.status || 'CONFIRMED')}</span>
+                        </div>
+                        <div class="booking-card-body">
+                            <div class="booking-card-header-row">
+                                <span class="booking-ref-code">${escapeHtml(b.bookingCode)}</span>
+                                <span class="booking-meta-date">${escapeHtml(bookedOn)}</span>
+                            </div>
+                            <h3 class="booking-card-title">${escapeHtml(b.eventTitle || 'Event')}</h3>
+                            <div class="booking-card-specs">
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">📅</span>
+                                    <span>${escapeHtml(b.eventDateTime || 'Date TBA')}</span>
+                                </div>
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">📍</span>
+                                    <span>${escapeHtml(b.eventVenue ? `${b.eventVenue}, ${b.eventCity || ''}` : (b.eventCity || 'Venue TBA'))}</span>
+                                </div>
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">🎟️</span>
+                                    <span>${b.quantity} × ${escapeHtml(b.ticketTier || 'General Admission')}</span>
+                                </div>
+                            </div>
+                            <div class="booking-card-footer">
+                                <div class="booking-card-price">
+                                    <span class="price-label">Total Paid</span>
+                                    <span class="price-val">${inrFormatter.format(b.totalAmount || 0)}</span>
+                                </div>
+                                <button class="btn btn-outline btn-sm btn-view-ticket-receipt" data-code="${escapeHtml(b.bookingCode)}" type="button">
+                                    <span>View Receipt</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            dom.myTicketsList.querySelectorAll('.btn-view-ticket-receipt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const code = btn.getAttribute('data-code');
+                    openBookingDetailsModal(code);
+                });
+            });
+
+        } catch (err) {
+            state.myBookingsLoading = false;
+            if (dom.myTicketsLoading) dom.myTicketsLoading.style.display = 'none';
+            if (dom.myTicketsError) {
+                dom.myTicketsError.style.display = 'block';
+                const txt = document.getElementById('my-tickets-error-text');
+                if (txt) txt.textContent = err.message || 'Unable to load ticket bookings. Please check your connection and retry.';
+            }
+        }
+    }
+
+    async function fetchMyInquiries(force = false) {
+        if (!dom.myInquiriesList) return;
+        if (state.myInquiriesLoading) return;
+
+        state.myInquiriesLoading = true;
+        if (dom.myInquiriesLoading) dom.myInquiriesLoading.style.display = 'flex';
+        if (dom.myInquiriesError) dom.myInquiriesError.style.display = 'none';
+        if (dom.myInquiriesEmpty) dom.myInquiriesEmpty.style.display = 'none';
+        dom.myInquiriesList.innerHTML = '';
+
+        try {
+            const res = await apiClient.get('/api/venues/inquiries/my');
+            state.myInquiriesLoading = false;
+            if (dom.myInquiriesLoading) dom.myInquiriesLoading.style.display = 'none';
+
+            const inquiries = (res && res.data) ? res.data : [];
+            state.myInquiries = inquiries;
+            if (dom.badgeInquiriesCount) dom.badgeInquiriesCount.textContent = inquiries.length;
+
+            if (inquiries.length === 0) {
+                if (dom.myInquiriesEmpty) dom.myInquiriesEmpty.style.display = 'block';
+                return;
+            }
+
+            dom.myInquiriesList.innerHTML = inquiries.map(i => {
+                const img = resolveVenueImage({ code: i.venueCode, name: i.venueName });
+                const statusCls = getInquiryStatusClass(i.status);
+                const submittedOn = formatIsoDateTime(i.inquiryTime);
+                return `
+                    <div class="my-inquiry-card" data-code="${escapeHtml(i.inquiryCode)}">
+                        <div class="booking-card-media">
+                            <img src="${img}" alt="${escapeHtml(i.venueName || 'Venue')}" class="booking-card-img" loading="lazy">
+                            <span class="status-badge ${statusCls}">${escapeHtml(i.status || 'PENDING')}</span>
+                        </div>
+                        <div class="booking-card-body">
+                            <div class="booking-card-header-row">
+                                <span class="booking-ref-code">${escapeHtml(i.inquiryCode)}</span>
+                                <span class="booking-meta-date">${escapeHtml(submittedOn)}</span>
+                            </div>
+                            <h3 class="booking-card-title">${escapeHtml(i.venueName || 'Venue')}</h3>
+                            <div class="booking-card-specs">
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">📅</span>
+                                    <span>Requested: ${escapeHtml(i.requestedDate || 'Date TBA')}</span>
+                                </div>
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">📍</span>
+                                    <span>${escapeHtml(i.venueLocation ? `${i.venueLocation}, ${i.venueCity || ''}` : (i.venueCity || 'City TBA'))}</span>
+                                </div>
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">👥</span>
+                                    <span>${escapeHtml(i.expectedAttendance || 'TBA')} • ${escapeHtml(i.rentalDuration || 'Full Day')}</span>
+                                </div>
+                                <div class="booking-spec-row">
+                                    <span class="spec-icon">🏷️</span>
+                                    <span>Event: ${escapeHtml(i.eventType || 'Rental')}</span>
+                                </div>
+                            </div>
+                            <div class="booking-card-footer">
+                                <div class="booking-card-price">
+                                    <span class="price-label">Estimated Quote</span>
+                                    <span class="price-val">${inrFormatter.format(i.estimatedQuote || 0)}</span>
+                                </div>
+                                <button class="btn btn-outline btn-sm btn-view-inquiry-receipt" data-code="${escapeHtml(i.inquiryCode)}" type="button">
+                                    <span>View Details</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            dom.myInquiriesList.querySelectorAll('.btn-view-inquiry-receipt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const code = btn.getAttribute('data-code');
+                    openInquiryDetailsModal(code);
+                });
+            });
+
+        } catch (err) {
+            state.myInquiriesLoading = false;
+            if (dom.myInquiriesLoading) dom.myInquiriesLoading.style.display = 'none';
+            if (dom.myInquiriesError) {
+                dom.myInquiriesError.style.display = 'block';
+                const txt = document.getElementById('my-inquiries-error-text');
+                if (txt) txt.textContent = err.message || 'Unable to load venue inquiries. Please check your connection and retry.';
+            }
+        }
+    }
+
+    function switchBookingsTab(tabName) {
+        const isTickets = tabName !== 'inquiries';
+        if (dom.tabBtnTickets) {
+            dom.tabBtnTickets.classList.toggle('active', isTickets);
+            dom.tabBtnTickets.setAttribute('aria-selected', isTickets ? 'true' : 'false');
+        }
+        if (dom.tabBtnInquiries) {
+            dom.tabBtnInquiries.classList.toggle('active', !isTickets);
+            dom.tabBtnInquiries.setAttribute('aria-selected', !isTickets ? 'true' : 'false');
+        }
+        if (dom.paneMyTickets) dom.paneMyTickets.style.display = isTickets ? 'block' : 'none';
+        if (dom.paneMyInquiries) dom.paneMyInquiries.style.display = !isTickets ? 'block' : 'none';
+
+        try {
+            window.history.replaceState(null, '', `/my-bookings?tab=${isTickets ? 'tickets' : 'inquiries'}`);
+        } catch (e) {}
+
+        if (isTickets) {
+            fetchMyBookings();
+        } else {
+            fetchMyInquiries();
+        }
+    }
+
+    function renderMyBookingsPage(tabParam) {
+        const tab = (tabParam || '').toLowerCase() === 'inquiries' ? 'inquiries' : 'tickets';
+        switchBookingsTab(tab);
+    }
+
+    function renderMyProfilePage() {
+        if (!state.currentUser) return;
+        const initial = (state.currentUser.name || 'U').charAt(0).toUpperCase();
+        const avatarEl = document.getElementById('profile-avatar-display');
+        const nameDisplay = document.getElementById('profile-name-display');
+        const roleDisplay = document.getElementById('profile-role-display');
+        const valName = document.getElementById('profile-val-name');
+        const valEmail = document.getElementById('profile-val-email');
+        const valPhone = document.getElementById('profile-val-phone');
+        const valRole = document.getElementById('profile-val-role');
+        const valId = document.getElementById('profile-val-id');
+
+        if (avatarEl) avatarEl.textContent = initial;
+        if (nameDisplay) nameDisplay.textContent = state.currentUser.name || 'User';
+        if (roleDisplay) roleDisplay.textContent = state.currentUser.role || 'ROLE_USER';
+        if (valName) valName.textContent = state.currentUser.name || '—';
+        if (valEmail) valEmail.textContent = state.currentUser.email || '—';
+        if (valPhone) valPhone.textContent = state.currentUser.phone || 'Not provided';
+        if (valRole) valRole.textContent = state.currentUser.role || 'ROLE_USER';
+        if (valId) valId.textContent = state.currentUser.id ? `#VV-USR-${state.currentUser.id}` : '#VV-DEMO-01';
+    }
+
+    function renderAccountSettingsPage() {
+        if (!state.currentUser) return;
+        const sessionDesc = document.getElementById('settings-session-desc');
+        if (sessionDesc) {
+            sessionDesc.textContent = `Logged in as ${state.currentUser.name} (${state.currentUser.email}).`;
+        }
+
+        const darkCard = document.getElementById('theme-card-dark');
+        const lightCard = document.getElementById('theme-card-light');
+        const checkDark = document.getElementById('theme-check-dark');
+        const checkLight = document.getElementById('theme-check-light');
+
+        const isDark = state.theme === 'dark';
+        if (darkCard) darkCard.classList.toggle('selected', isDark);
+        if (lightCard) lightCard.classList.toggle('selected', !isDark);
+        if (checkDark) checkDark.style.display = isDark ? 'inline-block' : 'none';
+        if (checkLight) checkLight.style.display = !isDark ? 'inline-block' : 'none';
+    }
+
     async function loadCategoriesAndCities() {
         // Fetch categories and cities from backend in parallel
         try {
@@ -2271,11 +3594,17 @@ const VenueVista = (() => {
             ]);
 
             if (eventsCatRes.status === 'fulfilled' && eventsCatRes.value && eventsCatRes.value.data) {
-                state.eventCategories = eventsCatRes.value.data;
+                state.eventCategories = eventsCatRes.value.data.map(cat => ({
+                    ...cat,
+                    image: resolveCategoryImage(cat)
+                }));
             }
 
             if (venuesCatRes.status === 'fulfilled' && venuesCatRes.value && venuesCatRes.value.data) {
-                state.venueCategories = venuesCatRes.value.data;
+                state.venueCategories = venuesCatRes.value.data.map(vc => ({
+                    ...vc,
+                    image: resolveVenueImage(vc)
+                }));
             }
 
             if (citiesRes.status === 'fulfilled' && citiesRes.value && citiesRes.value.data) {
@@ -2490,8 +3819,62 @@ const VenueVista = (() => {
         if (dom.formAuthLogin) {
             dom.formAuthLogin.addEventListener('submit', handleLoginSubmit);
         }
-        if (dom.formAuthRegister) {
-            dom.formAuthRegister.addEventListener('submit', handleRegisterSubmit);
+
+        // Dual OTP Registration Listeners
+        const regStep1 = document.getElementById('reg-step-1');
+        if (regStep1) regStep1.addEventListener('submit', handleRegistrationStart);
+
+        const regStep2 = document.getElementById('reg-step-2');
+        if (regStep2) regStep2.addEventListener('submit', handleVerifyEmailOtp);
+
+        const regStep3 = document.getElementById('reg-step-3');
+        if (regStep3) regStep3.addEventListener('submit', handleVerifyPhoneOtp);
+
+        const btnFillEmailOtp = document.getElementById('btn-fill-email-otp');
+        if (btnFillEmailOtp) {
+            btnFillEmailOtp.addEventListener('click', () => {
+                const valElem = document.getElementById('demo-email-otp-val');
+                const inputElem = document.getElementById('reg-email-otp');
+                if (valElem && inputElem && valElem.textContent && valElem.textContent !== '------') {
+                    inputElem.value = valElem.textContent.trim();
+                    inputElem.focus();
+                }
+            });
+        }
+
+        const btnFillPhoneOtp = document.getElementById('btn-fill-phone-otp');
+        if (btnFillPhoneOtp) {
+            btnFillPhoneOtp.addEventListener('click', () => {
+                const valElem = document.getElementById('demo-phone-otp-val');
+                const inputElem = document.getElementById('reg-phone-otp');
+                if (valElem && inputElem && valElem.textContent && valElem.textContent !== '------') {
+                    inputElem.value = valElem.textContent.trim();
+                    inputElem.focus();
+                }
+            });
+        }
+
+        const btnResendEmailOtp = document.getElementById('btn-resend-email-otp');
+        if (btnResendEmailOtp) {
+            btnResendEmailOtp.addEventListener('click', () => handleResendOtp('EMAIL'));
+        }
+
+        const btnResendPhoneOtp = document.getElementById('btn-resend-phone-otp');
+        if (btnResendPhoneOtp) {
+            btnResendPhoneOtp.addEventListener('click', () => handleResendOtp('PHONE'));
+        }
+
+        const btnBackStep1 = document.getElementById('btn-back-step1');
+        if (btnBackStep1) {
+            btnBackStep1.addEventListener('click', () => setRegistrationStep(1));
+        }
+
+        const btnRegGoLogin = document.getElementById('btn-reg-go-login');
+        if (btnRegGoLogin) {
+            btnRegGoLogin.addEventListener('click', () => {
+                switchAuthTab('login');
+                resetRegistrationWizard();
+            });
         }
 
         // Event Modal Controls
@@ -2518,6 +3901,9 @@ const VenueVista = (() => {
             dom.btnBookingAnother.addEventListener('click', () => {
                 if (dom.eventBookingSection) dom.eventBookingSection.style.display = 'block';
                 if (dom.eventBookingConfirmation) dom.eventBookingConfirmation.style.display = 'none';
+                if (state.selectedEvent) {
+                    updateModalAvailability(state.selectedEvent);
+                }
             });
         }
         if (dom.btnBookingDone) {
@@ -2547,12 +3933,68 @@ const VenueVista = (() => {
             dom.btnInquiryDone.addEventListener('click', closeVenueModal);
         }
 
-        // Global Escape closes any open modal
+        // Account Details Modal Controls
+        if (dom.accountDetailsModalCloseBtn) {
+            dom.accountDetailsModalCloseBtn.addEventListener('click', closeAccountDetailsModal);
+        }
+        if (dom.accountDetailsModal) {
+            dom.accountDetailsModal.addEventListener('click', (e) => {
+                if (e.target === dom.accountDetailsModal) closeAccountDetailsModal();
+            });
+        }
+
+        // My Bookings Tab Buttons & Retry Handlers
+        if (dom.tabBtnTickets) {
+            dom.tabBtnTickets.addEventListener('click', () => switchBookingsTab('tickets'));
+        }
+        if (dom.tabBtnInquiries) {
+            dom.tabBtnInquiries.addEventListener('click', () => switchBookingsTab('inquiries'));
+        }
+        if (dom.btnRetryTickets) {
+            dom.btnRetryTickets.addEventListener('click', () => fetchMyBookings(true));
+        }
+        if (dom.btnRetryInquiries) {
+            dom.btnRetryInquiries.addEventListener('click', () => fetchMyInquiries(true));
+        }
+
+        // Account Settings Theme Toggles & Signout
+        const darkThemeCard = document.getElementById('theme-card-dark');
+        const lightThemeCard = document.getElementById('theme-card-light');
+        if (darkThemeCard) {
+            darkThemeCard.addEventListener('click', () => {
+                setTheme('dark', true);
+                renderAccountSettingsPage();
+                showToast('Mode switched to Midnight Glow');
+            });
+        }
+        if (lightThemeCard) {
+            lightThemeCard.addEventListener('click', () => {
+                setTheme('light', true);
+                renderAccountSettingsPage();
+                showToast('Mode switched to Aurora View');
+            });
+        }
+        const btnSettingsSignout = document.getElementById('btn-settings-signout');
+        if (btnSettingsSignout) {
+            btnSettingsSignout.addEventListener('click', handleLogout);
+        }
+
+        // Close account dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const menuWrapper = document.getElementById('account-menu-wrapper');
+            if (menuWrapper && !menuWrapper.contains(e.target)) {
+                closeAccountDropdown();
+            }
+        });
+
+        // Global Escape closes any open modal or dropdown
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeEventModal();
                 closeVenueModal();
                 closeAuthModal();
+                closeAccountDetailsModal();
+                closeAccountDropdown();
             }
         });
     }
@@ -2595,7 +4037,23 @@ const VenueVista = (() => {
         openVenueModal,
         openAuthModal,
         handleLogout,
-        inrFormatter
+        inrFormatter,
+        assetRegistry: ASSET_REGISTRY,
+        resolveEventImage,
+        resolveCategoryImage,
+        resolveVenueImage,
+        getInventoryBadgeHtml,
+        updateModalAvailability,
+        switchBookingsTab,
+        renderMyBookingsPage,
+        renderMyProfilePage,
+        renderAccountSettingsPage,
+        openBookingDetailsModal,
+        openInquiryDetailsModal,
+        closeAccountDropdown,
+        toggleAccountDropdown,
+        fetchMyBookings,
+        fetchMyInquiries
     };
 })();
 

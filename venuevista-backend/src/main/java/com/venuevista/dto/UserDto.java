@@ -11,6 +11,8 @@ public class UserDto {
     private String email;
     private String phone;
     private Role role;
+    private Boolean emailVerified;
+    private Boolean phoneVerified;
     private LocalDateTime createdAt;
 
     public UserDto() {
@@ -23,6 +25,8 @@ public class UserDto {
             this.email = user.getEmail();
             this.phone = user.getPhone();
             this.role = user.getRole();
+            this.emailVerified = user.getEmailVerified();
+            this.phoneVerified = user.getPhoneVerified();
             this.createdAt = user.getCreatedAt();
         }
     }
@@ -65,6 +69,22 @@ public class UserDto {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public Boolean getPhoneVerified() {
+        return phoneVerified;
+    }
+
+    public void setPhoneVerified(Boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
     }
 
     public LocalDateTime getCreatedAt() {
