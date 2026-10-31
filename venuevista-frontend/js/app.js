@@ -15,7 +15,7 @@ const VenueVista = (() => {
         locale: 'en-IN',
         currency: 'INR',
         themeStorageKey: 'vv_theme',
-        apiBaseUrl: (typeof window !== 'undefined' && window.VENUEVISTA_API_URL) ? window.VENUEVISTA_API_URL : 'http://localhost:8081',
+        apiBaseUrl: (typeof window !== 'undefined' && window.VENUEVISTA_API_URL) ? window.VENUEVISTA_API_URL : 'https://venuevista-backend-kspi.onrender.com',
         tokenStorageKey: 'vv_token',
         userStorageKey: 'vv_user'
     };
