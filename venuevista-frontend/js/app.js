@@ -16,6 +16,7 @@ const VenueVista = (() => {
         currency: 'INR',
         themeStorageKey: 'vv_theme',
         apiBaseUrl: (typeof window !== 'undefined' && window.VENUEVISTA_API_URL) ? window.VENUEVISTA_API_URL : 'https://venuevista-backend-kspi.onrender.com',
+        requestTimeoutMs: 20000,
         tokenStorageKey: 'vv_token',
         userStorageKey: 'vv_user'
     };
@@ -29,26 +30,50 @@ const VenueVista = (() => {
 
     /**
      * Centralized Frontend API Client for VenueVista Spring Boot REST MVP
-     * Handles JSON envelopes, JWT bearer authorization, and error formatting consistently.
+     * Handles JSON envelopes, JWT bearer authorization, request timeouts, and error formatting consistently.
      */
     const apiClient = {
         async request(endpoint, options = {}) {
             const url = `${CONFIG.apiBaseUrl}${endpoint}`;
             const headers = {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 ...options.headers
             };
 
-            const token = localStorage.getItem(CONFIG.tokenStorageKey);
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
+            // Only attach Content-Type if a body is present or for mutating methods to prevent unnecessary CORS preflights on GET
+            const method = (options.method || 'GET').toUpperCase();
+            if (options.body || method === 'POST' || method === 'PUT' || method === 'PATCH') {
+                if (!headers['Content-Type']) {
+                    headers['Content-Type'] = 'application/json';
+                }
+            }
+
+            try {
+                const token = typeof localStorage !== 'undefined' ? localStorage.getItem(CONFIG.tokenStorageKey) : null;
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+            } catch (storageErr) {
+                // Storage may be restricted in private/sandboxed browsing modes
+            }
+
+            // Enforce a strict 20-second timeout to prevent infinite loading states
+            const timeoutMs = options.timeout || CONFIG.requestTimeoutMs || 20000;
+            let controller = null;
+            let timeoutId = null;
+
+            if (typeof AbortController !== 'undefined') {
+                controller = new AbortController();
+                timeoutId = setTimeout(() => {
+                    controller.abort(new Error(`Request timed out after ${Math.round(timeoutMs / 1000)} seconds`));
+                }, timeoutMs);
             }
 
             try {
                 const response = await fetch(url, {
                     ...options,
-                    headers
+                    headers,
+                    signal: controller ? controller.signal : undefined
                 });
 
                 const text = await response.text();
@@ -71,12 +96,22 @@ const VenueVista = (() => {
 
                 return json;
             } catch (err) {
+                if (err.name === 'AbortError' || err.code === 20 || (err.message && err.message.toLowerCase().includes('abort')) || (err.message && err.message.toLowerCase().includes('timeout'))) {
+                    const timeoutErr = new Error(`Request to ${endpoint} timed out after ${Math.round(timeoutMs / 1000)} seconds.`);
+                    timeoutErr.status = 408;
+                    timeoutErr.isTimeout = true;
+                    throw timeoutErr;
+                }
                 if (err.name === 'TypeError' && err.message && err.message.toLowerCase().includes('fetch')) {
                     const connErr = new Error(`Cannot connect to VenueVista backend server at ${CONFIG.apiBaseUrl}. Ensure the Spring Boot service is active.`);
                     connErr.status = 0;
                     throw connErr;
                 }
                 throw err;
+            } finally {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
             }
         },
 
@@ -1076,6 +1111,10 @@ const VenueVista = (() => {
         venueCategories: [],
         venueCities: [],
         categoriesLoading: false,
+        eventCategoriesLoading: false,
+        venueCategoriesLoading: false,
+        eventCategoriesError: false,
+        venueCategoriesError: false,
         eventsData: [],
         venuesData: [],
         eventsLoading: false,
@@ -1662,7 +1701,7 @@ const VenueVista = (() => {
     // Full category cards directory on /events/categories
     function renderEventsFullCategories() {
         if (!dom.eventsFullCategoriesGrid) return;
-        if (state.categoriesLoading) {
+        if ((state.eventCategoriesLoading || state.categoriesLoading) && (!state.eventCategories || !state.eventCategories.length)) {
             dom.eventsFullCategoriesGrid.innerHTML = `
                 <div class="api-loading-state" style="grid-column: 1 / -1;">
                     <div class="api-spinner"></div>
@@ -1671,7 +1710,27 @@ const VenueVista = (() => {
             `;
             return;
         }
-        const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : EVENT_CATEGORIES;
+        if (state.eventCategoriesError && (!state.eventCategories || !state.eventCategories.length)) {
+            dom.eventsFullCategoriesGrid.innerHTML = `
+                <div class="api-error-state" style="grid-column: 1 / -1;">
+                    <span class="error-icon" aria-hidden="true">⚠️</span>
+                    <h3>Couldn't load categories</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-event-categories-retry" type="button">Try Again</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-event-categories-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    state.eventCategoriesLoading = true;
+                    state.eventCategoriesError = false;
+                    renderEventsFullCategories();
+                    loadCategoriesAndCities();
+                });
+            }
+            return;
+        }
+        const cats = (state.eventCategories && state.eventCategories.length) ? state.eventCategories : [];
         if (!cats || cats.length === 0) {
             dom.eventsFullCategoriesGrid.innerHTML = `
                 <div class="api-error-state" style="grid-column: 1 / -1;">
@@ -1684,7 +1743,10 @@ const VenueVista = (() => {
             const retryBtn = document.getElementById('btn-event-categories-retry');
             if (retryBtn) {
                 retryBtn.addEventListener('click', () => {
-                    loadCategoriesAndCities().then(() => renderEventsFullCategories());
+                    state.eventCategoriesLoading = true;
+                    state.eventCategoriesError = false;
+                    renderEventsFullCategories();
+                    loadCategoriesAndCities();
                 });
             }
             return;
@@ -1856,7 +1918,7 @@ const VenueVista = (() => {
     // Full category cards directory on /venues/categories
     function renderVenuesFullCategories() {
         if (!dom.venuesFullCategoriesGrid) return;
-        if (state.categoriesLoading) {
+        if ((state.venueCategoriesLoading || state.categoriesLoading) && (!state.venueCategories || !state.venueCategories.length)) {
             dom.venuesFullCategoriesGrid.innerHTML = `
                 <div class="api-loading-state" style="grid-column: 1 / -1;">
                     <div class="api-spinner"></div>
@@ -1865,7 +1927,27 @@ const VenueVista = (() => {
             `;
             return;
         }
-        const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : VENUE_CATEGORIES;
+        if (state.venueCategoriesError && (!state.venueCategories || !state.venueCategories.length)) {
+            dom.venuesFullCategoriesGrid.innerHTML = `
+                <div class="api-error-state" style="grid-column: 1 / -1;">
+                    <span class="error-icon" aria-hidden="true">🏛️</span>
+                    <h3>Couldn't load categories</h3>
+                    <p>Please try again.</p>
+                    <button class="btn btn-primary btn-sm" id="btn-venue-categories-retry" type="button">Try Again</button>
+                </div>
+            `;
+            const retryBtn = document.getElementById('btn-venue-categories-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    state.venueCategoriesLoading = true;
+                    state.venueCategoriesError = false;
+                    renderVenuesFullCategories();
+                    loadCategoriesAndCities();
+                });
+            }
+            return;
+        }
+        const cats = (state.venueCategories && state.venueCategories.length) ? state.venueCategories : [];
         if (!cats || cats.length === 0) {
             dom.venuesFullCategoriesGrid.innerHTML = `
                 <div class="api-error-state" style="grid-column: 1 / -1;">
@@ -1878,7 +1960,10 @@ const VenueVista = (() => {
             const retryBtn = document.getElementById('btn-venue-categories-retry');
             if (retryBtn) {
                 retryBtn.addEventListener('click', () => {
-                    loadCategoriesAndCities().then(() => renderVenuesFullCategories());
+                    state.venueCategoriesLoading = true;
+                    state.venueCategoriesError = false;
+                    renderVenuesFullCategories();
+                    loadCategoriesAndCities();
                 });
             }
             return;
@@ -3836,50 +3921,89 @@ const VenueVista = (() => {
     }
 
     async function loadCategoriesAndCities() {
-        // Fetch categories and cities from backend in parallel
+        // Fetch categories and cities from backend in parallel, rendering each as soon as it resolves
         state.categoriesLoading = true;
-        try {
-            const [eventsCatRes, venuesCatRes, citiesRes] = await Promise.allSettled([
-                apiClient.get('/api/events/categories'),
-                apiClient.get('/api/venues/categories'),
-                apiClient.get('/api/venues/cities')
-            ]);
+        state.eventCategoriesLoading = true;
+        state.venueCategoriesLoading = true;
 
-            if (eventsCatRes.status === 'fulfilled' && eventsCatRes.value && eventsCatRes.value.data) {
-                state.eventCategories = eventsCatRes.value.data.map(cat => ({
-                    ...cat,
-                    icon: resolveEventIcon(cat),
-                    badgeClass: resolveEventBadgeClass(cat),
-                    image: resolveCategoryImage(cat)
-                }));
-            }
+        const fetchEventCats = apiClient.get('/api/events/categories')
+            .then(res => {
+                if (res && res.data) {
+                    state.eventCategories = res.data.map(cat => ({
+                        ...cat,
+                        icon: resolveEventIcon(cat),
+                        badgeClass: resolveEventBadgeClass(cat),
+                        image: resolveCategoryImage(cat)
+                    }));
+                    state.eventCategoriesError = false;
+                } else {
+                    state.eventCategoriesError = true;
+                }
+            })
+            .catch(err => {
+                console.warn('[VenueVista] Failed to fetch event categories:', err);
+                state.eventCategoriesError = true;
+            })
+            .finally(() => {
+                state.eventCategoriesLoading = false;
+                if (state.currentRoute === 'events-categories') {
+                    renderEventsFullCategories();
+                }
+            });
 
-            if (venuesCatRes.status === 'fulfilled' && venuesCatRes.value && venuesCatRes.value.data) {
-                state.venueCategories = venuesCatRes.value.data.map(vc => ({
-                    ...vc,
-                    icon: resolveVenueIcon(vc),
-                    badgeClass: resolveVenueBadgeClass(vc),
-                    image: resolveVenueImage(vc)
-                }));
-            }
+        const fetchVenueCats = apiClient.get('/api/venues/categories')
+            .then(res => {
+                if (res && res.data) {
+                    state.venueCategories = res.data.map(vc => ({
+                        ...vc,
+                        icon: resolveVenueIcon(vc),
+                        badgeClass: resolveVenueBadgeClass(vc),
+                        image: resolveVenueImage(vc)
+                    }));
+                    state.venueCategoriesError = false;
+                } else {
+                    state.venueCategoriesError = true;
+                }
+            })
+            .catch(err => {
+                console.warn('[VenueVista] Failed to fetch venue categories:', err);
+                state.venueCategoriesError = true;
+            })
+            .finally(() => {
+                state.venueCategoriesLoading = false;
+                if (state.currentRoute === 'venues-categories') {
+                    renderVenuesFullCategories();
+                }
+            });
 
-            if (citiesRes.status === 'fulfilled' && citiesRes.value && citiesRes.value.data) {
-                state.venueCities = citiesRes.value.data;
-                // Populate city select filter dropdowns
-                const citySelects = [dom.venuesCitySelect, dom.allVenuesCitySelect].filter(Boolean);
-                citySelects.forEach(sel => {
-                    const currentVal = sel.value;
-                    let opts = '<option value="">All Metro Cities</option>';
-                    state.venueCities.forEach(city => {
-                        opts += `<option value="${escapeHtml(city)}" ${currentVal === city ? 'selected' : ''}>${escapeHtml(city)}</option>`;
+        const fetchCities = apiClient.get('/api/venues/cities')
+            .then(res => {
+                if (res && res.data) {
+                    state.venueCities = res.data;
+                    // Populate city select filter dropdowns
+                    const citySelects = [dom.venuesCitySelect, dom.allVenuesCitySelect].filter(Boolean);
+                    citySelects.forEach(sel => {
+                        const currentVal = sel.value;
+                        let opts = '<option value="">All Metro Cities</option>';
+                        state.venueCities.forEach(city => {
+                            opts += `<option value="${escapeHtml(city)}" ${currentVal === city ? 'selected' : ''}>${escapeHtml(city)}</option>`;
+                        });
+                        sel.innerHTML = opts;
                     });
-                    sel.innerHTML = opts;
-                });
-            }
+                }
+            })
+            .catch(err => {
+                console.warn('[VenueVista] Failed to fetch venue cities:', err);
+            });
+
+        try {
+            await Promise.allSettled([fetchEventCats, fetchVenueCats, fetchCities]);
         } catch (err) {
             console.warn('[VenueVista] Non-critical metadata initialization error:', err);
         } finally {
             state.categoriesLoading = false;
+            state.eventCategoriesLoading = false;
+            state.venueCategoriesLoading = false;
             if (state.currentRoute === 'events-categories') {
                 renderEventsFullCategories();
             } else if (state.currentRoute === 'venues-categories') {
